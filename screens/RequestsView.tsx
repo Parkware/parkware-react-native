@@ -68,7 +68,7 @@ export function RequestsView() {
       </Text>
       
       {eventData.map((event) => (
-        <View style={{ marginBottom: 10 }}>
+        <View style={{ marginBottom: 10 }} key={event.id}>
         <Text key={event.doc.endTime}>
           {'Name: ' + event.doc.name}
         </Text>

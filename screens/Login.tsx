@@ -48,7 +48,7 @@ export function Login({ setScreen }: { setScreen: (screen: string) => void }) {
           <TextInput
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            // secureTextEntry
             placeholder="Enter password"
             autoCapitalize="none"
             placeholderTextColor="#aaa"

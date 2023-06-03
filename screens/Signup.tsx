@@ -37,7 +37,7 @@ export function Signup({ setScreen }: { setScreen: (screen: string) => void }) {
     return (
       <View style={styles.outer}>
         <View style={styles.inner}>
-          <Text style={styles.header}>Signup</Text>
+          <Text style={styles.header}>Sign up</Text>
   
           {error && <Text style={styles.error}>{error}</Text>}
   

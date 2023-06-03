@@ -5,7 +5,7 @@ import {
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { RequestsView } from './RequestsView';
+import { ProviderRequestsView } from './ProviderRequestsView';
 
 export function HomeScreen() {
   const [startTime, setStartTime] = useState('')
@@ -24,33 +24,36 @@ export function HomeScreen() {
   };
 
   const switchView = () => {
-    return <RequestsView />
+    return <ProviderRequestsView />
   }
   const createEventRequest = async () => {
     // Update Name field
     if (auth.currentUser) {
       const docRef = doc(db, 'users/', auth.currentUser.uid)
       await updateDoc(docRef, { ["name"]: name });
-      await addDoc(collection(db, 'users/' + auth.currentUser.uid + '/user_events'), { 
+      await addDoc(collection(db, `users/${auth.currentUser.uid}/user_events`), { 
         address,
         startTime,
         endTime
       });
 
-      await addDoc(collection(db, 'events/'), { 
+      await addDoc(collection(db, 'events/'), {
+        consumer_id: auth.currentUser.uid,
         name, 
         address,
         startTime,
         endTime,
-        accepted: false
+        accepted: false, 
+        accepted_provider_id: null,
       }).then(() => { console.log("added event doc")});
+      
       setStartTime('');
       setEndTime('');
       setName('');
       setAddress('');
       setSentMessage(true);
     }
-    return <RequestsView />
+    return <ProviderRequestsView />
   }
 
   return (

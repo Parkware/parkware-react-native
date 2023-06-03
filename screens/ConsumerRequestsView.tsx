@@ -8,7 +8,7 @@ interface docDataPair {
   doc: DocumentData
 }
 
-export function RequestsView() {
+export function ConsumerRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
 
   useEffect(() => {
@@ -64,22 +64,22 @@ export function RequestsView() {
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
-        Requests
+        My Requests
       </Text>
       
       {eventData.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
-        <Text key={event.doc.endTime}>
-          {'Name: ' + event.doc.name}
-        </Text>
         <Text key={event.doc.address}>
           {'Address: ' + event.doc.address}
         </Text>
         <Text key={event.doc.startTime}>
           {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
         </Text>
-        <Button title='Accept' onPress={() => sendRequest(event.doc.address, true)}/>
-        <Button title='Decline' onPress={() => sendRequest(event.doc.address, false)}/>
+        <Text key={event.doc.endTime} style={{ fontSize: 25 }}>
+          {'Accepted: ' + event.doc.accepted}
+        </Text>
+        {/* <Button title='Accept' onPress={() => sendRequest(event.doc.address, true)}/>
+        <Button title='Decline' onPress={() => sendRequest(event.doc.address, false)}/> */}
         </View>
       ))}
     </SafeAreaView>

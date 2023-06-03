@@ -8,7 +8,8 @@ import { HomeScreen } from './screens/HomeScreen';
 import { Signup } from './screens/Signup';
 import { ResetPassword } from './screens/ResetPassword';
 import { Login } from './screens/Login';
-import { RequestsView } from './screens/RequestsView';
+import { ProviderRequestsView } from './screens/ProviderRequestsView';
+import { ConsumerRequestsView } from './screens/ConsumerRequestsView';
 
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -30,7 +31,7 @@ export default function App() {
   };
 
   // return <View style={{ flex: 1 }}>{getScreen()}</View>;
-  return <View style={{ flex: 1 }}><RequestsView /></View>;
+  return <View style={{ flex: 1 }}><ProviderRequestsView /></View>;
 }
 
 const styles = StyleSheet.create({

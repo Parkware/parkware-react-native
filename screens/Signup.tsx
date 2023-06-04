@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc } from 'firebase/firestore';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParams } from '../App';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 
-export function Signup({ setScreen }: { setScreen: (screen: string) => void }) {
+type signupScreenProp = NativeStackNavigationProp<RootStackParams, 'Signup'>;
+
+export function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+
+    const navigation = useNavigation<signupScreenProp>();
+
+    useEffect(() => {
+      const unsubscribe = auth.onAuthStateChanged(user => {
+        if (user) {
+          navigation.navigate('Home');
+        }
+      })
+      return unsubscribe;
+    }, [])
 
     const createAccount = async () => {
       try {
@@ -41,7 +57,7 @@ export function Signup({ setScreen }: { setScreen: (screen: string) => void }) {
   
           {error && <Text style={styles.error}>{error}</Text>}
   
-          <TouchableOpacity onPress={() => setScreen('login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text style={styles.link}>Login to existing account</Text>
           </TouchableOpacity>
   

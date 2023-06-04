@@ -6,6 +6,11 @@ import {
 import { auth, db } from '../firebaseConfig';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { ProviderRequestsView } from './ProviderRequestsView';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../App';
+import { useNavigation } from '@react-navigation/native';
+
+type homeScreenProp = NativeStackNavigationProp<RootStackParams, 'Home'>;
 
 export function HomeScreen() {
   const [startTime, setStartTime] = useState('')
@@ -15,17 +20,21 @@ export function HomeScreen() {
   const [error, setError] = useState('');
   const [sentMessage, setSentMessage] = useState(false);
 
+  const navigation = useNavigation<homeScreenProp>();
+
   const logout = async () => {
     try {
       await signOut(auth);
+      navigation.navigate('Login');
     } catch (e) {
       console.error(e);
     }
   };
 
   const switchView = () => {
-    return <ProviderRequestsView />
+    navigation.navigate('providerRequestsView');
   }
+
   const createEventRequest = async () => {
     // Update Name field
     if (auth.currentUser) {
@@ -52,8 +61,9 @@ export function HomeScreen() {
       setName('');
       setAddress('');
       setSentMessage(true);
+
+      switchView();
     }
-    return <ProviderRequestsView />
   }
 
   return (

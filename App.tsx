@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
+  User,
   onAuthStateChanged,
 } from 'firebase/auth';
 import { auth } from './firebaseConfig';
@@ -11,27 +12,35 @@ import { Login } from './screens/Login';
 import { ProviderRequestsView } from './screens/ProviderRequestsView';
 import { ConsumerRequestsView } from './screens/ConsumerRequestsView';
 
+import { NavigationContainer, NavigationContext } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import 'react-native-gesture-handler';
+
+export type RootStackParams = {
+  Login: undefined;
+  Signup: undefined;
+  Home: undefined;
+  resetPassword: undefined;
+  providerRequestsView: undefined;
+}
+
+const RootStack = createNativeStackNavigator<RootStackParams>();
+
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [screen, setScreen] = useState<string>('');
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
-  });
-
-  const getScreen = () => {
-    if (loggedIn) return <HomeScreen />;
-    if (screen === 'signup') return <Signup setScreen={setScreen} />;
-    if (screen === 'reset-password') return <ResetPassword setScreen={setScreen} />;
-    return <Login setScreen={setScreen} />;
-  };
-
-  // return <View style={{ flex: 1 }}>{getScreen()}</View>;
-  return <View style={{ flex: 1 }}><ProviderRequestsView /></View>;
+  return (
+    <NavigationContainer>
+      <RootStack.Navigator>
+        <RootStack.Screen options={{ headerShown: false }} name="Login" component={Login}/>
+        <RootStack.Screen name="Signup" component={Signup}/>
+        <RootStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen}/>
+        <RootStack.Screen options={{ title: "Reset Password" }} name="resetPassword" component={ResetPassword}/>
+        <RootStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView}/>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  )
 }
 
 const styles = StyleSheet.create({

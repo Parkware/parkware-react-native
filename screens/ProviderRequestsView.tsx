@@ -22,6 +22,8 @@ interface docDataPair {
 export function ProviderRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
   if (auth.currentUser) {
+    console.log("Current User: ");
+    
     console.log(auth.currentUser.uid);
   }  
   
@@ -92,9 +94,9 @@ export function ProviderRequestsView() {
     await updateDoc(eventRef, { accepted });
   }
   return (
-    <View>
+    <View style={{ marginTop: 30, padding: 16 }}>
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
         Other Requests
       </Text>
       

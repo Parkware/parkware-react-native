@@ -4,7 +4,7 @@ import {
   User,
   onAuthStateChanged,
 } from 'firebase/auth';
-import { auth } from './firebaseConfig';
+import { auth, db } from './firebaseConfig';
 import { HomeScreen } from './screens/HomeScreen';
 import { Signup } from './screens/Signup';
 import { ResetPassword } from './screens/ResetPassword';
@@ -15,33 +15,77 @@ import { ConsumerRequestsView } from './screens/ConsumerRequestsView';
 import { NavigationContainer, NavigationContext } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
+import { doc, getDoc } from 'firebase/firestore';
 
-export type RootStackParams = {
-  Login: undefined;
-  Signup: undefined;
+export type ConsumerStackParams = {
   Home: undefined;
-  resetPassword: undefined;
+  consumerRequestsView: undefined;
+}
+export type ProviderStackParams = {
   providerRequestsView: undefined;
 }
+export type AuthStackParams = {
+  Login: undefined;
+  Signup: undefined;
+  resetPassword: undefined;
+}
 
-const RootStack = createNativeStackNavigator<RootStackParams>();
+const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
+const ProviderStack = createNativeStackNavigator<ProviderStackParams>();
+const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
-export default function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [screen, setScreen] = useState<string>('');
-
+const AuthScreenStack = () => {
   return (
-    <NavigationContainer>
-      <RootStack.Navigator>
-        <RootStack.Screen options={{ headerShown: false }} name="Login" component={Login}/>
-        <RootStack.Screen name="Signup" component={Signup}/>
-        <RootStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen}/>
-        <RootStack.Screen options={{ title: "Reset Password" }} name="resetPassword" component={ResetPassword}/>
-        <RootStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView}/>
-      </RootStack.Navigator>
-    </NavigationContainer>
+      <AuthStack.Navigator>
+        <AuthStack.Screen options={{ headerShown: false }} name="Login" component={Login}/>
+        <AuthStack.Screen options={{ headerShown: false }} name="Signup" component={Signup}/>
+        <AuthStack.Screen options={{ headerShown: false, title: "Reset Password" }} name="resetPassword" component={ResetPassword} />
+      </AuthStack.Navigator>
   )
 }
+
+export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [provider, setProvider] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+        if (user) {
+          const docRef = doc(db, 'users/', user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            console.log("Provider? ");
+            console.log(docSnap.data().provider);
+            setProvider(docSnap.data().provider);
+          }
+        }
+    });
+      return unsubscribe;
+    }, [])
+
+  const renderContent = () => {
+    if (user) {
+      if (provider) {
+        return (
+        <ProviderStack.Navigator>
+            <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView} />
+          </ProviderStack.Navigator>
+        )
+      } else {
+        return (
+        <ConsumerStack.Navigator>
+            <ConsumerStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
+            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="consumerRequestsView" component={ConsumerRequestsView} />
+          </ConsumerStack.Navigator>
+        )
+      }
+    }
+    else return <AuthScreenStack />;
+  };
+  return <NavigationContainer>{renderContent()}</NavigationContainer>;
+}
+
 
 const styles = StyleSheet.create({
   outer: {

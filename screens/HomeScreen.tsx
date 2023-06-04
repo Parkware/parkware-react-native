@@ -7,10 +7,10 @@ import { auth, db } from '../firebaseConfig';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 import { ProviderRequestsView } from './ProviderRequestsView';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParams } from '../App';
+import { ConsumerStackParams } from '../App';
 import { useNavigation } from '@react-navigation/native';
 
-type homeScreenProp = NativeStackNavigationProp<RootStackParams, 'Home'>;
+type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Home'>;
 
 export function HomeScreen() {
   const [startTime, setStartTime] = useState('')
@@ -32,7 +32,7 @@ export function HomeScreen() {
   };
 
   const switchView = () => {
-    navigation.navigate('providerRequestsView');
+    navigation.navigate('consumerRequestsView');
   }
 
   const createEventRequest = async () => {
@@ -61,7 +61,6 @@ export function HomeScreen() {
       setName('');
       setAddress('');
       setSentMessage(true);
-
       switchView();
     }
   }

@@ -6,10 +6,10 @@ import {
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc } from 'firebase/firestore';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParams } from '../App';
+import { ConsumerStackParams } from '../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 
-type signupScreenProp = NativeStackNavigationProp<RootStackParams, 'Signup'>;
+type signupScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Signup'>;
 
 export function Signup() {
     const [email, setEmail] = useState('');

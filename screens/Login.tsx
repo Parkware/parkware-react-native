@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import {
-  onAuthStateChanged,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParams } from '../App';
-import { doc, getDoc } from 'firebase/firestore';
+import { AuthStackParams } from '../App';
 
-type signupScreenProp = NativeStackNavigationProp<RootStackParams, 'Login'>;
+type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Login'>;
 
 export function Login() {
     const [email, setEmail] = useState('');
@@ -20,19 +17,6 @@ export function Login() {
     const [error, setError] = useState('');
   
     const navigation = useNavigation<signupScreenProp>();
-
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(async user => {
-        if (user) {
-          const docRef = doc(db, 'users/', user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            if (docSnap.data().provider) navigation.navigate('providerRequestsView'); 
-            else navigation.navigate('Home');
-          }
-      }});
-      return unsubscribe;
-    }, [])
 
     const loginUser = async () => {
       try {

@@ -6,10 +6,10 @@ import {
 import { auth } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParams } from '../App';
+import { AuthStackParams, ConsumerStackParams } from '../App';
 import { useNavigation } from '@react-navigation/native';
 
-type resetPasswordScreenProp = NativeStackNavigationProp<RootStackParams, 'Home'>;
+type resetPasswordScreenProp = NativeStackNavigationProp<AuthStackParams, 'resetPassword'>;
 
 export function ResetPassword() {
     const [email, setEmail] = useState('');

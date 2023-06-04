@@ -3,6 +3,7 @@ import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button } from 'react-n
 import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 
 interface docDataPair {
   id: string,
@@ -21,11 +22,13 @@ interface docDataPair {
 
 export function ProviderRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
-  if (auth.currentUser) {
-    console.log("Current User: ");
-    
-    console.log(auth.currentUser.uid);
-  }  
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error(e);
+    }
+  };
   
   useEffect(() => {
     const fetchData = async () => {
@@ -115,6 +118,8 @@ export function ProviderRequestsView() {
         <Button title='Decline' onPress={() => sendRequest(event.doc.address, false)}/>
         </View>
       ))}
+      <Button title="Log out" onPress={logout} />
+
     </SafeAreaView>
     </View>
   );

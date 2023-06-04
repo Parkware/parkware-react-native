@@ -25,7 +25,6 @@ export function HomeScreen() {
   const logout = async () => {
     try {
       await signOut(auth);
-      navigation.navigate('Login');
     } catch (e) {
       console.error(e);
     }

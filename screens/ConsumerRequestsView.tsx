@@ -12,9 +12,7 @@ export function ConsumerRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
 
   useEffect(() => {
-    // const fetchData = async () => {
       try {
-        // Remove the next keyword and see if it still works. 
         const unsub = onSnapshot(collection(db, 'events'), (snapshot) => {
             const events: docDataPair[] = [];
             snapshot.docs.forEach((doc) => {          
@@ -39,9 +37,6 @@ export function ConsumerRequestsView() {
       } catch (error) {
         console.error('Error fetching events:', error);
       }
-    // };
-
-    // fetchData();
   }, []);
 
   useEffect(() => {

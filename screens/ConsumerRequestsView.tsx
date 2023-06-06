@@ -1,39 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button } from 'react-native';
-import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 
 interface docDataPair {
   id: string,
   doc: DocumentData
+  /*
+  Fields:
+    address
+    startTime
+    endTime
+    interested_providers
+  */
 }
 
 export function ConsumerRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
 
+  const getProviders = async () => {
+    if (auth.currentUser) {
+      const snap = await getDoc(doc(db, 'users/', auth.currentUser.uid))
+      if (snap.exists()) {
+        for (const id in snap.data().interested_provider_ids) {
+          const docSnap = await getDoc(doc(db, 'interested_providers/', id));
+          if (docSnap.exists()) {
+            let pro_info = [];
+            pro_info.push(docSnap.data())
+            
+          }
+
+        }
+
+        }
+    }
+    }
+
   useEffect(() => {
       try {
-        const unsub = onSnapshot(collection(db, 'events'), (snapshot) => {
-            const events: docDataPair[] = [];
-            snapshot.docs.forEach((doc) => {          
-              events.push({
-                id: doc.id,
-                doc: doc.data()
-              } as docDataPair);
-            });
-            setEventData(events)
-        });
-        return () => unsub();
-        /*
-        const eventData = querySnapshot.docs.map((doc) => {          
-          const providersSnapshot = await getDocs(collection(db, 'events/3fKQI195b57xW1ot8Q7W/interested_providers/'));
-          const proData = providersSnapshot.docs.map(d => console.log(d.data()));
-          return {
-            id: doc.id,
-            doc: doc.data()
-          };
-        });
-        */
+        if (auth.currentUser) {
+          const unsub = onSnapshot(collection(db, `users/${auth.currentUser.uid}/user_events`), (snapshot) => {
+              const events: docDataPair[] = [];
+              getProviders();  
+              snapshot.docs.forEach((doc) => {
+                events.push({
+                  id: doc.id,
+                  doc: doc.data()
+                } as docDataPair);
+              });
+              setEventData(events)
+          });
+          return () => unsub();
+        }
       } catch (error) {
         console.error('Error fetching events:', error);
       }
@@ -53,16 +71,6 @@ export function ConsumerRequestsView() {
     }
   }, [eventData]);
   
-  const sendRequest = (event_addr: any, to_accept: boolean) => {
-    setEventData(prevEventData => {
-      return prevEventData.map(e => {
-        if (e.doc.address !== event_addr && e.doc.accepted) return { id: e.id, doc: { ...e.doc, accepted: false } }
-        if (e.doc.address === event_addr) return { id: e.id, doc: { ...e.doc, accepted: to_accept } };
-        return e;
-      });
-    });
-  };
-  
   const updateDB = async (doc_id: string, accepted: boolean) => {
     const docRef = doc(collection(db, 'events/'), doc_id);
     await updateDoc(docRef, {
@@ -71,7 +79,7 @@ export function ConsumerRequestsView() {
   }
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10}}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         My Requests
       </Text>
       

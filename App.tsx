@@ -5,14 +5,14 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
-import { HomeScreen } from './screens/HomeScreen';
+import { HomeScreen } from './screens/MakeRequestScreen';
 import { Signup } from './screens/Signup';
 import { ResetPassword } from './screens/ResetPassword';
 import { Login } from './screens/Login';
 import { ProviderRequestsView } from './screens/ProviderRequestsView';
 import { ConsumerRequestsView } from './screens/ConsumerRequestsView';
 
-import { NavigationContainer, NavigationContext } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import { doc, getDoc } from 'firebase/firestore';

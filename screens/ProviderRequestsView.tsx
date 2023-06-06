@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button } from 'react-native';
-import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
@@ -31,20 +31,21 @@ export function ProviderRequestsView() {
   };
   
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const eventSnapshot = await getDocs(collection(db, 'events'));
-        
-        // Populating eventData[] with all docDataPair values
-        setEventData(eventSnapshot.docs.map(doc => {          
-          return { id: doc.id, doc: doc.data() };
-        }));
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-    };
-
-    fetchData();
+    try {
+      const unsub = onSnapshot(collection(db, 'events'), (snapshot) => {
+          const events: docDataPair[] = [];
+          snapshot.docs.forEach((doc) => {          
+            events.push({
+              id: doc.id,
+              doc: doc.data()
+            } as docDataPair);
+          });
+          setEventData(events)
+      });
+      return () => unsub();
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
   }, []);
 
   useEffect(() => {
@@ -78,18 +79,18 @@ export function ProviderRequestsView() {
     const doc_id = ddPair.id;
     const temp_curr_uid = 'RiYVE0uK3VTtPr2Z8vmWKK7gp3u2';
     if (accepted) {
-      // if (auth.currentUser) {
-      if (ddPair.doc.consumer_id != temp_curr_uid) {
-        const userRef = doc(db, 'users/', temp_curr_uid); // auth.currentUser.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          await setDoc(doc(db, `events/${doc_id}/interested_providers/`, "p1"), {
-            p1_name: userSnap.data().name, 
-            p1_address: userSnap.data().address
-          });
+      if (auth.currentUser) {
+        if (ddPair.doc.consumer_id != auth.currentUser.uid) {
+          const userRef = doc(db, 'users/', auth.currentUser.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            await setDoc(doc(db, `events/${doc_id}/interested_providers/`, "p1"), {
+              p1_name: userSnap.data().name, 
+              p1_address: userSnap.data().address
+            });
+          }
         }
       }
-      // }
   }
 
     const eventRef = doc(collection(db, 'events/'), doc_id);

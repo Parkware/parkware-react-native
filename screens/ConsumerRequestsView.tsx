@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button } from 'react-native';
-import { DocumentData, DocumentReference, collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 interface docDataPair {
@@ -12,23 +12,36 @@ export function ConsumerRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    // const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'events'));
+        // Remove the next keyword and see if it still works. 
+        const unsub = onSnapshot(collection(db, 'events'), (snapshot) => {
+            const events: docDataPair[] = [];
+            snapshot.docs.forEach((doc) => {          
+              events.push({
+                id: doc.id,
+                doc: doc.data()
+              } as docDataPair);
+            });
+            setEventData(events)
+        });
+        return () => unsub();
+        /*
         const eventData = querySnapshot.docs.map((doc) => {          
+          const providersSnapshot = await getDocs(collection(db, 'events/3fKQI195b57xW1ot8Q7W/interested_providers/'));
+          const proData = providersSnapshot.docs.map(d => console.log(d.data()));
           return {
             id: doc.id,
-            doc: { ...doc.data(), accepted: false} 
+            doc: doc.data()
           };
         });
-        
-        setEventData(eventData);
+        */
       } catch (error) {
         console.error('Error fetching events:', error);
       }
-    };
+    // };
 
-    fetchData();
+    // fetchData();
   }, []);
 
   useEffect(() => {
@@ -75,7 +88,7 @@ export function ConsumerRequestsView() {
         <Text key={event.doc.startTime}>
           {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
         </Text>
-        <Text key={event.doc.endTime} style={{ fontSize: 25 }}>
+        <Text key={event.doc.endTime} style={{ fontSize: 20 }}>
           {'Accepted: ' + event.doc.accepted}
         </Text>
         {/* <Button title='Accept' onPress={() => sendRequest(event.doc.address, true)}/>

@@ -5,7 +5,12 @@ import {
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { RequestsView } from './RequestsView';
+import { ProviderRequestsView } from './ProviderRequestsView';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ConsumerStackParams } from '../App';
+import { useNavigation } from '@react-navigation/native';
+
+type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Home'>;
 
 export function HomeScreen() {
   const [startTime, setStartTime] = useState('')
@@ -14,6 +19,8 @@ export function HomeScreen() {
   const [address, setAddress] = useState<string>('');
   const [error, setError] = useState('');
   const [sentMessage, setSentMessage] = useState(false);
+
+  const navigation = useNavigation<homeScreenProp>();
 
   const logout = async () => {
     try {
@@ -24,33 +31,37 @@ export function HomeScreen() {
   };
 
   const switchView = () => {
-    return <RequestsView />
+    navigation.navigate('consumerRequestsView');
   }
+
   const createEventRequest = async () => {
     // Update Name field
     if (auth.currentUser) {
       const docRef = doc(db, 'users/', auth.currentUser.uid)
       await updateDoc(docRef, { ["name"]: name });
-      await addDoc(collection(db, 'users/' + auth.currentUser.uid + '/user_events'), { 
+      await addDoc(collection(db, `users/${auth.currentUser.uid}/user_events`), { 
         address,
         startTime,
         endTime
       });
 
-      await addDoc(collection(db, 'events/'), { 
+      await addDoc(collection(db, 'events/'), {
+        consumer_id: auth.currentUser.uid,
         name, 
         address,
         startTime,
         endTime,
-        accepted: false
+        accepted: false, 
+        accepted_provider_id: null,
       }).then(() => { console.log("added event doc")});
+      
       setStartTime('');
       setEndTime('');
       setName('');
       setAddress('');
       setSentMessage(true);
+      switchView();
     }
-    return <RequestsView />
   }
 
   return (

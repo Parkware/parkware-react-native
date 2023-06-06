@@ -5,12 +5,19 @@ import {
 } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParams, ConsumerStackParams } from '../App';
+import { useNavigation } from '@react-navigation/native';
 
-export function ResetPassword({ setScreen }: { setScreen: (screen: string) => void }) {
+type resetPasswordScreenProp = NativeStackNavigationProp<AuthStackParams, 'resetPassword'>;
+
+export function ResetPassword() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [submitted, setSubmitted] = useState(false);
   
+    const navigation = useNavigation<resetPasswordScreenProp>();
+
     const resetUserPassword = async () => {
       try {
         await sendPasswordResetEmail(auth, email);
@@ -32,7 +39,7 @@ export function ResetPassword({ setScreen }: { setScreen: (screen: string) => vo
   
           {error && <Text style={styles.error}>{error}</Text>}
   
-          <TouchableOpacity onPress={() => setScreen('login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text style={styles.link}>Back to login</Text>
           </TouchableOpacity>
   

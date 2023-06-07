@@ -5,7 +5,8 @@ import { auth, db } from '../firebaseConfig';
 
 interface docDataPair {
   id: string,
-  doc: DocumentData
+  doc: DocumentData,
+  // interestedProviderIds: DocumentData[]
   /*
   Fields:
     address
@@ -21,33 +22,35 @@ export function ConsumerRequestsView() {
   const getProviders = async () => {
     if (auth.currentUser) {
       const snap = await getDoc(doc(db, 'users/', auth.currentUser.uid))
+      
       if (snap.exists()) {
-        for (const id in snap.data().interested_provider_ids) {
+        let pro_info = [];
+        for (let id of snap.data().interested_provider_ids) {
           const docSnap = await getDoc(doc(db, 'interested_providers/', id));
           if (docSnap.exists()) {
-            let pro_info = [];
             pro_info.push(docSnap.data())
-            
           }
-
         }
-
-        }
+        return pro_info
+      }
     }
-    }
+  }
 
   useEffect(() => {
       try {
         if (auth.currentUser) {
           const unsub = onSnapshot(collection(db, `users/${auth.currentUser.uid}/user_events`), (snapshot) => {
               const events: docDataPair[] = [];
-              getProviders();  
+              // const pro_info = getProviders();  
               snapshot.docs.forEach((doc) => {
                 events.push({
                   id: doc.id,
                   doc: doc.data()
                 } as docDataPair);
               });
+              // events.push({
+              //   interestedProviderIds: pro_info,
+              // });
               setEventData(events)
           });
           return () => unsub();

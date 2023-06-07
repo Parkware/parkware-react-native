@@ -1,60 +1,67 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button } from 'react-native';
+import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button, LogBox } from 'react-native';
 import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
+import { Divider } from '@rneui/themed';
 
+interface docDuo {
+  id: string,
+  doc: DocumentData,
+}
 interface docDataPair {
   id: string,
   doc: DocumentData,
-  // interestedProviderIds: DocumentData[]
+  interestedProviders: docDuo[]
   /*
   Fields:
     address
     startTime
     endTime
-    interested_providers
+    interestedProviders
   */
 }
 
 export function ConsumerRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
 
-  const getProviders = async () => {
-    if (auth.currentUser) {
-      const snap = await getDoc(doc(db, 'users/', auth.currentUser.uid))
-      
-      if (snap.exists()) {
-        let pro_info = [];
-        for (let id of snap.data().interested_provider_ids) {
-          const docSnap = await getDoc(doc(db, 'interested_providers/', id));
-          if (docSnap.exists()) {
-            pro_info.push(docSnap.data())
-          }
-        }
-        return pro_info
-      }
-    }
+  const getProviders = async (e_id: string) => {
+      // Get interested providers within each event
+      const proSnap = await getDocs(collection(db, `events/${e_id}/interested_providers/`));      
+      const providers: DocumentData[] = [];
+      proSnap.forEach((pro) => {
+        providers.push({ 
+          id: pro.id,
+          doc: pro.data()
+        } as docDuo);
+      });
+      return providers;
   }
 
   useEffect(() => {
       try {
         if (auth.currentUser) {
-          const unsub = onSnapshot(collection(db, `users/${auth.currentUser.uid}/user_events`), (snapshot) => {
-              const events: docDataPair[] = [];
-              // const pro_info = getProviders();  
-              snapshot.docs.forEach((doc) => {
-                events.push({
-                  id: doc.id,
-                  doc: doc.data()
-                } as docDataPair);
-              });
-              // events.push({
-              //   interestedProviderIds: pro_info,
-              // });
-              setEventData(events)
+          const unsub = onSnapshot(doc(db, `users/${auth.currentUser.uid}`), async (eventSnap) => {
+            if (!eventSnap.exists()) return;
+            const eventIds = eventSnap.data().user_events;
+          
+            const eventPromises = eventIds.map(async (e_id: string) => {
+              const userSnap = await getDoc(doc(db, 'events/', e_id));
+              const providers = await getProviders(e_id);
+              return {
+                id: e_id,
+                doc: userSnap.data(),
+                interestedProviders: providers
+              } as docDataPair;
+            });
+          
+            const events = await Promise.all(eventPromises);
+            console.log(events);
+            setEventData(events);
           });
-          return () => unsub();
-        }
+          
+          return () => unsub();          
+        };
+        
       } catch (error) {
         console.error('Error fetching events:', error);
       }
@@ -94,12 +101,25 @@ export function ConsumerRequestsView() {
         <Text key={event.doc.startTime}>
           {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
         </Text>
-        <Text key={event.doc.endTime} style={{ fontSize: 20 }}>
+        <Text key={event.doc.endTime}>
           {'Accepted: ' + event.doc.accepted}
         </Text>
+        <Text style={{ fontSize: 20 }}>Available Providers:</Text>
+        {event.interestedProviders.map((providerInfo: docDuo) => (
+          <View key={providerInfo.id}>
+          <Text key={providerInfo.doc.name}>
+          {'Name: ' + providerInfo.doc.name}
+          </Text>
+          <Text key={providerInfo.doc.address}>
+          {'Address: ' + providerInfo.doc.address}
+          </Text>
+          </View >
+        ))}
         {/* <Button title='Accept' onPress={() => sendRequest(event.doc.address, true)}/>
         <Button title='Decline' onPress={() => sendRequest(event.doc.address, false)}/> */}
+        <Divider width={5}/>
         </View>
+        
       ))}
     </SafeAreaView>
   );

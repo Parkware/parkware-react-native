@@ -52,13 +52,8 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
         if (user) {
-          const docRef = doc(db, 'users/', user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            console.log("Provider? ");
-            console.log(docSnap.data().provider);
-            setProvider(docSnap.data().provider);
-          }
+          const docSnap = await getDoc(doc(db, 'users/', user.uid));
+          if (docSnap.exists()) setProvider(docSnap.data().provider);
         }
     });
       return unsubscribe;

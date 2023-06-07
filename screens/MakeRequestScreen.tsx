@@ -34,32 +34,31 @@ export function HomeScreen() {
   }
 
   const createEventRequest = async () => {
-    // Update Name field
-    if (auth.currentUser) {
-      const consRef = doc(db, 'users/', auth.currentUser.uid);
-      await updateDoc(consRef, { ["name"]: name });
-      await addDoc(collection(db, `users/${auth.currentUser.uid}/user_events`), { 
-        address,
-        startTime,
-        endTime
-      });
-
-      const eventRef = await addDoc(collection(db, 'events/'), {
-        consumer_id: auth.currentUser.uid,
-        name, 
-        address,
-        startTime,
-        endTime,
-        accepted: false, 
-        accepted_provider_id: null,
-      })
-      
-      setStartTime('');
-      setEndTime('');
-      setName('');
-      setAddress('');
-      setSentMessage(true);
-      switchView();
+      // Update Name field
+      if (auth.currentUser) {
+        const consRef = doc(db, 'users/', auth.currentUser.uid);
+        await updateDoc(consRef, { ["name"]: name });
+        
+        const eventRef = await addDoc(collection(db, 'events/'), {
+          consumer_id: auth.currentUser.uid,
+          name, 
+          address,
+          startTime,
+          endTime,
+          accepted: false, 
+          accepted_provider_id: null,
+        });
+        
+        await updateDoc(consRef, {
+          user_events: arrayUnion(eventRef.id)
+        });
+        
+        setStartTime('');
+        setEndTime('');
+        setName('');
+        setAddress('');
+        setSentMessage(true);
+        switchView();
     }
   }
   return (

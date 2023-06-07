@@ -49,8 +49,8 @@ export function ProviderRequestsView() {
     }
   }, []);
 
+  // Searching through all of the true docs and updating firebase accordingly. All these fields are local to the eventData object. 
   useEffect(() => {
-    // Searching through all of the true docs and updating firebase accordingly. All these fields are local to the eventData object. 
     const doc_id_accept: docDataPair | undefined = eventData.find(d => d.doc.accepted === true);
     const doc_id_decline: docDataPair[] = eventData.filter(d => d.doc.accepted === false);
     
@@ -79,20 +79,20 @@ export function ProviderRequestsView() {
     if (auth.currentUser) {
       if (accepted) {
         if (ddPair.doc.consumer_id != auth.currentUser.uid) {
-          const userRef = doc(db, 'users/', auth.currentUser.uid);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
+          const currUserRef = doc(db, 'users/', auth.currentUser.uid);
+          const currUserSnap = await getDoc(currUserRef);
+          if (currUserSnap.exists()) {
             // This is a custom id generation method that differs with each event. 
-            const proId = auth.currentUser.uid + doc_id.slice(0, 3);
-            await setDoc(doc(db, 'interested_providers/', proId), {
-              provider_id: auth.currentUser.uid,
-              name: userSnap.data().name,
-              address: userSnap.data().address,
-              event_id: doc_id,
+            // const proId = auth.currentUser.uid + doc_id.slice(0, 3);
+            const proId = auth.currentUser.uid;
+            await setDoc(doc(db, `events/${doc_id}/interested_providers/`, proId), {
+              // provider_id: auth.currentUser.uid,
+              name: currUserSnap.data().name,
+              address: currUserSnap.data().address,
             }, { merge: true });
            
-            const consRef = doc(db, 'users/', ddPair.doc.consumer_id);
-            await updateDoc(consRef, {
+            const docRef = doc(db, 'events/', doc_id);
+            await updateDoc(docRef, {
               interested_provider_ids: arrayUnion(proId),
             });
           }

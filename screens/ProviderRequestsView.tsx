@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button } from 'react-native';
-import { DocumentData, DocumentReference, addDoc, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { View, Text, SafeAreaView, Button } from 'react-native';
+import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';

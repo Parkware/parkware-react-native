@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button, LogBox } from 'react-native';
-import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { View, Text, SafeAreaView } from 'react-native';
+import { DocumentData, collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import { Divider } from '@rneui/themed';
 
@@ -25,16 +25,18 @@ export function ConsumerRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
 
   const getProviders = async (e_id: string) => {
-      // Get interested providers within each event
-      const proSnap = await getDocs(collection(db, `events/${e_id}/interested_providers/`));      
-      const providers: DocumentData[] = [];
-      proSnap.forEach((pro) => {
-        providers.push({ 
-          id: pro.id,
-          doc: pro.data()
-        } as docDuo);
-      });
-      return providers;
+    // Get interested providers within each event
+    // onSnapshot(collection(db, `events/${e_id}/interested_providers/`), async (proSnap) => {   
+    const proSnap = await getDocs(collection(db, `events/${e_id}/interested_providers/`));      
+    const providers: DocumentData[] = [];
+    proSnap.forEach((pro) => {
+      providers.push({ 
+        id: pro.id,
+        doc: pro.data()
+      } as docDuo);
+    });
+    return providers;
+    // });
   }
 
   useEffect(() => {
@@ -55,7 +57,6 @@ export function ConsumerRequestsView() {
             });
           
             const events = await Promise.all(eventPromises);
-            console.log(events);
             setEventData(events);
           });
           

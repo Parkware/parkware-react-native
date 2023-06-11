@@ -38,8 +38,7 @@ export function HomeScreen() {
       if (auth.currentUser) {
         const consRef = doc(db, 'users/', auth.currentUser.uid);
         await updateDoc(consRef, { ["name"]: name });
-        
-        const eventRef = await addDoc(collection(db, 'events/'), {
+        await addDoc(collection(db, 'events/'), {
           consumer_id: auth.currentUser.uid,
           name, 
           address,
@@ -47,12 +46,9 @@ export function HomeScreen() {
           endTime,
           accepted: false, 
           accepted_provider_id: null,
+          interestedProviders: null
         });
-        
-        await updateDoc(consRef, {
-          user_events: arrayUnion(eventRef.id)
-        });
-        
+                
         setStartTime('');
         setEndTime('');
         setName('');

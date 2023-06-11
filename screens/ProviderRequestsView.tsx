@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, Button } from 'react-native';
+import { View, Text, SafeAreaView, Button, ToastAndroid } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
@@ -22,6 +22,7 @@ interface docDataPair {
 
 export function ProviderRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
+  
   const logout = async () => {
     try {
       await signOut(auth);
@@ -49,24 +50,28 @@ export function ProviderRequestsView() {
     }
   }, []);
 
-  // Searching through all of the true docs and updating firebase accordingly. All these fields are local to the eventData object. 
+  /*
+    Searching through all of the true docs and updating firebase accordingly. 
+    All these fields are local to the eventData object. 
+  */
+
   useEffect(() => {
-    const doc_id_accept: docDataPair | undefined = eventData.find(d => d.doc.accepted === true);
+    const doc_id_accept: docDataPair[] = eventData.filter(d => d.doc.accepted === true);
     const doc_id_decline: docDataPair[] = eventData.filter(d => d.doc.accepted === false);
     
     if (doc_id_accept) {
-      updateDB(doc_id_accept, true);
+      doc_id_accept.map(d => updateDB(d, true));
     }
     if (doc_id_decline) {
       doc_id_decline.map(d => updateDB(d, false));
     }
   }, [eventData]);
   
-  // If a request wasn't selected, it will be set to false (only one request can be accepted at a time)
   const sendRequest = (id: any, to_accept: boolean) => {
     setEventData(prevEventData => {
       return prevEventData.map(e => {
-        if (e.id !== id && e.doc.accepted) return { id: e.id, doc: { ...e.doc, accepted: false } }
+        // If the user is removing acceptance, I only want to change that event's value. Else if putting acceptance, I want only that event request to be selected. 
+        // if (to_accept && e.id !== id && e.doc.accepted) return { id: e.id, doc: { ...e.doc, accepted: false } }
         if (e.id === id) return { id: e.id, doc: { ...e.doc, accepted: to_accept } };
         return e;
       });
@@ -75,26 +80,32 @@ export function ProviderRequestsView() {
   
   const updateDB = async (ddPair: docDataPair, accepted: boolean) => {
     const doc_id = ddPair.id;
-    
+    const curEventRef = doc(db, 'events/', doc_id);
     if (auth.currentUser) {
+      const currUid = auth.currentUser.uid;
       if (accepted) {
-        if (ddPair.doc.consumer_id != auth.currentUser.uid) {
-          const currUserRef = doc(db, 'users/', auth.currentUser.uid);
+        if (ddPair.doc.consumer_id != currUid) {
+          const currUserRef = doc(db, 'users/', currUid);
           const currUserSnap = await getDoc(currUserRef);
           if (currUserSnap.exists()) {
-            // This is a custom id generation method that differs with each event. 
-            // const proId = auth.currentUser.uid + doc_id.slice(0, 3);
-            const proId = auth.currentUser.uid;
-            await setDoc(doc(db, `events/${doc_id}/interested_providers/`, proId), {
-              // provider_id: auth.currentUser.uid,
-              name: currUserSnap.data().name,
-              address: currUserSnap.data().address,
-            }, { merge: true });
-           
-            const docRef = doc(db, 'events/', doc_id);
-            await updateDoc(docRef, {
-              interested_provider_ids: arrayUnion(proId),
-            });
+            let already_providing = false;
+            const eventSnap = await getDoc(curEventRef);
+            // Checking to see if the user is already signed up. 
+            // Eventually, this won't be needed since we would disable if already sent, but just to validate
+            if (eventSnap.exists()) {
+              eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
+                  if (prov.provider_id == currUid) already_providing = true
+              });
+            }
+            if (!already_providing) { 
+              await setDoc(curEventRef, {
+                interestedProviders: arrayUnion({
+                  provider_id: currUid,
+                  name: currUserSnap.data().name,
+                  address: currUserSnap.data().address
+                }),
+              }, { merge: true });
+            }
           }
         }
       }
@@ -104,11 +115,8 @@ export function ProviderRequestsView() {
         await deleteDoc(doc(db, "interested_providers/", auth.currentUser.uid));
       }
       */
-  }
-
-    const eventRef = doc(collection(db, 'events/'), doc_id);
-
-    await updateDoc(eventRef, { accepted });
+    }
+    await updateDoc(curEventRef, { accepted });
   }
   return (
     <View style={{ marginTop: 30, padding: 16 }}>
@@ -127,6 +135,9 @@ export function ProviderRequestsView() {
           </Text>
           <Text key={event.doc.startTime}>
             {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
+          </Text>
+          <Text key={event.doc.accepted_provider_id}>
+            {(auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? 'Status: accepted' : 'Status: declined'}
           </Text>
           <Button title='Accept' onPress={() => sendRequest(event.id, true)}/>
           <Button title='Decline' onPress={() => sendRequest(event.id, false)}/>

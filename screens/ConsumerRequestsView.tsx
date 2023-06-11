@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
-import { DocumentData, collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
+import { View, Text, SafeAreaView, Button } from 'react-native';
+import { DocumentData, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import { Divider } from '@rneui/themed';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ConsumerStackParams } from '../App';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-interface docDuo {
+export interface docDataTrio {
   id: string,
   doc: DocumentData,
-}
-interface docDataPair {
-  id: string,
-  doc: DocumentData,
-  interestedProviders: docDuo[]
+  interestedProviders: DocumentData[]
   /*
   Fields:
     address
@@ -21,48 +21,51 @@ interface docDataPair {
   */
 }
 
-export function ConsumerRequestsView() {
-  const [eventData, setEventData] = useState<docDataPair[]>([]);
+type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
-  const getProviders = async (e_id: string) => {
+export function ConsumerRequestsView() {
+  const [eventData, setEventData] = useState<docDataTrio[]>([]);
+  const [providers, setProviders] = useState<DocumentData[]>([]);
+  
+  const navigation = useNavigation<consumerScreenProp>();
+
+  const startProvidersListener = (e_id: string) => {
     // Get interested providers within each event
-    // onSnapshot(collection(db, `events/${e_id}/interested_providers/`), async (proSnap) => {   
-    const proSnap = await getDocs(collection(db, `events/${e_id}/interested_providers/`));      
-    const providers: DocumentData[] = [];
-    proSnap.forEach((pro) => {
-      providers.push({ 
+    onSnapshot(collection(db, `events/${e_id}/interested_providers/`), (proSnap) => {   
+      const proList: DocumentData[] = proSnap.docs.map((pro) => ({
         id: pro.id,
         doc: pro.data()
-      } as docDuo);
+      }));
+      console.log('before ' + JSON.stringify(proList));
+      
+      setProviders(proList);
     });
-    return providers;
-    // });
+  }
+  
+  const getEvents = async () => {
+    if (auth.currentUser) {
+    const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
+    const unsub = onSnapshot(q, async (snap) => {
+      const eventPromises = snap.docs.map((e) => {
+        // startProvidersListener(e.id);
+        return {
+          id: e.id,
+          doc: e.data(),
+          interestedProviders: e.data().interestedProviders
+        } as docDataTrio;
+      });
+      
+      const events = await Promise.all(eventPromises);
+      
+      setEventData(events);
+    });
+    return () => unsub;
+  }
   }
 
   useEffect(() => {
-      try {
-        if (auth.currentUser) {
-          const unsub = onSnapshot(doc(db, `users/${auth.currentUser.uid}`), async (eventSnap) => {
-            if (!eventSnap.exists()) return;
-            const eventIds = eventSnap.data().user_events;
-          
-            const eventPromises = eventIds.map(async (e_id: string) => {
-              const userSnap = await getDoc(doc(db, 'events/', e_id));
-              const providers = await getProviders(e_id);
-              return {
-                id: e_id,
-                doc: userSnap.data(),
-                interestedProviders: providers
-              } as docDataPair;
-            });
-          
-            const events = await Promise.all(eventPromises);
-            setEventData(events);
-          });
-          
-          return () => unsub();          
-        };
-        
+      try {      
+        getEvents();
       } catch (error) {
         console.error('Error fetching events:', error);
       }
@@ -70,7 +73,7 @@ export function ConsumerRequestsView() {
 
   useEffect(() => {
     const doc_id_true = eventData.find(d => d.doc.accepted === true)?.id;
-    const doc_id_false: docDataPair[] = eventData.filter(d => d.doc.accepted === false);
+    const doc_id_false: docDataTrio[] = eventData.filter(d => d.doc.accepted === false);
 
     if (doc_id_true) {
       updateDB(doc_id_true, true);
@@ -95,30 +98,30 @@ export function ConsumerRequestsView() {
       </Text>
       
       {eventData.map((event) => (
-        <View style={{ marginBottom: 10 }} key={event.id}>
-        <Text key={event.doc.address}>
-          {'Address: ' + event.doc.address}
-        </Text>
-        <Text key={event.doc.startTime}>
-          {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-        </Text>
-        <Text key={event.doc.endTime}>
-          {'Accepted: ' + event.doc.accepted}
-        </Text>
-        <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-        {event.interestedProviders.map((providerInfo: docDuo) => (
-          <View key={providerInfo.id}>
-          <Text key={providerInfo.doc.name}>
-          {'Name: ' + providerInfo.doc.name}
-          </Text>
-          <Text key={providerInfo.doc.address}>
-          {'Address: ' + providerInfo.doc.address}
-          </Text>
-          </View >
-        ))}
-        {/* <Button title='Accept' onPress={() => sendRequest(event.doc.address, true)}/>
-        <Button title='Decline' onPress={() => sendRequest(event.doc.address, false)}/> */}
-        <Divider width={5}/>
+        <View key={event.id}>
+          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('providerDetailsView', { event })}>
+            <Text key={event.doc.address}>
+              {'Address: ' + event.doc.address}
+            </Text>
+            <Text key={event.doc.startTime}>
+              {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
+            </Text>
+            <Text key={event.doc.endTime}>
+              {'Accepted: ' + event.doc.accepted}
+            </Text>
+            <Text style={{ fontSize: 20 }}>Available Providers:</Text>
+            {event.interestedProviders.map((providerInfo: DocumentData) => (
+              <View key={providerInfo.provider_id}>
+                <Text key={providerInfo.name}>
+                {'Name: ' + providerInfo.name}
+                </Text>
+                <Text key={providerInfo.address}>
+                {'Address: ' + providerInfo.address}
+                </Text>
+              </View >
+            ))}
+            <Divider width={5} style={{ marginTop: 10 }}/>
+          </TouchableOpacity>
         </View>
         
       ))}

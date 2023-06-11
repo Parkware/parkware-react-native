@@ -4,8 +4,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
-import { ProviderRequestsView } from './ProviderRequestsView';
+import { addDoc, arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../App';
 import { useNavigation } from '@react-navigation/native';
@@ -35,35 +34,29 @@ export function HomeScreen() {
   }
 
   const createEventRequest = async () => {
-    // Update Name field
-    if (auth.currentUser) {
-      const docRef = doc(db, 'users/', auth.currentUser.uid)
-      await updateDoc(docRef, { ["name"]: name });
-      await addDoc(collection(db, `users/${auth.currentUser.uid}/user_events`), { 
-        address,
-        startTime,
-        endTime
-      });
-
-      await addDoc(collection(db, 'events/'), {
-        consumer_id: auth.currentUser.uid,
-        name, 
-        address,
-        startTime,
-        endTime,
-        accepted: false, 
-        accepted_provider_id: null,
-      }).then(() => { console.log("added event doc")});
-      
-      setStartTime('');
-      setEndTime('');
-      setName('');
-      setAddress('');
-      setSentMessage(true);
-      switchView();
+      // Update Name field
+      if (auth.currentUser) {
+        const consRef = doc(db, 'users/', auth.currentUser.uid);
+        await updateDoc(consRef, { ["name"]: name });
+        await addDoc(collection(db, 'events/'), {
+          consumer_id: auth.currentUser.uid,
+          name, 
+          address,
+          startTime,
+          endTime,
+          accepted: false, 
+          accepted_provider_id: null,
+          interestedProviders: null
+        });
+                
+        setStartTime('');
+        setEndTime('');
+        setName('');
+        setAddress('');
+        setSentMessage(true);
+        switchView();
     }
   }
-
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>

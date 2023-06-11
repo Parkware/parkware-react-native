@@ -6,7 +6,7 @@ import {
 import { auth, db } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from '../App';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Login'>;
@@ -67,6 +67,16 @@ export function Login() {
           </TouchableOpacity>
   
           <Button title="Login" onPress={loginUser} disabled={!email || !password} />
+          <Button title="Login Consumer" onPress={() => { 
+            setEmail('naren@gmail.com')
+            setPassword('naren1234')
+            loginUser();
+          }} />
+          <Button title="Login Provider" onPress={() => { 
+            setEmail('dhanya@gmail.com')
+            setPassword('dhanya1234')
+            loginUser();
+          }} />
         </View>
       </View>
     );

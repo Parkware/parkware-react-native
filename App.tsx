@@ -10,16 +10,20 @@ import { Signup } from './screens/Signup';
 import { ResetPassword } from './screens/ResetPassword';
 import { Login } from './screens/Login';
 import { ProviderRequestsView } from './screens/ProviderRequestsView';
-import { ConsumerRequestsView } from './screens/ConsumerRequestsView';
+import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsView';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import { doc, getDoc } from 'firebase/firestore';
+import { DocumentData, doc, getDoc } from 'firebase/firestore';
+import ProviderDetailsView from './screens/ProviderDetailsView';
 
 export type ConsumerStackParams = {
   Home: undefined;
-  consumerRequestsView: undefined;
+  consumerRequestsView: any;
+  providerDetailsView: {
+    event: docDataTrio;
+  };
 }
 export type ProviderStackParams = {
   providerRequestsView: undefined;
@@ -52,31 +56,27 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
         if (user) {
-          const docRef = doc(db, 'users/', user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            console.log("Provider? ");
-            console.log(docSnap.data().provider);
-            setProvider(docSnap.data().provider);
-          }
+          const docSnap = await getDoc(doc(db, 'users/', user.uid));
+          if (docSnap.exists()) setProvider(docSnap.data().provider);
         }
     });
-      return unsubscribe;
-    }, [])
+    return unsubscribe;
+  }, [])
 
   const renderContent = () => {
     if (user) {
       if (provider) {
         return (
-        <ProviderStack.Navigator>
+          <ProviderStack.Navigator>
             <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView} />
           </ProviderStack.Navigator>
         )
       } else {
         return (
-        <ConsumerStack.Navigator>
+          <ConsumerStack.Navigator>
             <ConsumerStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
             <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="consumerRequestsView" component={ConsumerRequestsView} />
+            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="providerDetailsView" component={ProviderDetailsView} />
           </ConsumerStack.Navigator>
         )
       }

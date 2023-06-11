@@ -5,11 +5,11 @@ import {
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { doc, setDoc } from 'firebase/firestore';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { ConsumerStackParams } from '../App';
+import { useNavigation } from '@react-navigation/native';
+import { AuthStackParams } from '../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 
-type signupScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Signup'>;
+type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Signup'>;
 
 export function Signup() {
     const [email, setEmail] = useState('');
@@ -18,15 +18,6 @@ export function Signup() {
     const [error, setError] = useState('');
 
     const navigation = useNavigation<signupScreenProp>();
-
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(user => {
-        if (user) {
-          navigation.navigate('Home');
-        }
-      })
-      return unsubscribe;
-    }, [])
 
     const createAccount = async () => {
       try {

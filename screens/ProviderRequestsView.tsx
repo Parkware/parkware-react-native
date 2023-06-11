@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StatusBar, StyleSheet, Button } from 'react-native';
-import { DocumentData, DocumentReference, collection, doc, getDoc, getDocs, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { View, Text, SafeAreaView, Button, ToastAndroid } from 'react-native';
+import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
@@ -22,6 +22,7 @@ interface docDataPair {
 
 export function ProviderRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
+  
   const logout = async () => {
     try {
       await signOut(auth);
@@ -32,6 +33,7 @@ export function ProviderRequestsView() {
   
   useEffect(() => {
     try {
+      // Reading the event data and setting eventData to it. 
       const unsub = onSnapshot(collection(db, 'events'), (snapshot) => {
           const events: docDataPair[] = [];
           snapshot.docs.forEach((doc) => {          
@@ -48,54 +50,73 @@ export function ProviderRequestsView() {
     }
   }, []);
 
+  /*
+    Searching through all of the true docs and updating firebase accordingly. 
+    All these fields are local to the eventData object. 
+  */
+
   useEffect(() => {
-    // Searching through all of the true docs and updating firebase accordingly. All these fields are local to the eventData object. 
-    const doc_id_accept = eventData.find(d => d.doc.accepted === true);
+    const doc_id_accept: docDataPair[] = eventData.filter(d => d.doc.accepted === true);
     const doc_id_decline: docDataPair[] = eventData.filter(d => d.doc.accepted === false);
     
-    // need to pass in the consumer id from the doc (so rm the .id)
     if (doc_id_accept) {
-      updateDB(doc_id_accept, true);
+      doc_id_accept.map(d => updateDB(d, true));
     }
     if (doc_id_decline) {
       doc_id_decline.map(d => updateDB(d, false));
     }
   }, [eventData]);
   
-  const sendRequest = (event_addr: any, to_accept: boolean) => {
+  const sendRequest = (id: any, to_accept: boolean) => {
     setEventData(prevEventData => {
       return prevEventData.map(e => {
-        if (e.doc.address !== event_addr && e.doc.accepted) return { id: e.id, doc: { ...e.doc, accepted: false } }
-        if (e.doc.address === event_addr) return { id: e.id, doc: { ...e.doc, accepted: to_accept } };
+        // If the user is removing acceptance, I only want to change that event's value. Else if putting acceptance, I want only that event request to be selected. 
+        // if (to_accept && e.id !== id && e.doc.accepted) return { id: e.id, doc: { ...e.doc, accepted: false } }
+        if (e.id === id) return { id: e.id, doc: { ...e.doc, accepted: to_accept } };
         return e;
       });
     });
   };
   
   const updateDB = async (ddPair: docDataPair, accepted: boolean) => {
-    // const eref = doc(collection(db, 'events/'), '3fKQI195b57xW1ot8Q7W');
-    // const userSnap = await getDoc(eref);
-    // console.log(userSnap.data().name);
     const doc_id = ddPair.id;
-    const temp_curr_uid = 'RiYVE0uK3VTtPr2Z8vmWKK7gp3u2';
-    if (accepted) {
-      if (auth.currentUser) {
-        if (ddPair.doc.consumer_id != auth.currentUser.uid) {
-          const userRef = doc(db, 'users/', auth.currentUser.uid);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            await setDoc(doc(db, `events/${doc_id}/interested_providers/`, "p1"), {
-              p1_name: userSnap.data().name, 
-              p1_address: userSnap.data().address
-            });
+    const curEventRef = doc(db, 'events/', doc_id);
+    if (auth.currentUser) {
+      const currUid = auth.currentUser.uid;
+      if (accepted) {
+        if (ddPair.doc.consumer_id != currUid) {
+          const currUserRef = doc(db, 'users/', currUid);
+          const currUserSnap = await getDoc(currUserRef);
+          if (currUserSnap.exists()) {
+            let already_providing = false;
+            const eventSnap = await getDoc(curEventRef);
+            // Checking to see if the user is already signed up. 
+            // Eventually, this won't be needed since we would disable if already sent, but just to validate
+            if (eventSnap.exists()) {
+              eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
+                  if (prov.provider_id == currUid) already_providing = true
+              });
+            }
+            if (!already_providing) { 
+              await setDoc(curEventRef, {
+                interestedProviders: arrayUnion({
+                  provider_id: currUid,
+                  name: currUserSnap.data().name,
+                  address: currUserSnap.data().address
+                }),
+              }, { merge: true });
+            }
           }
         }
       }
-  }
-
-    const eventRef = doc(collection(db, 'events/'), doc_id);
-
-    await updateDoc(eventRef, { accepted });
+      /*
+      A provider may need to be able to revert their acceptance to an event request. 
+      else {
+        await deleteDoc(doc(db, "interested_providers/", auth.currentUser.uid));
+      }
+      */
+    }
+    await updateDoc(curEventRef, { accepted });
   }
   return (
     <View style={{ marginTop: 30, padding: 16 }}>
@@ -106,21 +127,23 @@ export function ProviderRequestsView() {
       
       {eventData.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
-        <Text key={event.doc.endTime}>
-          {'Name: ' + event.doc.name}
-        </Text>
-        <Text key={event.doc.address}>
-          {'Address: ' + event.doc.address}
-        </Text>
-        <Text key={event.doc.startTime}>
-          {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-        </Text>
-        <Button title='Accept' onPress={() => sendRequest(event.doc.address, true)}/>
-        <Button title='Decline' onPress={() => sendRequest(event.doc.address, false)}/>
+          <Text key={event.doc.endTime}>
+            {'Name: ' + event.doc.name}
+          </Text>
+          <Text key={event.doc.address}>
+            {'Address: ' + event.doc.address}
+          </Text>
+          <Text key={event.doc.startTime}>
+            {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
+          </Text>
+          <Text key={event.doc.accepted_provider_id}>
+            {(auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? 'Status: accepted' : 'Status: declined'}
+          </Text>
+          <Button title='Accept' onPress={() => sendRequest(event.id, true)}/>
+          <Button title='Decline' onPress={() => sendRequest(event.id, false)}/>
         </View>
       ))}
       <Button title="Log out" onPress={logout} />
-
     </SafeAreaView>
     </View>
   );

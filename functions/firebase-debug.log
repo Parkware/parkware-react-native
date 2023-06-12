@@ -1,0 +1,122 @@
+[debug] [2023-06-12T03:00:31.774Z] ----------------------------------------------------------------------
+[debug] [2023-06-12T03:00:31.776Z] Command:       /opt/homebrew/Cellar/node/20.2.0/bin/node /Users/narenmani/.npm-global/bin/firebase emulators:start
+[debug] [2023-06-12T03:00:31.776Z] CLI Version:   12.3.1
+[debug] [2023-06-12T03:00:31.776Z] Platform:      darwin
+[debug] [2023-06-12T03:00:31.776Z] Node Version:  v20.2.0
+[debug] [2023-06-12T03:00:31.776Z] Time:          Sun Jun 11 2023 23:00:31 GMT-0400 (Eastern Daylight Time)
+[debug] [2023-06-12T03:00:31.776Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-06-12T03:00:31.828Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-06-12T03:00:31.828Z] > authorizing via signed-in user (nmanikandan219@gmail.com)
+[info] i  emulators: Starting emulators: functions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions"}}
+[debug] [2023-06-12T03:00:31.991Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-12T03:00:31.991Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-06-12T03:00:31.996Z] [hub] writing locator at /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/hub-parkware1.json
+[debug] [2023-06-12T03:00:32.098Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-12T03:00:32.098Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-12T03:00:32.098Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: auth, firestore, database, hosting, pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mauth, firestore, database, hosting, pubsub, storage\u001b[22m"}}
+[debug] [2023-06-12T03:00:32.100Z] defaultcredentials: writing to file /Users/narenmani/.config/firebase/nmanikandan219_gmail_com_application_default_credentials.json
+[debug] [2023-06-12T03:00:32.107Z] Setting GAC to /Users/narenmani/.config/firebase/nmanikandan219_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /Users/narenmani/.config/firebase/nmanikandan219_gmail_com_application_default_credentials.json"}}
+[debug] [2023-06-12T03:00:32.108Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/parkware1/adminSdkConfig [none]
+[debug] [2023-06-12T03:00:32.353Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/parkware1/adminSdkConfig 200
+[debug] [2023-06-12T03:00:32.354Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/parkware1/adminSdkConfig {"projectId":"parkware1","databaseURL":"https://parkware1-default-rtdb.firebaseio.com","storageBucket":"parkware1.appspot.com","locationId":"us-central"}
+[debug] [2023-06-12T03:00:32.377Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-06-12T03:00:32.377Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-06-12T03:00:32.377Z] Starting Emulator UI with command {"binary":"node","args":["/Users/narenmani/.cache/firebase/emulators/ui-v1.11.6/server/server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/Users/narenmani/.cache/firebase/emulators/ui-v1.11.6/server/server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-06-12T03:00:32.465Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-06-12T03:00:32.465Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "/Users/narenmani/Development/parkware/parkware/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/Users/narenmani/Development/parkware/parkware/functions\" for Cloud Functions..."}}
+[debug] [2023-06-12T03:00:32.640Z] Validating nodejs source
+[debug] [2023-06-12T03:00:33.103Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-12T03:00:33.103Z] Building nodejs source
+[debug] [2023-06-12T03:00:33.103Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-12T03:00:33.105Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-12T03:00:33.109Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-12T03:00:33.207Z] Serving at port 8484
+
+[debug] [2023-06-12T03:00:33.288Z] Got response from /__/functions.yaml {"endpoints":{"helloWorld":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"helloWorld"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-12T03:00:33.292Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: helloWorld. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: helloWorld."}}
+[info] ✔  functions[us-central1-helloWorld]: http function initialized (http://127.0.0.1:5001/parkware1/us-central1/helloWorld). {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mhttp\u001b[22m function initialized (http://127.0.0.1:5001/parkware1/us-central1/helloWorld)."}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port      │ View in Emulator UI             │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Functions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+└───────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-06-12T03:00:37.704Z] [work-queue] {"queuedWork":["/parkware1/us-central1/helloWorld-2023-06-12T03:00:37.703Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2023-06-12T03:00:37.705Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/parkware1/us-central1/helloWorld-2023-06-12T03:00:37.703Z"],"workRunningCount":1}
+[debug] [2023-06-12T03:00:37.705Z] Accepted request GET /parkware1/us-central1/helloWorld --> us-central1-helloWorld
+[debug] [2023-06-12T03:00:37.712Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2023-06-12T03:00:37.713Z] [functions] Got req.url=/parkware1/us-central1/helloWorld, mapping to path=/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/parkware1/us-central1/helloWorld, mapping to path=/"}}
+[debug] [2023-06-12T03:00:37.722Z] [worker-pool] addWorker(us-central1-helloWorld) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-helloWorld)"}}
+[debug] [2023-06-12T03:00:37.723Z] [worker-pool] Adding worker with key us-central1-helloWorld, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-helloWorld, total=1"}}
+[debug] [2023-06-12T03:00:38.304Z] [runtime-status] [51150] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-12T03:00:38.304Z] [runtime-status] [51150] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-12T03:00:38.304Z] [runtime-status] [51150] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2023-06-12T03:00:38.304Z] [runtime-status] [51150] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-12T03:00:38.385Z] [runtime-status] [51150] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Checked functions.config() {\"config\":{}}"}}
+[debug] [2023-06-12T03:00:38.385Z] [runtime-status] [51150] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}}"}}
+[debug] [2023-06-12T03:00:38.385Z] [runtime-status] [51150] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-12T03:00:38.386Z] [runtime-status] [51150] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-12T03:00:38.387Z] [runtime-status] [51150] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-12T03:00:38.387Z] [runtime-status] [51150] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2023-06-12T03:00:38.392Z] [runtime-status] [51150] Functions runtime initialized. {"cwd":"/Users/narenmani/Development/parkware/parkware/functions","node_version":"20.2.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Functions runtime initialized. {\"cwd\":\"/Users/narenmani/Development/parkware/parkware/functions\",\"node_version\":\"20.2.0\"}"}}
+[debug] [2023-06-12T03:00:38.392Z] [runtime-status] [51150] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_e06feb78c73aea13.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[runtime-status] [51150] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_e06feb78c73aea13.sock"}}
+[debug] [2023-06-12T03:00:38.436Z] [worker-us-central1-helloWorld-735af53d-13aa-44d6-95db-992f65ed6434]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[worker-us-central1-helloWorld-735af53d-13aa-44d6-95db-992f65ed6434]: IDLE"}}
+[debug] [2023-06-12T03:00:38.436Z] [worker-pool] submitRequest(triggerId=us-central1-helloWorld) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-helloWorld)"}}
+[info] i  functions: Beginning execution of "us-central1-helloWorld" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"Beginning execution of \"us-central1-helloWorld\""}}
+[debug] [2023-06-12T03:00:38.436Z] [worker-us-central1-helloWorld-735af53d-13aa-44d6-95db-992f65ed6434]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[worker-us-central1-helloWorld-735af53d-13aa-44d6-95db-992f65ed6434]: BUSY"}}
+[info] >  {"structuredData":true,"severity":"INFO","message":"Hello logs!"} {"user":{"structuredData":true,"severity":"INFO","message":"Hello logs!"},"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"\u001b[90m> \u001b[39m {\"structuredData\":true,\"severity\":\"INFO\",\"message\":\"Hello logs!\"}"}}
+[debug] [2023-06-12T03:00:38.440Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-helloWorld" in 3.854375ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"Finished \"us-central1-helloWorld\" in 3.854375ms"}}
+[debug] [2023-06-12T03:00:38.441Z] [worker-us-central1-helloWorld-735af53d-13aa-44d6-95db-992f65ed6434]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"[worker-us-central1-helloWorld-735af53d-13aa-44d6-95db-992f65ed6434]: IDLE"}}
+[debug] [2023-06-12T03:00:38.441Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2023-06-12T03:00:38.441Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-helloWorld"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2023-06-12T03:00:38.441Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}

@@ -1,0 +1,1029 @@
+[debug] [2023-06-13T16:10:13.386Z] ----------------------------------------------------------------------
+[debug] [2023-06-13T16:10:13.394Z] Command:       /opt/homebrew/Cellar/node/20.2.0/bin/node /Users/narenmani/.npm-global/bin/firebase emulators:start
+[debug] [2023-06-13T16:10:13.395Z] CLI Version:   12.3.1
+[debug] [2023-06-13T16:10:13.395Z] Platform:      darwin
+[debug] [2023-06-13T16:10:13.395Z] Node Version:  v20.2.0
+[debug] [2023-06-13T16:10:13.395Z] Time:          Tue Jun 13 2023 12:10:13 GMT-0400 (Eastern Daylight Time)
+[debug] [2023-06-13T16:10:13.395Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-06-13T16:10:13.455Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-06-13T16:10:13.455Z] > authorizing via signed-in user (nmanikandan219@gmail.com)
+[debug] [2023-06-13T16:10:13.738Z] java version "17.0.6" 2023-01-17 LTS
+
+[debug] [2023-06-13T16:10:13.739Z] Java(TM) SE Runtime Environment (build 17.0.6+9-LTS-190)
+Java HotSpot(TM) 64-Bit Server VM (build 17.0.6+9-LTS-190, mixed mode, sharing)
+
+[debug] [2023-06-13T16:10:13.741Z] Parsed Java major version: 17
+[info] i  emulators: Starting emulators: functions, firestore {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions, firestore"}}
+[debug] [2023-06-13T16:10:14.023Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-13T16:10:14.023Z] [firestore] Firestore Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-13T16:10:14.023Z] [firestore.websocket] websocket server for firestore only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-13T16:10:14.023Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}]},"metadata":{"message":"assigned listening specs for emulators"}}
+[debug] [2023-06-13T16:10:14.029Z] [hub] writing locator at /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/hub-parkware1.json
+[debug] [2023-06-13T16:10:14.134Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-13T16:10:14.134Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-06-13T16:10:14.134Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"firestore":[{"address":"127.0.0.1","family":"IPv4","port":8080}],"firestore.websocket":[{"address":"127.0.0.1","family":"IPv4","port":9150}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
+[warn] ⚠  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: auth, database, hosting, pubsub, storage {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mauth, database, hosting, pubsub, storage\u001b[22m"}}
+[debug] [2023-06-13T16:10:14.136Z] defaultcredentials: writing to file /Users/narenmani/.config/firebase/nmanikandan219_gmail_com_application_default_credentials.json
+[debug] [2023-06-13T16:10:14.137Z] Setting GAC to /Users/narenmani/.config/firebase/nmanikandan219_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to /Users/narenmani/.config/firebase/nmanikandan219_gmail_com_application_default_credentials.json"}}
+[debug] [2023-06-13T16:10:14.138Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/parkware1/adminSdkConfig [none]
+[debug] [2023-06-13T16:10:14.514Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/parkware1/adminSdkConfig 200
+[debug] [2023-06-13T16:10:14.514Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/parkware1/adminSdkConfig {"projectId":"parkware1","databaseURL":"https://parkware1-default-rtdb.firebaseio.com","storageBucket":"parkware1.appspot.com","locationId":"us-central"}
+[debug] [2023-06-13T16:10:14.536Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-06-13T16:10:14.536Z] Ignoring unsupported arg: single_project_mode_error {"metadata":{"emulator":{"name":"firestore"},"message":"Ignoring unsupported arg: single_project_mode_error"}}
+[debug] [2023-06-13T16:10:14.536Z] Starting Firestore Emulator with command {"binary":"java","args":["-Dgoogle.cloud_firestore.debug_log_level=FINE","-Duser.language=en","-jar","/Users/narenmani/.cache/firebase/emulators/cloud-firestore-emulator-v1.17.4.jar","--host","127.0.0.1","--port",8080,"--websocket_port",9150,"--project_id","parkware1","--rules","/Users/narenmani/Development/parkware/parkware/firestore.rules","--single_project_mode",true,"--functions_emulator","127.0.0.1:5001"],"optionalArgs":["port","webchannel_port","host","rules","websocket_port","functions_emulator","seed_from_export","project_id","single_project_mode"],"joinArgs":false} {"metadata":{"emulator":{"name":"firestore"},"message":"Starting Firestore Emulator with command {\"binary\":\"java\",\"args\":[\"-Dgoogle.cloud_firestore.debug_log_level=FINE\",\"-Duser.language=en\",\"-jar\",\"/Users/narenmani/.cache/firebase/emulators/cloud-firestore-emulator-v1.17.4.jar\",\"--host\",\"127.0.0.1\",\"--port\",8080,\"--websocket_port\",9150,\"--project_id\",\"parkware1\",\"--rules\",\"/Users/narenmani/Development/parkware/parkware/firestore.rules\",\"--single_project_mode\",true,\"--functions_emulator\",\"127.0.0.1:5001\"],\"optionalArgs\":[\"port\",\"webchannel_port\",\"host\",\"rules\",\"websocket_port\",\"functions_emulator\",\"seed_from_export\",\"project_id\",\"single_project_mode\"],\"joinArgs\":false}"}}
+[info] i  firestore: Firestore Emulator logging to firestore-debug.log {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator logging to \u001b[1mfirestore-debug.log\u001b[22m"}}
+[debug] [2023-06-13T16:10:15.229Z] Jun 13, 2023 12:10:15 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start
+INFO: Started WebSocket server on ws://127.0.0.1:9150
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:15 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketServer start\nINFO: Started WebSocket server on ws://127.0.0.1:9150\n"}}
+[debug] [2023-06-13T16:10:15.240Z] API endpoint: http:// {"metadata":{"emulator":{"name":"firestore"},"message":"API endpoint: http://"}}
+[debug] [2023-06-13T16:10:15.241Z] 127.0.0.1:8080
+If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:
+
+   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080
+
+Dev App Server is now running.
+
+ {"metadata":{"emulator":{"name":"firestore"},"message":"127.0.0.1:8080\nIf you are using a library that supports the FIRESTORE_EMULATOR_HOST environment variable, run:\n\n   export FIRESTORE_EMULATOR_HOST=127.0.0.1:8080\n\nDev App Server is now running.\n\n"}}
+[info] ✔  firestore: Firestore Emulator UI websocket is running on 9150. {"metadata":{"emulator":{"name":"firestore"},"message":"Firestore Emulator UI websocket is running on 9150."}}
+[debug] [2023-06-13T16:10:15.302Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
+[debug] [2023-06-13T16:10:15.302Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
+[debug] [2023-06-13T16:10:15.303Z] Starting Emulator UI with command {"binary":"node","args":["/Users/narenmani/.cache/firebase/emulators/ui-v1.11.6/server/server.js"],"optionalArgs":[],"joinArgs":false} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"/Users/narenmani/.cache/firebase/emulators/ui-v1.11.6/server/server.js\"],\"optionalArgs\":[],\"joinArgs\":false}"}}
+[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
+[debug] [2023-06-13T16:10:15.370Z] Web / API server started at 127.0.0.1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
+[debug] [2023-06-13T16:10:15.370Z] Web / API server started at ::1:4000
+ {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
+[info] i  functions: Watching "/Users/narenmani/Development/parkware/parkware/functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"/Users/narenmani/Development/parkware/parkware/functions\" for Cloud Functions..."}}
+[debug] [2023-06-13T16:10:15.561Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:10:16.156Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:10:16.156Z] Building nodejs source
+[debug] [2023-06-13T16:10:16.157Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:10:16.159Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:10:16.164Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:10:16.201Z] Jun 13, 2023 12:10:16 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:16 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2023-06-13T16:10:16.322Z] Serving at port 8552
+
+[debug] [2023-06-13T16:10:16.524Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T16:10:16.527Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T16:10:16.531Z] addFirestoreTrigger "{\"eventTrigger\":{\"eventType\":\"providers/cloud.firestore/eventTypes/document.write\",\"resource\":\"projects/parkware1/databases/(default)/documents/events/{docID}\",\"service\":\"firestore.googleapis.com\"}}"
+[debug] [2023-06-13T16:10:16.532Z] >>> [apiv2][query] PUT http://127.0.0.1:8080/emulator/v1/projects/parkware1/triggers/us-central1-onMessageUpdate-0 [none]
+[debug] [2023-06-13T16:10:16.532Z] >>> [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/parkware1/triggers/us-central1-onMessageUpdate-0 "{\"eventTrigger\":{\"eventType\":\"providers/cloud.firestore/eventTypes/document.write\",\"resource\":\"projects/parkware1/databases/(default)/documents/events/{docID}\",\"service\":\"firestore.googleapis.com\"}}"
+[debug] [2023-06-13T16:10:16.535Z] Jun 13, 2023 12:10:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:16.607Z] Jun 13, 2023 12:10:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:16.828Z] <<< [apiv2][status] PUT http://127.0.0.1:8080/emulator/v1/projects/parkware1/triggers/us-central1-onMessageUpdate-0 200
+[debug] [2023-06-13T16:10:16.828Z] <<< [apiv2][body] PUT http://127.0.0.1:8080/emulator/v1/projects/parkware1/triggers/us-central1-onMessageUpdate-0 {}
+[info] ✔  functions[us-central1-onMessageUpdate]: firestore function initialized. {"metadata":{"emulator":{"name":"functions"},"message":"\u001b[1mfirestore\u001b[22m function initialized."}}
+[info] 
+┌─────────────────────────────────────────────────────────────┐
+│ ✔  All emulators ready! It is now safe to connect your app. │
+│ i  View Emulator UI at http://127.0.0.1:4000/               │
+└─────────────────────────────────────────────────────────────┘
+
+┌───────────┬────────────────┬─────────────────────────────────┐
+│ Emulator  │ Host:Port      │ View in Emulator UI             │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Functions │ 127.0.0.1:5001 │ http://127.0.0.1:4000/functions │
+├───────────┼────────────────┼─────────────────────────────────┤
+│ Firestore │ 127.0.0.1:8080 │ http://127.0.0.1:4000/firestore │
+└───────────┴────────────────┴─────────────────────────────────┘
+  Emulator Hub running at 127.0.0.1:4400
+  Other reserved ports: 4500, 9150
+
+Issues? Report them at https://github.com/firebase/firebase-tools/issues and attach the *-debug.log files.
+ 
+[debug] [2023-06-13T16:10:20.649Z] Jun 13, 2023 12:10:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:20 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:42.868Z] Jun 13, 2023 12:10:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:43.001Z] Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:43.008Z] Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:43.133Z] Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:43.210Z] Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:43.224Z] Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:43.233Z] Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:43 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:47.005Z] Jun 13, 2023 12:10:47 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:47 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\n"}}
+[debug] [2023-06-13T16:10:47.154Z] Jun 13, 2023 12:10:47 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:47 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2023-06-13T16:10:47.183Z] Jun 13, 2023 12:10:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:47.230Z] Jun 13, 2023 12:10:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:10:47.458Z] Jun 13, 2023 12:10:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:10:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:11:47.520Z] Jun 13, 2023 12:11:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:11:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:12:47.570Z] Jun 13, 2023 12:12:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:12:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:13:47.608Z] Jun 13, 2023 12:13:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:13:47 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:13:48.502Z] Jun 13, 2023 12:13:48 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:13:48 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\n"}}
+[debug] [2023-06-13T16:13:48.622Z] Jun 13, 2023 12:13:48 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:13:48 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:14:39.371Z] Jun 13, 2023 12:14:39 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:14:39 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2023-06-13T16:15:04.322Z] Jun 13, 2023 12:15:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:15:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:16:04.388Z] Jun 13, 2023 12:16:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:16:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:16:29.460Z] Jun 13, 2023 12:16:29 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+Jun 13, 2023 12:16:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:16:29 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\nJun 13, 2023 12:16:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:21:42.147Z] Jun 13, 2023 12:21:42 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:21:42 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2023-06-13T16:24:38.415Z] Jun 13, 2023 12:24:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:24:38 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:27:12.647Z] Jun 13, 2023 12:27:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:27:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:31:24.644Z] Jun 13, 2023 12:31:24 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:31:24 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:32:42.795Z] Jun 13, 2023 12:32:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:32:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:32:54.526Z] Jun 13, 2023 12:32:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:32:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:32:54.529Z] Jun 13, 2023 12:32:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:32:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:32:54.536Z] Jun 13, 2023 12:32:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:32:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:33:42.832Z] Jun 13, 2023 12:33:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:33:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:34:42.860Z] Jun 13, 2023 12:34:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:34:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:35:42.889Z] Jun 13, 2023 12:35:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:35:42 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:36:58.581Z] Jun 13, 2023 12:36:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:36:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:37:58.610Z] Jun 13, 2023 12:37:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:37:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:38:58.632Z] Jun 13, 2023 12:38:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:38:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:39:58.665Z] Jun 13, 2023 12:39:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:39:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:40:58.702Z] Jun 13, 2023 12:40:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:40:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:41:40.164Z] Jun 13, 2023 12:41:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 13, 2023 12:41:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 13, 2023 12:41:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:41:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\nJun 13, 2023 12:41:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\nJun 13, 2023 12:41:40 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:41:58.742Z] Jun 13, 2023 12:41:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:41:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:42:58.767Z] Jun 13, 2023 12:42:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:42:58 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:11.111Z] Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:11.124Z] Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:11.130Z] Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:11.181Z] Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:11.251Z] [work-queue] {"queuedWork":["/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0-2023-06-13T16:43:11.251Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2023-06-13T16:43:11.252Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0-2023-06-13T16:43:11.251Z"],"workRunningCount":1}
+[debug] [2023-06-13T16:43:11.253Z] Accepted request POST /functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0 --> us-central1-onMessageUpdate-0
+[debug] [2023-06-13T16:43:11.277Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2023-06-13T16:43:11.278Z] [functions] Got req.url=/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0, mapping to path=/functions/projects/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0, mapping to path=/functions/projects/"}}
+[debug] [2023-06-13T16:43:11.291Z] [worker-pool] addWorker(us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-onMessageUpdate)"}}
+[debug] [2023-06-13T16:43:11.292Z] [worker-pool] Adding worker with key us-central1-onMessageUpdate, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-onMessageUpdate, total=1"}}
+[debug] [2023-06-13T16:43:11.292Z] Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:12.007Z] [runtime-status] [30510] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-13T16:43:12.008Z] [runtime-status] [30510] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:43:12.008Z] [runtime-status] [30510] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2023-06-13T16:43:12.008Z] [runtime-status] [30510] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:43:12.166Z] [runtime-status] [30510] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Checked functions.config() {\"config\":{}}"}}
+[debug] [2023-06-13T16:43:12.166Z] [runtime-status] [30510] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}}"}}
+[debug] [2023-06-13T16:43:12.166Z] [runtime-status] [30510] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:43:12.166Z] [runtime-status] [30510] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-13T16:43:12.169Z] [runtime-status] [30510] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:43:12.169Z] [runtime-status] [30510] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2023-06-13T16:43:12.176Z] [runtime-status] [30510] Functions runtime initialized. {"cwd":"/Users/narenmani/Development/parkware/parkware/functions","node_version":"20.2.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Functions runtime initialized. {\"cwd\":\"/Users/narenmani/Development/parkware/parkware/functions\",\"node_version\":\"20.2.0\"}"}}
+[debug] [2023-06-13T16:43:12.176Z] [runtime-status] [30510] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_75c1b98e370ce38c.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_75c1b98e370ce38c.sock"}}
+[debug] [2023-06-13T16:43:12.208Z] [worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: IDLE"}}
+[debug] [2023-06-13T16:43:12.208Z] [worker-pool] submitRequest(triggerId=us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-onMessageUpdate)"}}
+[info] i  functions: Beginning execution of "us-central1-onMessageUpdate" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Beginning execution of \"us-central1-onMessageUpdate\""}}
+[debug] [2023-06-13T16:43:12.209Z] [worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: BUSY"}}
+[debug] [2023-06-13T16:43:12.220Z] [runtime-status] [30510] ProcessBackground: lifting resource.name from resource {"name":"projects/parkware1/databases/(default)/documents/events/event_01","service":"firestore.googleapis.com"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] ProcessBackground: lifting resource.name from resource {\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"service\":\"firestore.googleapis.com\"}"}}
+[debug] [2023-06-13T16:43:12.221Z] [runtime-status] [30510] RunBackground {"data":{"value":{"name":"projects/parkware1/databases/(default)/documents/events/event_01","fields":{"accepted_id":{"stringValue":"some_id"}},"createTime":"2023-06-13T16:43:11.138433Z","updateTime":"2023-06-13T16:43:11.138433Z"},"updateMask":{}},"context":{"eventId":"56f0a4c2-9103-42ef-bb3f-6b84aa247e6f","timestamp":"2023-06-13T16:43:11.138Z","eventType":"providers/cloud.firestore/eventTypes/document.write","resource":"projects/parkware1/databases/(default)/documents/events/event_01"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [30510] RunBackground {\"data\":{\"value\":{\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"fields\":{\"accepted_id\":{\"stringValue\":\"some_id\"}},\"createTime\":\"2023-06-13T16:43:11.138433Z\",\"updateTime\":\"2023-06-13T16:43:11.138433Z\"},\"updateMask\":{}},\"context\":{\"eventId\":\"56f0a4c2-9103-42ef-bb3f-6b84aa247e6f\",\"timestamp\":\"2023-06-13T16:43:11.138Z\",\"eventType\":\"providers/cloud.firestore/eventTypes/document.write\",\"resource\":\"projects/parkware1/databases/(default)/documents/events/event_01\"}}"}}
+[info] >  some_id {"user":"some_id","metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"\u001b[90m> \u001b[39m some_id"}}
+[debug] [2023-06-13T16:43:12.555Z] Jun 13, 2023 12:43:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:12 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:12.581Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-onMessageUpdate" in 372.000583ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finished \"us-central1-onMessageUpdate\" in 372.000583ms"}}
+[debug] [2023-06-13T16:43:12.582Z] [worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: IDLE"}}
+[debug] [2023-06-13T16:43:12.582Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2023-06-13T16:43:12.582Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2023-06-13T16:43:12.582Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2023-06-13T16:43:13.748Z] Jun 13, 2023 12:43:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:13 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:16.618Z] Jun 13, 2023 12:43:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:16 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:43:46.641Z] Jun 13, 2023 12:43:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:43:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:44:11.191Z] Jun 13, 2023 12:44:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:44:11 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:44:11.196Z] Jun 13, 2023 12:44:11 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+INFO: channel closed
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:44:11 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose\nINFO: channel closed\n"}}
+[debug] [2023-06-13T16:44:46.671Z] Jun 13, 2023 12:44:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:44:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:45:46.702Z] Jun 13, 2023 12:45:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:45:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:46:46.757Z] Jun 13, 2023 12:46:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:46:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:47:45.423Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:47:46.426Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:47:47.111Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:47:47.111Z] Building nodejs source
+[debug] [2023-06-13T16:47:47.111Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:47:47.112Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:47:47.113Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:47:47.115Z] Jun 13, 2023 12:47:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:47:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:47:47.267Z] Serving at port 8656
+
+[debug] [2023-06-13T16:47:47.273Z] Got response from /__/functions.yaml Failed to generate manifest from function source: SyntaxError: Unexpected token 'return'
+[debug] [2023-06-13T16:47:47.274Z] Failed to parse functions.yaml incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:
+     ... rom function source: SyntaxError: Unexpected token 'return'
+                                         ^ {"name":"YAMLException","reason":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line","mark":{"name":null,"buffer":"Failed to generate manifest from function source: SyntaxError: Unexpected token 'return'\n\u0000","position":61,"line":0,"column":61},"message":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:\n     ... rom function source: SyntaxError: Unexpected token 'return'\n                                         ^"}
+[debug] [2023-06-13T16:47:47.276Z] shutdown requested via /__/quitquitquit
+
+[error] ⬢  functions: Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected token 'return' {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected token 'return'"}}
+[debug] [2023-06-13T16:47:48.583Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:47:49.602Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:47:49.985Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:47:49.985Z] Building nodejs source
+[debug] [2023-06-13T16:47:49.985Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:47:49.986Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:47:49.987Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:47:50.070Z] Serving at port 8434
+
+[debug] [2023-06-13T16:47:50.076Z] Got response from /__/functions.yaml Failed to generate manifest from function source: SyntaxError: Unexpected identifier 'getFirestore'
+[debug] [2023-06-13T16:47:50.076Z] Failed to parse functions.yaml incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:
+     ... rom function source: SyntaxError: Unexpected identifier 'getFire ... 
+                                         ^ {"name":"YAMLException","reason":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line","mark":{"name":null,"buffer":"Failed to generate manifest from function source: SyntaxError: Unexpected identifier 'getFirestore'\n\u0000","position":61,"line":0,"column":61},"message":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:\n     ... rom function source: SyntaxError: Unexpected identifier 'getFire ... \n                                         ^"}
+[debug] [2023-06-13T16:47:50.077Z] shutdown requested via /__/quitquitquit
+
+[error] ⬢  functions: Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected identifier 'getFirestore' {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected identifier 'getFirestore'"}}
+[debug] [2023-06-13T16:47:51.400Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:47:52.403Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:47:52.946Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:47:52.946Z] Building nodejs source
+[debug] [2023-06-13T16:47:52.946Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:47:52.946Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:47:52.947Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:47:53.046Z] Serving at port 8516
+
+[debug] [2023-06-13T16:47:53.208Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T16:47:53.211Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T16:47:53.217Z] [worker-pool] Shutting down IDLE worker (us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-onMessageUpdate)"}}
+[debug] [2023-06-13T16:47:53.217Z] [worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: FINISHING"}}
+[debug] [2023-06-13T16:47:53.227Z] [worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: exited"}}
+[debug] [2023-06-13T16:47:53.227Z] [worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4655ff62-db41-4d4f-9b23-774ef3cdc08d]: FINISHED"}}
+[debug] [2023-06-13T16:47:55.160Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:47:56.163Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:47:56.520Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:47:56.520Z] Building nodejs source
+[debug] [2023-06-13T16:47:56.520Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:47:56.521Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:47:56.522Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:47:56.597Z] Serving at port 8332
+
+[debug] [2023-06-13T16:47:56.603Z] Got response from /__/functions.yaml Failed to generate manifest from function source: SyntaxError: Invalid or unexpected token
+[debug] [2023-06-13T16:47:56.608Z] Failed to parse functions.yaml incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:
+     ... rom function source: SyntaxError: Invalid or unexpected token
+                                         ^ {"name":"YAMLException","reason":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line","mark":{"name":null,"buffer":"Failed to generate manifest from function source: SyntaxError: Invalid or unexpected token\n\u0000","position":61,"line":0,"column":61},"message":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:\n     ... rom function source: SyntaxError: Invalid or unexpected token\n                                         ^"}
+[debug] [2023-06-13T16:47:56.611Z] shutdown requested via /__/quitquitquit
+
+[error] ⬢  functions: Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Invalid or unexpected token {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Invalid or unexpected token"}}
+[debug] [2023-06-13T16:47:59.144Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:48:00.151Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:48:00.576Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:48:00.576Z] Building nodejs source
+[debug] [2023-06-13T16:48:00.576Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:48:00.577Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:48:00.578Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:48:00.667Z] Serving at port 8166
+
+[debug] [2023-06-13T16:48:00.904Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T16:48:00.906Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T16:48:07.950Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:48:08.953Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:48:09.347Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:48:09.347Z] Building nodejs source
+[debug] [2023-06-13T16:48:09.347Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:48:09.348Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:48:09.350Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:48:09.431Z] Serving at port 8977
+
+[debug] [2023-06-13T16:48:09.562Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T16:48:09.564Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T16:48:43.253Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:48:44.255Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:48:44.780Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:48:44.781Z] Building nodejs source
+[debug] [2023-06-13T16:48:44.781Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:48:44.781Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:48:44.782Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:48:44.903Z] Serving at port 8846
+
+[debug] [2023-06-13T16:48:45.075Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T16:48:45.077Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T16:48:46.814Z] Jun 13, 2023 12:48:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:48:46 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:48:49.291Z] Jun 13, 2023 12:48:49 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:48:49 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:48:54.554Z] Jun 13, 2023 12:48:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:48:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:48:54.569Z] Jun 13, 2023 12:48:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:48:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:48:54.574Z] Jun 13, 2023 12:48:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:48:54 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:48:54.603Z] [work-queue] {"queuedWork":["/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0-2023-06-13T16:48:54.603Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2023-06-13T16:48:54.603Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0-2023-06-13T16:48:54.603Z"],"workRunningCount":1}
+[debug] [2023-06-13T16:48:54.603Z] Accepted request POST /functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0 --> us-central1-onMessageUpdate-0
+[debug] [2023-06-13T16:48:54.610Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2023-06-13T16:48:54.610Z] [functions] Got req.url=/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0, mapping to path=/functions/projects/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0, mapping to path=/functions/projects/"}}
+[debug] [2023-06-13T16:48:54.610Z] [worker-pool] Cleaned up workers for us-central1-onMessageUpdate: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-onMessageUpdate: 1 --> 0"}}
+[debug] [2023-06-13T16:48:54.613Z] [worker-pool] addWorker(us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-onMessageUpdate)"}}
+[debug] [2023-06-13T16:48:54.614Z] [worker-pool] Adding worker with key us-central1-onMessageUpdate, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-onMessageUpdate, total=1"}}
+[debug] [2023-06-13T16:48:55.299Z] [runtime-status] [31011] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-13T16:48:55.299Z] [runtime-status] [31011] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:48:55.299Z] [runtime-status] [31011] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2023-06-13T16:48:55.300Z] [runtime-status] [31011] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:48:55.427Z] [runtime-status] [31011] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Checked functions.config() {\"config\":{}}"}}
+[debug] [2023-06-13T16:48:55.427Z] [runtime-status] [31011] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}}"}}
+[debug] [2023-06-13T16:48:55.427Z] [runtime-status] [31011] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:48:55.428Z] [runtime-status] [31011] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-13T16:48:55.431Z] [runtime-status] [31011] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:48:55.431Z] [runtime-status] [31011] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2023-06-13T16:48:55.437Z] [runtime-status] [31011] Functions runtime initialized. {"cwd":"/Users/narenmani/Development/parkware/parkware/functions","node_version":"20.2.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Functions runtime initialized. {\"cwd\":\"/Users/narenmani/Development/parkware/parkware/functions\",\"node_version\":\"20.2.0\"}"}}
+[debug] [2023-06-13T16:48:55.437Z] [runtime-status] [31011] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_ba0f4940cfdac60b.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_ba0f4940cfdac60b.sock"}}
+[debug] [2023-06-13T16:48:55.530Z] [worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: IDLE"}}
+[debug] [2023-06-13T16:48:55.530Z] [worker-pool] submitRequest(triggerId=us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-onMessageUpdate)"}}
+[info] i  functions: Beginning execution of "us-central1-onMessageUpdate" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Beginning execution of \"us-central1-onMessageUpdate\""}}
+[debug] [2023-06-13T16:48:55.531Z] [worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: BUSY"}}
+[debug] [2023-06-13T16:48:55.541Z] [runtime-status] [31011] ProcessBackground: lifting resource.name from resource {"name":"projects/parkware1/databases/(default)/documents/events/event_01","service":"firestore.googleapis.com"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] ProcessBackground: lifting resource.name from resource {\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"service\":\"firestore.googleapis.com\"}"}}
+[debug] [2023-06-13T16:48:55.541Z] [runtime-status] [31011] RunBackground {"data":{"value":{"name":"projects/parkware1/databases/(default)/documents/events/event_01","fields":{"accepted_id":{"stringValue":"another_id"}},"createTime":"2023-06-13T16:43:11.138433Z","updateTime":"2023-06-13T16:48:54.594558Z"},"oldValue":{"name":"projects/parkware1/databases/(default)/documents/events/event_01","fields":{"accepted_id":{"stringValue":"some_id"}},"createTime":"2023-06-13T16:43:11.138433Z","updateTime":"2023-06-13T16:43:11.138433Z"},"updateMask":{}},"context":{"eventId":"3eb5fe9d-13f0-41e8-a512-bb4d91bf56a6","timestamp":"2023-06-13T16:48:54.594Z","eventType":"providers/cloud.firestore/eventTypes/document.write","resource":"projects/parkware1/databases/(default)/documents/events/event_01"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31011] RunBackground {\"data\":{\"value\":{\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"fields\":{\"accepted_id\":{\"stringValue\":\"another_id\"}},\"createTime\":\"2023-06-13T16:43:11.138433Z\",\"updateTime\":\"2023-06-13T16:48:54.594558Z\"},\"oldValue\":{\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"fields\":{\"accepted_id\":{\"stringValue\":\"some_id\"}},\"createTime\":\"2023-06-13T16:43:11.138433Z\",\"updateTime\":\"2023-06-13T16:43:11.138433Z\"},\"updateMask\":{}},\"context\":{\"eventId\":\"3eb5fe9d-13f0-41e8-a512-bb4d91bf56a6\",\"timestamp\":\"2023-06-13T16:48:54.594Z\",\"eventType\":\"providers/cloud.firestore/eventTypes/document.write\",\"resource\":\"projects/parkware1/databases/(default)/documents/events/event_01\"}}"}}
+[warn] ⚠  functions: ReferenceError: docID is not defined
+    at /Users/narenmani/Development/parkware/parkware/functions/lib/index.js:15:98
+    at cloudFunction (/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/cloud-functions.js:79:23)
+    at /Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:518:16
+    at runFunction (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:15)
+    at runBackground (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:517:11)
+    at processBackground (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:501:11)
+    at /Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:689:27
+    at Layer.handle [as handle_request] (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:144:13)
+    at next (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:140:7) {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"ReferenceError: docID is not defined\n    at /Users/narenmani/Development/parkware/parkware/functions/lib/index.js:15:98\n    at cloudFunction (/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/cloud-functions.js:79:23)\n    at /Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:518:16\n    at runFunction (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:506:15)\n    at runBackground (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:517:11)\n    at processBackground (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:501:11)\n    at /Users/narenmani/.npm-global/lib/node_modules/firebase-tools/lib/emulator/functionsEmulatorRuntime.js:689:27\n    at Layer.handle [as handle_request] (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:144:13)\n    at next (/Users/narenmani/.npm-global/lib/node_modules/firebase-tools/node_modules/express/lib/router/route.js:140:7)"}}
+[warn] ⚠  Your function was killed because it raised an unhandled error. {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Your function was killed because it raised an unhandled error."}}
+[error] i  Request to function failed: Error: socket hang up {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Request to function failed: Error: socket hang up"}}
+[debug] [2023-06-13T16:48:55.548Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2023-06-13T16:48:55.549Z] [worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: exited"}}
+[debug] [2023-06-13T16:48:55.549Z] [worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-68596595-c3d0-47b0-8fe6-daab50fe1369]: FINISHED"}}
+[debug] [2023-06-13T16:48:55.552Z] Jun 13, 2023 12:48:55 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest
+WARNING: Unsuccessful HTTP response when publishing event for projects/parkware1/triggers/us-central1-onMessageUpdate-0: 500 Internal Server Error
+POST http://127.0.0.1:5001/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0
+{"code":"ECONNRESET"}
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:48:55 PM com.google.cloud.datastore.emulator.impl.events.FunctionsEmulatorEventPublisher sendHttpRequest\nWARNING: Unsuccessful HTTP response when publishing event for projects/parkware1/triggers/us-central1-onMessageUpdate-0: 500 Internal Server Error\nPOST http://127.0.0.1:5001/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0\n{\"code\":\"ECONNRESET\"}\n"}}
+[debug] [2023-06-13T16:49:00.110Z] Jun 13, 2023 12:49:00 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed
+INFO: Websocket client disconnected
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:00 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler channelClosed\nINFO: Websocket client disconnected\n"}}
+[debug] [2023-06-13T16:49:00.209Z] Jun 13, 2023 12:49:00 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel
+INFO: Connected to new websocket client
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:00 PM com.google.cloud.datastore.emulator.firestore.websocket.WebSocketChannelHandler initChannel\nINFO: Connected to new websocket client\n"}}
+[debug] [2023-06-13T16:49:00.226Z] Jun 13, 2023 12:49:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:00.282Z] Jun 13, 2023 12:49:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:00.489Z] Jun 13, 2023 12:49:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:00 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:01.967Z] Jun 13, 2023 12:49:01 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:01 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:02.007Z] Jun 13, 2023 12:49:02 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:02 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:14.371Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:49:15.374Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:49:15.900Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:49:15.901Z] Building nodejs source
+[debug] [2023-06-13T16:49:15.901Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:49:15.902Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T16:49:15.902Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:49:15.903Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:49:16.014Z] Serving at port 8285
+
+[debug] [2023-06-13T16:49:16.146Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T16:49:16.149Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T16:49:16.904Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T16:49:17.280Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T16:49:17.280Z] Building nodejs source
+[debug] [2023-06-13T16:49:17.280Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T16:49:17.280Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T16:49:17.281Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T16:49:17.377Z] Serving at port 8786
+
+[debug] [2023-06-13T16:49:17.461Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T16:49:17.463Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T16:49:19.656Z] Jun 13, 2023 12:49:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:19 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:29.035Z] Jun 13, 2023 12:49:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:29.058Z] Jun 13, 2023 12:49:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:29.064Z] Jun 13, 2023 12:49:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:29.080Z] [work-queue] {"queuedWork":["/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0-2023-06-13T16:49:29.080Z"],"queueLength":1,"runningWork":[],"workRunningCount":0}
+[debug] [2023-06-13T16:49:29.081Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":["/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0-2023-06-13T16:49:29.080Z"],"workRunningCount":1}
+[debug] [2023-06-13T16:49:29.081Z] Accepted request POST /functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0 --> us-central1-onMessageUpdate-0
+[debug] [2023-06-13T16:49:29.086Z] [functions] Runtime ready! Sending request! {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Runtime ready! Sending request!"}}
+[debug] [2023-06-13T16:49:29.086Z] [functions] Got req.url=/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0, mapping to path=/functions/projects/ {"metadata":{"emulator":{"name":"functions"},"message":"[functions] Got req.url=/functions/projects/parkware1/triggers/us-central1-onMessageUpdate-0, mapping to path=/functions/projects/"}}
+[debug] [2023-06-13T16:49:29.087Z] [worker-pool] Cleaned up workers for us-central1-onMessageUpdate: 1 --> 0 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Cleaned up workers for us-central1-onMessageUpdate: 1 --> 0"}}
+[debug] [2023-06-13T16:49:29.089Z] [worker-pool] addWorker(us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] addWorker(us-central1-onMessageUpdate)"}}
+[debug] [2023-06-13T16:49:29.089Z] [worker-pool] Adding worker with key us-central1-onMessageUpdate, total=1 {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Adding worker with key us-central1-onMessageUpdate, total=1"}}
+[debug] [2023-06-13T16:49:29.697Z] [runtime-status] [31092] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-13T16:49:29.698Z] [runtime-status] [31092] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:49:29.698Z] [runtime-status] [31092] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Outgoing network have been stubbed. [{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"http\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"https\",\"status\":\"mocked\"},{\"name\":\"net\",\"status\":\"mocked\"}]"}}
+[debug] [2023-06-13T16:49:29.698Z] [runtime-status] [31092] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:49:29.846Z] [runtime-status] [31092] Checked functions.config() {"config":{}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Checked functions.config() {\"config\":{}}"}}
+[debug] [2023-06-13T16:49:29.846Z] [runtime-status] [31092] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] firebase-functions has been stubbed. {\"functionsResolution\":{\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}}"}}
+[debug] [2023-06-13T16:49:29.846Z] [runtime-status] [31092] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:49:29.848Z] [runtime-status] [31092] Resolved module firebase-admin {"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Resolved module firebase-admin {\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}"}}
+[debug] [2023-06-13T16:49:29.849Z] [runtime-status] [31092] Resolved module firebase-functions {"declared":true,"installed":true,"version":"4.4.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Resolved module firebase-functions {\"declared\":true,\"installed\":true,\"version\":\"4.4.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-functions/lib/v1/index.js\"}"}}
+[debug] [2023-06-13T16:49:29.849Z] [runtime-status] [31092] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"11.9.0","resolution":"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] firebase-admin has been stubbed. {\"adminResolution\":{\"declared\":true,\"installed\":true,\"version\":\"11.9.0\",\"resolution\":\"/Users/narenmani/Development/parkware/parkware/functions/node_modules/firebase-admin/lib/index.js\"}}"}}
+[debug] [2023-06-13T16:49:29.855Z] [runtime-status] [31092] Functions runtime initialized. {"cwd":"/Users/narenmani/Development/parkware/parkware/functions","node_version":"20.2.0"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Functions runtime initialized. {\"cwd\":\"/Users/narenmani/Development/parkware/parkware/functions\",\"node_version\":\"20.2.0\"}"}}
+[debug] [2023-06-13T16:49:29.855Z] [runtime-status] [31092] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_588415c80d5bd144.sock {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] Listening to port: /var/folders/l4/m_qrjcs10x738zhj3xpjcld80000gn/T/fire_emu_588415c80d5bd144.sock"}}
+[debug] [2023-06-13T16:49:29.901Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: IDLE"}}
+[debug] [2023-06-13T16:49:29.901Z] [worker-pool] submitRequest(triggerId=us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] submitRequest(triggerId=us-central1-onMessageUpdate)"}}
+[info] i  functions: Beginning execution of "us-central1-onMessageUpdate" {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Beginning execution of \"us-central1-onMessageUpdate\""}}
+[debug] [2023-06-13T16:49:29.901Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: BUSY {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: BUSY"}}
+[debug] [2023-06-13T16:49:29.909Z] [runtime-status] [31092] ProcessBackground: lifting resource.name from resource {"name":"projects/parkware1/databases/(default)/documents/events/event_01","service":"firestore.googleapis.com"} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] ProcessBackground: lifting resource.name from resource {\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"service\":\"firestore.googleapis.com\"}"}}
+[debug] [2023-06-13T16:49:29.909Z] [runtime-status] [31092] RunBackground {"data":{"value":{"name":"projects/parkware1/databases/(default)/documents/events/event_01","fields":{"accepted_id":{"stringValue":"id1"}},"createTime":"2023-06-13T16:43:11.138433Z","updateTime":"2023-06-13T16:49:29.069691Z"},"oldValue":{"name":"projects/parkware1/databases/(default)/documents/events/event_01","fields":{"accepted_id":{"stringValue":"another_id"}},"createTime":"2023-06-13T16:43:11.138433Z","updateTime":"2023-06-13T16:48:54.594558Z"},"updateMask":{}},"context":{"eventId":"5229987d-3192-42c8-b171-1c4500c41c41","timestamp":"2023-06-13T16:49:29.069Z","eventType":"providers/cloud.firestore/eventTypes/document.write","resource":"projects/parkware1/databases/(default)/documents/events/event_01"}} {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[runtime-status] [31092] RunBackground {\"data\":{\"value\":{\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"fields\":{\"accepted_id\":{\"stringValue\":\"id1\"}},\"createTime\":\"2023-06-13T16:43:11.138433Z\",\"updateTime\":\"2023-06-13T16:49:29.069691Z\"},\"oldValue\":{\"name\":\"projects/parkware1/databases/(default)/documents/events/event_01\",\"fields\":{\"accepted_id\":{\"stringValue\":\"another_id\"}},\"createTime\":\"2023-06-13T16:43:11.138433Z\",\"updateTime\":\"2023-06-13T16:48:54.594558Z\"},\"updateMask\":{}},\"context\":{\"eventId\":\"5229987d-3192-42c8-b171-1c4500c41c41\",\"timestamp\":\"2023-06-13T16:49:29.069Z\",\"eventType\":\"providers/cloud.firestore/eventTypes/document.write\",\"resource\":\"projects/parkware1/databases/(default)/documents/events/event_01\"}}"}}
+[debug] [2023-06-13T16:49:30.070Z] Jun 13, 2023 12:49:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:30 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:30.081Z] Finishing up request with event=pause {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finishing up request with event=pause"}}
+[info] i  functions: Finished "us-central1-onMessageUpdate" in 179.395ms {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finished \"us-central1-onMessageUpdate\" in 179.395ms"}}
+[debug] [2023-06-13T16:49:30.081Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: IDLE {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: IDLE"}}
+[debug] [2023-06-13T16:49:30.081Z] Finishing up request with event=finish {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finishing up request with event=finish"}}
+[debug] [2023-06-13T16:49:30.081Z] Finishing up request with event=close {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"Finishing up request with event=close"}}
+[debug] [2023-06-13T16:49:30.081Z] [work-queue] {"queuedWork":[],"queueLength":0,"runningWork":[],"workRunningCount":0}
+[debug] [2023-06-13T16:49:32.437Z] Jun 13, 2023 12:49:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:49:33.227Z] Jun 13, 2023 12:49:33 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:49:33 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:50:03.260Z] Jun 13, 2023 12:50:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:50:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:50:29.112Z] Jun 13, 2023 12:50:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:50:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:50:29.570Z] Jun 13, 2023 12:50:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:50:29 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:50:29.574Z] Jun 13, 2023 12:50:29 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose
+INFO: channel closed
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:50:29 PM com.google.cloud.datastore.emulator.firestore.webchannel.FirestoreV1WebChannelAdapter$FirestoreWriteHandler onClose\nINFO: channel closed\n"}}
+[debug] [2023-06-13T16:51:03.304Z] Jun 13, 2023 12:51:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:51:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:52:03.341Z] Jun 13, 2023 12:52:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:52:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:53:03.410Z] Jun 13, 2023 12:53:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:53:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:54:03.468Z] Jun 13, 2023 12:54:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:54:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:54:37.324Z] Jun 13, 2023 12:54:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 13, 2023 12:54:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:54:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\nJun 13, 2023 12:54:37 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:55:03.510Z] Jun 13, 2023 12:55:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:55:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:56:03.558Z] Jun 13, 2023 12:56:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:56:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:57:03.627Z] Jun 13, 2023 12:57:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:57:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:58:03.679Z] Jun 13, 2023 12:58:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:58:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T16:59:03.714Z] Jun 13, 2023 12:59:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 12:59:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:00:03.764Z] Jun 13, 2023 1:00:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:00:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:01:03.822Z] Jun 13, 2023 1:01:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:01:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:02:03.848Z] Jun 13, 2023 1:02:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:02:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:02:24.827Z] File /Users/narenmani/Development/parkware/parkware/functions/src/index.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/src/index.ts changed, reloading triggers"}}
+[debug] [2023-06-13T17:02:25.837Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:02:27.109Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:02:27.109Z] Building nodejs source
+[debug] [2023-06-13T17:02:27.109Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:02:27.110Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:02:27.111Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:02:27.237Z] Serving at port 8661
+
+[debug] [2023-06-13T17:02:27.404Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:02:27.414Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:02:27.418Z] [worker-pool] Shutting down IDLE worker (us-central1-onMessageUpdate) {"metadata":{"emulator":{"name":"functions"},"message":"[worker-pool] Shutting down IDLE worker (us-central1-onMessageUpdate)"}}
+[debug] [2023-06-13T17:02:27.418Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHING"}}
+[debug] [2023-06-13T17:02:27.422Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: exited"}}
+[debug] [2023-06-13T17:02:27.422Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHED"}}

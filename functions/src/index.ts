@@ -12,6 +12,6 @@ export const onMessageUpdate = functions.firestore.document("/events/{docID}")
 .onWrite(async (change: any, context: any) => {
     const after = change.after.data();
     const d = after.accepted_id;
-    console.log(d);
-    return db.doc(`/users/${d}`).set({ dummy_message: "You were accepted for event {docID}" });
+    const event_id = context.params.docID;
+    return db.doc(`/users/${d}`).set({ accepted_events: event_id });
 })

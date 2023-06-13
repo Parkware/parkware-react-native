@@ -1027,3 +1027,544 @@ INFO: Detected non-HTTP/2 connection.
 [debug] [2023-06-13T17:02:27.418Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHING {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHING"}}
 [debug] [2023-06-13T17:02:27.422Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: exited {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: exited"}}
 [debug] [2023-06-13T17:02:27.422Z] [worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHED {"metadata":{"emulator":{"name":"functions"},"function":{"name":"us-central1-onMessageUpdate"},"extension":{},"message":"[worker-us-central1-onMessageUpdate-4a3ced01-aee5-49cd-bfde-9ff831081108]: FINISHED"}}
+[debug] [2023-06-13T17:03:03.879Z] Jun 13, 2023 1:03:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:03:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:04:03.937Z] Jun 13, 2023 1:04:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:04:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:05:03.990Z] Jun 13, 2023 1:05:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:05:03 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:06:04.034Z] Jun 13, 2023 1:06:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:06:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:07:04.099Z] Jun 13, 2023 1:07:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:07:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:08:04.138Z] Jun 13, 2023 1:08:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:08:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:09:04.184Z] Jun 13, 2023 1:09:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:09:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:10:04.234Z] Jun 13, 2023 1:10:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:10:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:10:22.725Z] Jun 13, 2023 1:10:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 13, 2023 1:10:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 13, 2023 1:10:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:10:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\nJun 13, 2023 1:10:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\nJun 13, 2023 1:10:22 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:10:32.782Z] Jun 13, 2023 1:10:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:10:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:10:32.783Z] Jun 13, 2023 1:10:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+Jun 13, 2023 1:10:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:10:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\nJun 13, 2023 1:10:32 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:11:04.266Z] Jun 13, 2023 1:11:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:11:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:11:15.755Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:16.769Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:17.441Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:17.441Z] Building nodejs source
+[debug] [2023-06-13T17:11:17.442Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:17.442Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:17.443Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:17.585Z] Serving at port 8912
+
+[debug] [2023-06-13T17:11:17.778Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:11:17.781Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:11:21.106Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:22.109Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:22.501Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:22.501Z] Building nodejs source
+[debug] [2023-06-13T17:11:22.501Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:22.502Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:22.503Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:22.694Z] Serving at port 8103
+
+[debug] [2023-06-13T17:11:22.776Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:11:22.778Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:11:22.871Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:23.873Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:24.225Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:24.225Z] Building nodejs source
+[debug] [2023-06-13T17:11:24.225Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:24.225Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:24.226Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:24.304Z] Serving at port 8435
+
+[debug] [2023-06-13T17:11:24.389Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:11:24.390Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:11:32.547Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:33.551Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:34.034Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:34.034Z] Building nodejs source
+[debug] [2023-06-13T17:11:34.034Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:34.035Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:34.036Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:34.155Z] Serving at port 8383
+
+[debug] [2023-06-13T17:11:34.288Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:11:34.291Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:11:38.968Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:39.973Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:40.447Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:40.447Z] Building nodejs source
+[debug] [2023-06-13T17:11:40.447Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:40.448Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:40.448Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:40.449Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:40.570Z] Serving at port 8755
+
+[debug] [2023-06-13T17:11:40.676Z] Got response from /__/functions.yaml Failed to generate manifest from function source: SyntaxError: Unexpected token '{'
+[debug] [2023-06-13T17:11:40.677Z] Failed to parse functions.yaml incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:
+     ... rom function source: SyntaxError: Unexpected token '{'
+                                         ^ {"name":"YAMLException","reason":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line","mark":{"name":null,"buffer":"Failed to generate manifest from function source: SyntaxError: Unexpected token '{'\n\u0000","position":61,"line":0,"column":61},"message":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:\n     ... rom function source: SyntaxError: Unexpected token '{'\n                                         ^"}
+[debug] [2023-06-13T17:11:40.679Z] shutdown requested via /__/quitquitquit
+
+[error] ⬢  functions: Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected token '{' {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected token '{'"}}
+[debug] [2023-06-13T17:11:41.449Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:41.950Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:41.950Z] Building nodejs source
+[debug] [2023-06-13T17:11:41.950Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:41.951Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:41.952Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:42.036Z] Serving at port 8366
+
+[debug] [2023-06-13T17:11:42.041Z] Got response from /__/functions.yaml Failed to generate manifest from function source: SyntaxError: Unexpected token '{'
+[debug] [2023-06-13T17:11:42.041Z] Failed to parse functions.yaml incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:
+     ... rom function source: SyntaxError: Unexpected token '{'
+                                         ^ {"name":"YAMLException","reason":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line","mark":{"name":null,"buffer":"Failed to generate manifest from function source: SyntaxError: Unexpected token '{'\n\u0000","position":61,"line":0,"column":61},"message":"incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line at line 1, column 62:\n     ... rom function source: SyntaxError: Unexpected token '{'\n                                         ^"}
+[debug] [2023-06-13T17:11:42.042Z] shutdown requested via /__/quitquitquit
+
+[error] ⬢  functions: Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected token '{' {"metadata":{"emulator":{"name":"functions"},"message":"Failed to load function definition from source: FirebaseError: Failed to load function definition from source: Failed to generate manifest from function source: SyntaxError: Unexpected token '{'"}}
+[debug] [2023-06-13T17:11:46.188Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:47.192Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:47.594Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:47.594Z] Building nodejs source
+[debug] [2023-06-13T17:11:47.595Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:47.595Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:47.596Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:47.698Z] Serving at port 8358
+
+[debug] [2023-06-13T17:11:47.844Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:11:47.846Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:11:48.441Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:49.443Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:49.815Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:49.815Z] Building nodejs source
+[debug] [2023-06-13T17:11:49.815Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:49.815Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:49.816Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:49.891Z] Serving at port 8524
+
+[debug] [2023-06-13T17:11:49.967Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:11:49.969Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:11:51.470Z] File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/lib/index.js changed, reloading triggers"}}
+[debug] [2023-06-13T17:11:52.473Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:11:52.974Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:11:52.974Z] Building nodejs source
+[debug] [2023-06-13T17:11:52.974Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:11:52.975Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:11:52.976Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:11:53.063Z] Serving at port 8269
+
+[debug] [2023-06-13T17:11:53.150Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:11:53.152Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}
+[debug] [2023-06-13T17:12:04.301Z] Jun 13, 2023 1:12:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:12:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:13:04.362Z] Jun 13, 2023 1:13:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:13:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:14:04.415Z] Jun 13, 2023 1:14:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:14:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:15:04.444Z] Jun 13, 2023 1:15:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
+INFO: Detected non-HTTP/2 connection.
+ {"metadata":{"emulator":{"name":"firestore"},"message":"Jun 13, 2023 1:15:04 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead\nINFO: Detected non-HTTP/2 connection.\n"}}
+[debug] [2023-06-13T17:15:34.899Z] File /Users/narenmani/Development/parkware/parkware/functions/src/index.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/src/index.ts changed, reloading triggers"}}
+[debug] [2023-06-13T17:15:35.357Z] File /Users/narenmani/Development/parkware/parkware/functions/src/index.ts changed, reloading triggers {"metadata":{"emulator":{"name":"functions"},"message":"File /Users/narenmani/Development/parkware/parkware/functions/src/index.ts changed, reloading triggers"}}
+[debug] [2023-06-13T17:15:36.359Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-06-13T17:15:37.464Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "npm run lint && tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "watch": "watch 'npm run build' ../functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/react": "~18.0.27",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "watch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "private": true
+}
+[debug] [2023-06-13T17:15:37.464Z] Building nodejs source
+[debug] [2023-06-13T17:15:37.464Z] Failed to find version of module node: reached end of search path /Users/narenmani/Development/parkware/parkware/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "20". Using node@20 from host. 
+[debug] [2023-06-13T17:15:37.465Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-06-13T17:15:37.466Z] Found firebase-functions binary at '/Users/narenmani/Development/parkware/parkware/functions/node_modules/.bin/firebase-functions'
+[debug] [2023-06-13T17:15:37.591Z] Serving at port 8982
+
+[debug] [2023-06-13T17:15:37.750Z] Got response from /__/functions.yaml {"endpoints":{"onMessageUpdate":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.write","eventFilters":{"resource":"projects/parkware1/databases/(default)/documents/events/{docID}"},"retry":false},"labels":{},"entryPoint":"onMessageUpdate"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[debug] [2023-06-13T17:15:37.752Z] shutdown requested via /__/quitquitquit
+
+[info] ✔  functions: Loaded functions definitions from source: onMessageUpdate. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: onMessageUpdate."}}

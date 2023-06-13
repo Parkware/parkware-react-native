@@ -1,15 +1,15 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
-const functions = require("firebase-functions")
+import functions from "firebase-functions";
 
 // The Firebase Admin SDK to access Firestore.
-const {initializeApp} = require("firebase-admin/app");
-const {getFirestore} = require("firebase-admin/firestore");
+import {initializeApp} from "firebase-admin/app";
+import {getFirestore} from "firebase-admin/firestore";
 
 initializeApp();
 const db = getFirestore();
 
 export const onMessageUpdate = functions.firestore.document("/events/{docID}")
-.onWrite(async (change: any, context: any) => {
+  .onWrite(async (change: any, context: any) => {
     const after = change.after.data();
     const d = after.accepted_id;
     const event_id = context.params.docID;

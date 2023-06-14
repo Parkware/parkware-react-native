@@ -1,10 +1,11 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../App'
-import { DocumentData } from 'firebase/firestore'
+import { DocumentData, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
+import { db } from '../firebaseConfig'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'providerDetailsView'>
 /*
@@ -14,13 +15,18 @@ type Props = NativeStackScreenProps<ConsumerStackParams, 'providerDetailsView'>
     since many events could be looked at. 
 */
 const ProviderDetailsView = ({ route }: Props) => {
+  const [sentEvent, setSentEvent] = useState(false);
+
   const { event } = route.params;
 
-  const setFinalStatus = (provider_id: string) => {}
-
-  useEffect(() => {
-    // console.log(event.doc);
-  }, [])
+  const setAcceptStatus = async (provider_id: string) => {
+    await updateDoc(doc(db, 'events/', event.id), { accepted_provider_id: provider_id });
+    setSentEvent(true);
+  }
+  
+  const setDeclineStatus = (provider_id: string) => {
+    setSentEvent(true);
+  }
   
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
@@ -47,8 +53,8 @@ const ProviderDetailsView = ({ route }: Props) => {
                 <Text key={providerInfo.address}>
                 {'Address: ' + providerInfo.address}
                 </Text>
-                <Button title='Accept' onPress={() => setFinalStatus(providerInfo.provider_id)}/>
-                <Button title='Decline' onPress={() => setFinalStatus(providerInfo.provider_id)}/>
+                <Button title='Accept' onPress={() => setAcceptStatus(providerInfo.provider_id)} disabled={sentEvent}/>
+                <Button title='Decline' onPress={() => setDeclineStatus(providerInfo.provider_id)} disabled={sentEvent}/>
                 <Divider width={5} style={{ marginTop: 10 }}/>
             </View >
         ))}

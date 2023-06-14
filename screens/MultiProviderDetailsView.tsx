@@ -6,6 +6,7 @@ import { ConsumerStackParams } from '../App'
 import { DocumentData, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../firebaseConfig'
+import { docDataTrio } from './ConsumerRequestsView'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
 /*
@@ -16,36 +17,48 @@ type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsVi
 */
 const MultiProviderDetailsView = ({ route }: Props) => {
   const [sentEvent, setSentEvent] = useState(false);
-
   const { event } = route.params;
+  const [eventData, setEventData] = useState<docDataTrio>(event);
+
 
   const setAcceptStatus = async (provider_id: string) => {
     await updateDoc(doc(db, 'events/', event.id), { accepted_provider_id: provider_id });
     setSentEvent(true);
   }
   
+  // Removing a provider from the consumer view if they have been declined...sorry:(
   const setDeclineStatus = (provider_id: string) => {
-    setSentEvent(true);
+    const updatedProviders = eventData.interestedProviders.filter(pro => {
+      if (pro.provider_id !== provider_id) {
+        return pro
+      }
+    })
+    setEventData(prevEventData => {
+      return {
+        ...prevEventData,
+        interestedProviders: updatedProviders
+      }
+    })
   }
-  
+
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-            Event {event.id.slice(0, 3)}
+            Event {eventData.id.slice(0, 3)}
         </Text>
-        <View style={{ marginBottom: 10 }} key={event.id}>
-        <Text key={event.doc.address}>
-            {'Address: ' + event.doc.address}
+        <View style={{ marginBottom: 10 }} key={eventData.id}>
+        <Text key={eventData.doc.address}>
+            {'Address: ' + eventData.doc.address}
         </Text>
-        <Text key={event.doc.startTime}>
-            {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
+        <Text key={eventData.doc.startTime}>
+            {'Time Range: ' + eventData.doc.startTime + '-' + eventData.doc.endTime}
         </Text>
-        <Text key={event.doc.endTime}>
-            {'Accepted: ' + event.doc.accepted}
+        <Text key={eventData.doc.endTime}>
+            {'Accepted: ' + eventData.doc.accepted}
         </Text>
         <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
         <Divider width={5} style={{ marginTop: 10 }}/>
-        {event.interestedProviders.map((providerInfo: DocumentData) => (
+        {eventData.interestedProviders.map((providerInfo: DocumentData) => (
             <View key={providerInfo.provider_id}>
                 <Text key={providerInfo.name}>
                 {'Name: ' + providerInfo.name}

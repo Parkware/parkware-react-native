@@ -26,6 +26,7 @@ export function ProviderRequestsView() {
   const [openEvents, setOpenEvents] = useState<docDataPair[]>([]);
   const [accEvents, setAccEvents] = useState<docDataPair[]>([]);
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
+  const [boxColor, setBoxColor] = useState('red')
 
   const logout = async () => {
     try {
@@ -113,7 +114,6 @@ export function ProviderRequestsView() {
           if (currUserSnap.exists()) {
             let already_providing = false;
             const eventSnap = await getDoc(curEventRef);
-            // Checking to see if the user is already signed up. 
             // Eventually, this won't be needed since we would disable if already sent, but just to validate
             if (eventSnap.exists()) {
               eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
@@ -121,8 +121,6 @@ export function ProviderRequestsView() {
               });
             }
             if (!already_providing) {
-              console.log('adding to db');
-              
               await setDoc(curEventRef, {
                 interestedProviders: arrayUnion({
                   provider_id: currUid,
@@ -145,6 +143,15 @@ export function ProviderRequestsView() {
       */
     }
     await updateDoc(curEventRef, { accepted });
+  }
+  const statusColorChooser = (event: docDataPair) => {
+    if (auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) {
+      setBoxColor('"');
+      return true;
+    } else {
+      setBoxColor('red');
+      return false;
+    }
   }
   return (
     <View style={{ marginTop: 30, padding: 16 }}>
@@ -180,10 +187,15 @@ export function ProviderRequestsView() {
           </Text>
           <Text key={event.doc.startTime}>
             {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-          </Text>
-          <Text key={event.doc.accepted_provider_id}>
-            {(auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? 'Status: accepted' : 'Status: declined'}
-          </Text>
+          </Text >
+          <View style={{
+              borderRadius: 10,
+              borderColor: (auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? "green" : "red",
+            }} >
+            <Text key={event.doc.accepted_provider_id}>
+              {(auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? 'Status: accepted' : 'Status: declined'}
+            </Text>
+          </View>
         </View>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>

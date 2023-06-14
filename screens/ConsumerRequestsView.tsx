@@ -48,21 +48,17 @@ export function ConsumerRequestsView() {
       const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
       const unsub = onSnapshot(q, async (snap) => {
         const compEventPromises: docDataTrio[] = [];
-        const penEventPromises = snap.docs.filter(e => {
-          if (e.data().accepted_provider_id) {
-            compEventPromises.push({
-              id: e.id,
-              doc: e.data(),
-              interestedProviders: e.data().interestedProviders
-            } as docDataTrio);
-            return false;
-          } else return true;
-        }).map(e => {
-          return {
+        const penEventPromises: docDataTrio[] = [];
+        snap.docs.map(e => {
+          let eventObj = {
             id: e.id,
             doc: e.data(),
             interestedProviders: e.data().interestedProviders
           } as docDataTrio;
+          if (e.data().accepted_provider_id) 
+            compEventPromises.push(eventObj);
+          else 
+            penEventPromises.push(eventObj);
         });
         
         const penEvents = await Promise.all(penEventPromises);

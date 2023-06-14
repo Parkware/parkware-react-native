@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, Button, ToastAndroid } from 'react-native';
-import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import { docDataTrio } from './ConsumerRequestsView';
 
 interface docDataPair {
   id: string,
@@ -22,7 +23,10 @@ interface docDataPair {
 
 export function ProviderRequestsView() {
   const [eventData, setEventData] = useState<docDataPair[]>([]);
-  
+  const [openEvents, setOpenEvents] = useState<docDataPair[]>([]);
+  const [accEvents, setAccEvents] = useState<docDataPair[]>([]);
+  const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -34,15 +38,36 @@ export function ProviderRequestsView() {
   useEffect(() => {
     try {
       // Reading the event data and setting eventData to it. 
-      const unsub = onSnapshot(collection(db, 'events'), (snapshot) => {
-          const events: docDataPair[] = [];
-          snapshot.docs.forEach((doc) => {          
-            events.push({
-              id: doc.id,
-              doc: doc.data()
-            } as docDataPair);
-          });
-          setEventData(events)
+      const unsub = onSnapshot(collection(db, 'events'), async (snapshot) => {            
+        // i can remove an array element interestedprovider and then add it to the accepted providers
+        const openEventPromises: docDataPair[] = [];
+        const penEventPromises: docDataPair[] = [];
+        const accEventPromises: docDataPair[] = [];
+
+        snapshot.docs.map(e => {
+          let eventObj = {
+            id: e.id,
+            doc: e.data(),
+          } as docDataPair
+
+          if (auth.currentUser) {
+            if (e.data().interestedProviderIds.includes(auth.currentUser.uid)) {
+              penEventPromises.push(eventObj);
+            } else if (e.data().accepted_provider_id === auth.currentUser.uid) {
+              accEventPromises.push(eventObj);
+            } else {
+              openEventPromises.push(eventObj);
+            }
+        }});
+      
+        const penEvents = await Promise.all(penEventPromises);
+        const accEvents = await Promise.all(accEventPromises);
+        const openEvents = await Promise.all(openEventPromises);
+        
+        setPendingEvents(penEvents);
+        setAccEvents(accEvents);
+        setOpenEvents(openEvents);
+          
       });
       return () => unsub();
     } catch (error) {
@@ -56,19 +81,17 @@ export function ProviderRequestsView() {
   */
 
   useEffect(() => {
-    const doc_id_accept: docDataPair[] = eventData.filter(d => d.doc.accepted === true);
-    const doc_id_decline: docDataPair[] = eventData.filter(d => d.doc.accepted === false);
+    const doc_id_accept: docDataPair[] = openEvents.filter(d => d.doc.accepted === true);
+    const doc_id_decline: docDataPair[] = openEvents.filter(d => d.doc.accepted === false);
     
-    if (doc_id_accept) {
+    if (doc_id_accept) 
       doc_id_accept.map(d => updateDB(d, true));
-    }
-    if (doc_id_decline) {
+    if (doc_id_decline) 
       doc_id_decline.map(d => updateDB(d, false));
-    }
-  }, [eventData]);
+  }, [openEvents]);
   
   const sendRequest = (id: any, to_accept: boolean) => {
-    setEventData(prevEventData => {
+    setOpenEvents(prevEventData => {
       return prevEventData.map(e => {
         // If the user is removing acceptance, I only want to change that event's value. Else if putting acceptance, I want only that event request to be selected. 
         // if (to_accept && e.id !== id && e.doc.accepted) return { id: e.id, doc: { ...e.doc, accepted: false } }
@@ -97,7 +120,9 @@ export function ProviderRequestsView() {
                   if (prov.provider_id == currUid) already_providing = true
               });
             }
-            if (!already_providing) { 
+            if (!already_providing) {
+              console.log('adding to db');
+              
               await setDoc(curEventRef, {
                 interestedProviders: arrayUnion({
                   provider_id: currUid,
@@ -105,6 +130,9 @@ export function ProviderRequestsView() {
                   address: currUserSnap.data().address
                 }),
               }, { merge: true });
+              await updateDoc(curEventRef, {
+                interestedProviderIds: arrayUnion(currUid),
+              });
             }
           }
         }
@@ -122,10 +150,27 @@ export function ProviderRequestsView() {
     <View style={{ marginTop: 30, padding: 16 }}>
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-        Other Requests
+        Accepted Requests
       </Text>
       
-      {eventData.map((event) => (
+      {accEvents.map(event => (
+        <View style={{ marginBottom: 10 }} key={event.id}>
+          <Text key={event.doc.endTime}>
+            {'Name: ' + event.doc.name}
+          </Text>
+          <Text key={event.doc.address}>
+            {'Address: ' + event.doc.address}
+          </Text>
+          <Text key={event.doc.startTime}>
+            {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
+          </Text>
+        </View>
+      ))}
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+        Pending Requests
+      </Text>
+      
+      {pendingEvents.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
           <Text key={event.doc.endTime}>
             {'Name: ' + event.doc.name}
@@ -138,6 +183,23 @@ export function ProviderRequestsView() {
           </Text>
           <Text key={event.doc.accepted_provider_id}>
             {(auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? 'Status: accepted' : 'Status: declined'}
+          </Text>
+        </View>
+      ))}
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+        Open Requests
+      </Text>
+      
+      {openEvents.map((event) => (
+        <View style={{ marginBottom: 10 }} key={event.id}>
+          <Text key={event.doc.endTime}>
+            {'Name: ' + event.doc.name}
+          </Text>
+          <Text key={event.doc.address}>
+            {'Address: ' + event.doc.address}
+          </Text>
+          <Text key={event.doc.startTime}>
+            {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
           </Text>
           <Button title='Accept' onPress={() => sendRequest(event.id, true)}/>
           <Button title='Decline' onPress={() => sendRequest(event.id, false)}/>

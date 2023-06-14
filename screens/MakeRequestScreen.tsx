@@ -46,7 +46,8 @@ export function HomeScreen() {
           endTime,
           accepted: false, 
           accepted_provider_id: null,
-          interestedProviders: null
+          interestedProviders: [],
+          interestedProviderIds: []
         });
                 
         setStartTime('');

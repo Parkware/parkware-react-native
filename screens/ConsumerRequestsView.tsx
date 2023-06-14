@@ -68,10 +68,6 @@ export function ConsumerRequestsView() {
         const penEvents = await Promise.all(penEventPromises);
         const compEvents = await Promise.all(compEventPromises);
         
-        console.log("comp events");
-        
-        console.log(compEvents);
-        
         setPendingEvents(penEvents);
         setCompletedEvents(compEvents);
       });

@@ -24,9 +24,10 @@ export interface docDataTrio {
 type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
 export function ConsumerRequestsView() {
-  const [eventData, setEventData] = useState<docDataTrio[]>([]);
+  const [pendingEvents, setPendingEvents] = useState<docDataTrio[]>([]);
+  const [completedEvents, setCompletedEvents] = useState<docDataTrio[]>([]);
   const [providers, setProviders] = useState<DocumentData[]>([]);
-  
+
   const navigation = useNavigation<consumerScreenProp>();
 
   const startProvidersListener = (e_id: string) => {
@@ -44,27 +45,42 @@ export function ConsumerRequestsView() {
   
   const getEvents = async () => {
     if (auth.currentUser) {
-    const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
-    const unsub = onSnapshot(q, async (snap) => {
-      const eventPromises = snap.docs.map((e) => {
-        // startProvidersListener(e.id);
-        return {
-          id: e.id,
-          doc: e.data(),
-          interestedProviders: e.data().interestedProviders
-        } as docDataTrio;
+      const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
+      const unsub = onSnapshot(q, async (snap) => {
+        const compEventPromises: docDataTrio[] = [];
+        const penEventPromises = snap.docs.filter(e => {
+          if (e.data().accepted_provider_id) {
+            compEventPromises.push({
+              id: e.id,
+              doc: e.data(),
+              interestedProviders: e.data().interestedProviders
+            } as docDataTrio);
+            return false;
+          } else return true;
+        }).map(e => {
+          return {
+            id: e.id,
+            doc: e.data(),
+            interestedProviders: e.data().interestedProviders
+          } as docDataTrio;
+        });
+        
+        const penEvents = await Promise.all(penEventPromises);
+        const compEvents = await Promise.all(compEventPromises);
+        
+        console.log("comp events");
+        
+        console.log(compEvents);
+        
+        setPendingEvents(penEvents);
+        setCompletedEvents(compEvents);
       });
-      
-      const events = await Promise.all(eventPromises);
-      
-      setEventData(events);
-    });
-    return () => unsub;
-  }
+      return () => unsub;
+    }
   }
 
   useEffect(() => {
-      try {      
+      try {
         getEvents();
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -72,8 +88,8 @@ export function ConsumerRequestsView() {
   }, []);
 
   useEffect(() => {
-    const doc_id_true = eventData.find(d => d.doc.accepted === true)?.id;
-    const doc_id_false: docDataTrio[] = eventData.filter(d => d.doc.accepted === false);
+    const doc_id_true = pendingEvents.find(d => d.doc.accepted === true)?.id;
+    const doc_id_false: docDataTrio[] = pendingEvents.filter(d => d.doc.accepted === false);
 
     if (doc_id_true) {
       updateDB(doc_id_true, true);
@@ -83,7 +99,7 @@ export function ConsumerRequestsView() {
         updateDB(d.id, false);
       })
     }
-  }, [eventData]);
+  }, [pendingEvents]);
   
   const updateDB = async (doc_id: string, accepted: boolean) => {
     const docRef = doc(collection(db, 'events/'), doc_id);
@@ -94,12 +110,12 @@ export function ConsumerRequestsView() {
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
-        My Requests
+        Pending Requests
       </Text>
       
-      {eventData.map((event) => (
+      {pendingEvents.map((event) => (
         <View key={event.id}>
-          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('providerDetailsView', { event })}>
+          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
             <Text key={event.doc.address}>
               {'Address: ' + event.doc.address}
             </Text>
@@ -123,7 +139,37 @@ export function ConsumerRequestsView() {
             <Divider width={5} style={{ marginTop: 10 }}/>
           </TouchableOpacity>
         </View>
-        
+      ))}
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
+        Accepted Requests
+      </Text>
+      
+      {completedEvents.map((event) => (
+        <View key={event.id}>
+          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('singleProviderDetailsView', { event })}>
+            <Text key={event.doc.address}>
+              {'Address: ' + event.doc.address}
+            </Text>
+            <Text key={event.doc.startTime}>
+              {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
+            </Text>
+            <Text key={event.doc.endTime}>
+              {'Accepted: ' + event.doc.accepted}
+            </Text>
+            <Text style={{ fontSize: 20 }}>Provider Info</Text>
+            {event.interestedProviders.map((providerInfo: DocumentData) => {
+              if (providerInfo.provider_id === event.doc.accepted_provider_id) {
+                return (
+                  <View key={providerInfo.provider_id}>
+                    <Text>{'Name: ' + providerInfo.name}</Text>
+                    <Text>{'Address: ' + providerInfo.address}</Text>
+                  </View>
+                );
+              }
+            })}
+            <Divider width={5} style={{ marginTop: 10 }}/>
+          </TouchableOpacity>
+        </View>
       ))}
     </SafeAreaView>
   );

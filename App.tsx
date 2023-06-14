@@ -16,12 +16,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import { DocumentData, doc, getDoc } from 'firebase/firestore';
-import ProviderDetailsView from './screens/ProviderDetailsView';
+import MultiProviderDetailsView from './screens/MultiProviderDetailsView';
+import SingleProviderDetailsView from './screens/SingleProviderDetailsView';
 
 export type ConsumerStackParams = {
   Home: undefined;
   consumerRequestsView: any;
-  providerDetailsView: {
+  multiProviderDetailsView: {
+    event: docDataTrio;
+  };
+  singleProviderDetailsView: {
     event: docDataTrio;
   };
 }
@@ -76,7 +80,8 @@ export default function App() {
           <ConsumerStack.Navigator>
             <ConsumerStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
             <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="consumerRequestsView" component={ConsumerRequestsView} />
-            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="providerDetailsView" component={ProviderDetailsView} />
+            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="multiProviderDetailsView" component={MultiProviderDetailsView} />
+            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="singleProviderDetailsView" component={SingleProviderDetailsView} />
           </ConsumerStack.Navigator>
         )
       }

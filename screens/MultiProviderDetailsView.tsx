@@ -7,14 +7,14 @@ import { DocumentData, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../firebaseConfig'
 
-type Props = NativeStackScreenProps<ConsumerStackParams, 'providerDetailsView'>
+type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
 /*
     Is there some way that I can have one onSnapshot function listen and update both these pages?
     It isn't necessary since a user may only need updates from one screen, but it could be a good addition
     I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
     since many events could be looked at. 
 */
-const ProviderDetailsView = ({ route }: Props) => {
+const MultiProviderDetailsView = ({ route }: Props) => {
   const [sentEvent, setSentEvent] = useState(false);
 
   const { event } = route.params;
@@ -31,7 +31,7 @@ const ProviderDetailsView = ({ route }: Props) => {
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-            Event #
+            Event {event.id.slice(0, 3)}
         </Text>
         <View style={{ marginBottom: 10 }} key={event.id}>
         <Text key={event.doc.address}>
@@ -63,6 +63,6 @@ const ProviderDetailsView = ({ route }: Props) => {
   )
 }
 
-export default ProviderDetailsView
+export default MultiProviderDetailsView
 
 const styles = StyleSheet.create({})

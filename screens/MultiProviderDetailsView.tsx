@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../App'
-import { DocumentData, doc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayRemove, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../firebaseConfig'
 import { docDataTrio } from './ConsumerRequestsView'
@@ -20,25 +20,33 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataTrio>(event);
 
-
   const setAcceptStatus = async (provider_id: string) => {
-    await updateDoc(doc(db, 'events/', event.id), { accepted_provider_id: provider_id });
+    const eventRef = doc(db, 'events/', event.id); 
+    await updateDoc(eventRef, { accepted_provider_id: provider_id });
+    await updateDoc(eventRef, { 
+      interestedProviderIds: arrayRemove(provider_id) 
+    });
+
+    const updatedProviders = removeLocalData(provider_id);
+    await updateDoc(eventRef, { 
+      interestedProviders: updatedProviders,
+    });
     setSentEvent(true);
   }
   
   // Removing a provider from the consumer view if they have been declined...sorry:(
-  const setDeclineStatus = (provider_id: string) => {
+  const removeLocalData = (provider_id: string) => {
     const updatedProviders = eventData.interestedProviders.filter(pro => {
-      if (pro.provider_id !== provider_id) {
-        return pro
-      }
+      if (pro.provider_id !== provider_id) return pro
     })
+    
     setEventData(prevEventData => {
       return {
         ...prevEventData,
         interestedProviders: updatedProviders
       }
     })
+    return updatedProviders
   }
 
   return (
@@ -67,7 +75,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
                 {'Address: ' + providerInfo.address}
                 </Text>
                 <Button title='Accept' onPress={() => setAcceptStatus(providerInfo.provider_id)} disabled={sentEvent}/>
-                <Button title='Decline' onPress={() => setDeclineStatus(providerInfo.provider_id)} disabled={sentEvent}/>
+                <Button title='Decline' onPress={() => removeLocalData(providerInfo.provider_id)} disabled={sentEvent}/>
                 <Divider width={5} style={{ marginTop: 10 }}/>
             </View >
         ))}

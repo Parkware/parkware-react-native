@@ -4,7 +4,7 @@ import {
   signOut,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
-import { addDoc, arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../App';
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +14,6 @@ type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Home'>;
 export function HomeScreen() {
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
-  const [name, setName] = useState<string>('');
   const [address, setAddress] = useState<string>('');
   const [error, setError] = useState('');
   const [sentMessage, setSentMessage] = useState(false);
@@ -37,40 +36,32 @@ export function HomeScreen() {
       // Update Name field
       if (auth.currentUser) {
         const consRef = doc(db, 'users/', auth.currentUser.uid);
-        await updateDoc(consRef, { ["name"]: name });
-        await addDoc(collection(db, 'events/'), {
-          consumer_id: auth.currentUser.uid,
-          name, 
-          address,
-          startTime,
-          endTime,
-          accepted: false, 
-          accepted_provider_id: null,
-          interestedProviders: [],
-          interestedProviderIds: []
-        });
-                
-        setStartTime('');
-        setEndTime('');
-        setName('');
-        setAddress('');
-        setSentMessage(true);
-        switchView();
+        const consSnap = await getDoc(consRef)
+        if (consSnap.exists()) {
+          await addDoc(collection(db, 'events/'), {
+            consumer_id: auth.currentUser.uid,
+            name: consSnap.data().name,
+            address,
+            startTime,
+            endTime,
+            accepted: false, 
+            accepted_provider_id: '',
+            interestedProviders: [],
+            interestedProviderIds: []
+          });
+                  
+          setStartTime('');
+          setEndTime('');
+          setAddress('');
+          setSentMessage(true);
+          switchView();
+        }
     }
   }
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
       <Button title="Log out" onPress={logout} />
-
-      <TextInput
-            value={name}
-            onChangeText={setName}
-            placeholder="Enter full name"
-            placeholderTextColor="#aaa"
-            autoCapitalize="words"
-            style={styles.input}
-      />
       <TextInput
         value={startTime}
         onChangeText={setStartTime}
@@ -101,7 +92,7 @@ export function HomeScreen() {
       <Button
         title="Send Request"
         onPress={createEventRequest}
-        disabled={!name || !startTime || !endTime}
+        disabled={!startTime || !endTime}
       />
       <Button
         title="Skip"

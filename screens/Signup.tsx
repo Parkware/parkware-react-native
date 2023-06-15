@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/ty
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Signup'>;
 
 export function Signup() {
+    const [name, setName] = useState<string>('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,7 +27,8 @@ export function Signup() {
           .then(() => {
             if (auth.currentUser) {
               setDoc(doc(db, "users", auth.currentUser.uid), {
-                email
+                email, 
+                name
               })
               .catch(error => {
                 console.log('Something went wrong with added user to firestore: ', error)
@@ -45,13 +47,18 @@ export function Signup() {
       <View style={styles.outer}>
         <View style={styles.inner}>
           <Text style={styles.header}>Sign up</Text>
-  
           {error && <Text style={styles.error}>{error}</Text>}
-  
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Text style={styles.link}>Login to existing account</Text>
           </TouchableOpacity>
-  
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter display name"
+            autoCapitalize="none"
+            placeholderTextColor="#aaa"
+            style={styles.input}
+          />
           <TextInput
             value={email}
             onChangeText={setEmail}

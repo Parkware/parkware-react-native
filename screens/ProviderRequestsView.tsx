@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, Button, ToastAndroid } from 'react-native';
-import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { View, Text, SafeAreaView, Button } from 'react-native';
+import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import { docDataTrio } from './ConsumerRequestsView';
+import { StatusText } from './providerScreens/StatusText';
 
-interface docDataPair {
+export interface docDataPair {
   id: string,
   doc: DocumentData
   /*
@@ -21,12 +21,12 @@ interface docDataPair {
   */
 }
 
+
+
 export function ProviderRequestsView() {
-  const [eventData, setEventData] = useState<docDataPair[]>([]);
   const [openEvents, setOpenEvents] = useState<docDataPair[]>([]);
   const [accEvents, setAccEvents] = useState<docDataPair[]>([]);
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
-  const [boxColor, setBoxColor] = useState('red')
 
   const logout = async () => {
     try {
@@ -144,15 +144,7 @@ export function ProviderRequestsView() {
     }
     await updateDoc(curEventRef, { accepted });
   }
-  const statusColorChooser = (event: docDataPair) => {
-    if (auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) {
-      setBoxColor('"');
-      return true;
-    } else {
-      setBoxColor('red');
-      return false;
-    }
-  }
+
   return (
     <View style={{ marginTop: 30, padding: 16 }}>
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -188,14 +180,7 @@ export function ProviderRequestsView() {
           <Text key={event.doc.startTime}>
             {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
           </Text >
-          <View style={{
-              borderRadius: 10,
-              borderColor: (auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? "green" : "red",
-            }} >
-            <Text key={event.doc.accepted_provider_id}>
-              {(auth.currentUser && event.doc.accepted_provider_id == auth.currentUser.uid) ? 'Status: accepted' : 'Status: declined'}
-            </Text>
-          </View>
+          <StatusText event={event} />
         </View>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>

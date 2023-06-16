@@ -2,11 +2,11 @@ import { Button, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ConsumerStackParams } from '../App'
+import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayRemove, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
-import { db } from '../firebaseConfig'
-import { docDataTrio } from './ConsumerRequestsView'
+import { db } from '../../firebaseConfig'
+import { docDataTrio } from '../ConsumerRequestsView'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
 /*

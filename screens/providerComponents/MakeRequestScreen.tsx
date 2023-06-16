@@ -3,10 +3,10 @@ import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import {
   signOut,
 } from 'firebase/auth';
-import { auth, db } from '../firebaseConfig';
+import { auth, db } from '../../firebaseConfig';
 import { addDoc, arrayUnion, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ConsumerStackParams } from '../App';
+import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Home'>;

@@ -5,7 +5,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
-import { HomeScreen } from './screens/MakeRequestScreen';
+import { HomeScreen } from './screens/providerComponents/MakeRequestScreen';
 import { Signup } from './screens/Signup';
 import { ResetPassword } from './screens/ResetPassword';
 import { Login } from './screens/Login';
@@ -16,8 +16,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import { DocumentData, doc, getDoc } from 'firebase/firestore';
-import MultiProviderDetailsView from './screens/MultiProviderDetailsView';
-import SingleProviderDetailsView from './screens/SingleProviderDetailsView';
+import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
+import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
 
 export type ConsumerStackParams = {
   Home: undefined;

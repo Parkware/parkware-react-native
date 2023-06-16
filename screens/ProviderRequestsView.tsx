@@ -4,7 +4,7 @@ import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, 
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import { StatusText } from './providerScreens/StatusText';
+import { StatusText } from './providerComponents/StatusText';
 
 export interface docDataPair {
   id: string,

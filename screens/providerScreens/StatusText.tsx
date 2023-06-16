@@ -24,9 +24,9 @@ export const StatusText = ({ event }: StatusTextProps) => {
               borderRadius: 10,
               borderColor: statusColor
             }} >
-            <Text key={event.doc.accepted_provider_id}>
-                {statusWord}
-            </Text>
+              <Text key={event.doc.accepted_provider_id}>
+                  {statusWord}
+              </Text>
             </View>
   }
   return null;

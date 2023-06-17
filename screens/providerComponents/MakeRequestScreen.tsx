@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import {
   signOut,
@@ -8,14 +8,14 @@ import { addDoc, arrayUnion, collection, doc, getDoc, updateDoc } from 'firebase
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Home'>;
 
 export function HomeScreen() {
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
+  const [startTime, setStartTime] = useState<Date>(new Date(Date.now()));
+  const [endTime, setEndTime] = useState<Date>(new Date(Date.now()));
   const [address, setAddress] = useState<string>('');
-  const [error, setError] = useState('');
   const [sentMessage, setSentMessage] = useState(false);
 
   const navigation = useNavigation<homeScreenProp>();
@@ -33,7 +33,6 @@ export function HomeScreen() {
   }
 
   const createEventRequest = async () => {
-      // Update Name field
       if (auth.currentUser) {
         const consRef = doc(db, 'users/', auth.currentUser.uid);
         const consSnap = await getDoc(consRef)
@@ -50,33 +49,62 @@ export function HomeScreen() {
             interestedProviderIds: []
           });
                   
-          setStartTime('');
-          setEndTime('');
+          setStartTime(new Date(Date.now()));
+          setEndTime(new Date(Date.now()));
           setAddress('');
           setSentMessage(true);
           switchView();
         }
     }
   }
+  const startTimeFun = (event: any, selectedDate: any) => {
+    if (event.type === 'set' && selectedDate)
+      setStartTime(selectedDate);
+  };
+  const endTimeFun = (event: any, selectedDate: any) => {
+    if (event.type === 'set' && selectedDate)
+      setEndTime(selectedDate);
+  };
+  const dateFun = (event: any, selectedDate: any) => {
+    if (event.type === 'set' && selectedDate) {
+      setStartTime(selectedDate);
+      setEndTime(selectedDate);
+    }
+  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      let newDate = new Date(Date.now())
+      setStartTime(newDate);
+      setEndTime(newDate);
+      
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [startTime]);
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
       <Button title="Log out" onPress={logout} />
-      <TextInput
+      <DateTimePicker
+        testID="dateTimePicker"
         value={startTime}
-        onChangeText={setStartTime}
-        placeholder="Start time"
-        placeholderTextColor="#aaa"
-        style={styles.input}
+        mode='date'
+        is24Hour={true}
+        onChange={dateFun}
       />
-      <TextInput
+      <DateTimePicker
+        testID="dateTimePicker"
+        value={startTime}
+        mode='time'
+        is24Hour={true}
+        onChange={startTimeFun}
+      />
+      <DateTimePicker
+        testID="dateTimePicker"
         value={endTime}
-        onChangeText={setEndTime}
-        keyboardType="default"
-        placeholder="End time"
-        autoCapitalize="none"
-        placeholderTextColor="#aaa"
-        style={styles.input}
+        mode='time'
+        is24Hour={true}
+        onChange={endTimeFun}
       />
       <TextInput
         value={address}

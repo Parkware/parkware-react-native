@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   User,
   onAuthStateChanged,
@@ -15,9 +15,10 @@ import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsVie
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import { DocumentData, doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
+import { CountdownTimer } from './screens/consumerComponents/CountdownTimer';
 
 export type ConsumerStackParams = {
   Home: undefined;
@@ -89,6 +90,7 @@ export default function App() {
     else return <AuthScreenStack />;
   };
   return <NavigationContainer>{renderContent()}</NavigationContainer>;
+  // return <CountdownTimer />
 }
 
 

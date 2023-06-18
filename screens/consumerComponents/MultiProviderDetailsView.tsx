@@ -51,7 +51,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
           Event {eventData.id.slice(0, 3)}
       </Text>
-      <EventBlock event={eventData}/>
+      <EventBlock event={eventData} proView={false}/>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.interestedProviders.map((providerInfo: DocumentData) => (

@@ -16,12 +16,33 @@ type Props = NativeStackScreenProps<ConsumerStackParams, 'singleProviderDetailsV
 */
 const SingleProviderDetailsView = ({ route }: Props) => {
   const { event } = route.params;
+  const [timeRemaining, setTimeRemaining] = useState('');
+  const targetDate = event.doc.startTime.toDate();
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const difference = targetDate.getTime() - now.getTime();
+      
+      if (difference <= 0) {
+        clearInterval(interval);
+        setTimeRemaining("Parking Time!");
+      } else {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / (1000 * 60)) % 60);
 
+        setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-            interested provider id: {event.doc.accepted_provider_id}
-        </Text>        
+          {timeRemaining} till your parking event.
+        </Text>
     </SafeAreaView>
   )
 }

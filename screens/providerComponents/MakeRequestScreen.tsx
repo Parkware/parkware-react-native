@@ -13,11 +13,12 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Home'>;
 
 export function HomeScreen() {
-  const [startTime, setStartTime] = useState<Date>(new Date(Date.now()));
-  const [endTime, setEndTime] = useState<Date>(new Date(Date.now()));
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [endTime, setEndTime] = useState<Date>(new Date());
   const [address, setAddress] = useState<string>('');
   const [sentMessage, setSentMessage] = useState(false);
-
+  const [error, setError] = useState('')
+  const [sendable, setSendable] = useState(true)
   const navigation = useNavigation<homeScreenProp>();
 
   const logout = async () => {
@@ -33,28 +34,28 @@ export function HomeScreen() {
   }
 
   const createEventRequest = async () => {
-      if (auth.currentUser) {
-        const consRef = doc(db, 'users/', auth.currentUser.uid);
-        const consSnap = await getDoc(consRef)
-        if (consSnap.exists()) {
-          await addDoc(collection(db, 'events/'), {
-            consumer_id: auth.currentUser.uid,
-            name: consSnap.data().name,
-            address,
-            startTime,
-            endTime,
-            accepted: false, 
-            accepted_provider_id: '',
-            interestedProviders: [],
-            interestedProviderIds: []
-          });
-                  
-          setStartTime(new Date(Date.now()));
-          setEndTime(new Date(Date.now()));
-          setAddress('');
-          setSentMessage(true);
-          switchView();
-        }
+    if (auth.currentUser) {
+      const consRef = doc(db, 'users/', auth.currentUser.uid);
+      const consSnap = await getDoc(consRef)
+      if (consSnap.exists()) {
+        await addDoc(collection(db, 'events/'), {
+          consumer_id: auth.currentUser.uid,
+          name: consSnap.data().name,
+          address,
+          startTime,
+          endTime,
+          accepted: false, 
+          accepted_provider_id: '',
+          interestedProviders: [],
+          interestedProviderIds: []
+        });
+                
+        setStartTime(new Date());
+        setEndTime(new Date());
+        setAddress('');
+        setSentMessage(true);
+        switchView();
+      }
     }
   }
   const startTimeFun = (event: any, selectedDate: any) => {
@@ -62,8 +63,15 @@ export function HomeScreen() {
       setStartTime(selectedDate);
   };
   const endTimeFun = (event: any, selectedDate: any) => {
-    if (event.type === 'set' && selectedDate)
+    if (event.type === 'set' && selectedDate) {
       setEndTime(selectedDate);
+      const sub = endTime.getTime()-startTime.getTime();
+      const min = Math.floor((sub / (1000 * 60)) % 60);
+      if (min < 10) {
+        setSendable(false);
+        setError('Events must be at least 10 minutes!')
+      }
+    }
   };
   const dateFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
@@ -107,11 +115,11 @@ export function HomeScreen() {
         autoCorrect={false}
         style={styles.input}
       />
-      { sentMessage && <Text>Sent Request!</Text>}
+      {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"
         onPress={createEventRequest}
-        disabled={!startTime || !endTime}
+        disabled={!sendable || address.length == 0}
       />
       <Button
         title="Skip"

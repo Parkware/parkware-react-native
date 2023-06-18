@@ -78,9 +78,7 @@ export function HomeScreen() {
     }
   };
   const findDiff = (diff: number) => {
-    const min = Math.floor(diff / (1000 * 60));
-    console.log(min);
-    
+    const min = Math.ceil(diff / (1000 * 60));
     if (min < 10) {
       setSendable(false);
       setError('Events must be at least 10 minutes!')

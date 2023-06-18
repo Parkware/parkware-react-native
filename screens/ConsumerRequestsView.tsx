@@ -133,8 +133,8 @@ export function ConsumerRequestsView() {
       
       {completedEvents.map((event) => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('singleProviderDetailsView', { event })}>
-          <EventBlock event={event} proView={false}/>
           <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
+          <EventBlock event={event} proView={false}/>
           {event.interestedProviders.map((providerInfo: DocumentData) => {
             if (providerInfo.provider_id === event.doc.accepted_provider_id) {
               return (

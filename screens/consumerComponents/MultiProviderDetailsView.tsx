@@ -26,7 +26,8 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     await updateDoc(doc(db, 'events/', event.id), { 
       interestedProviderIds: arrayRemove(accepted_provider_id),
       interestedProviders: updatedProviders,
-      accepted_provider_id
+      accepted_provider_id,
+      consumerParkingStatus: false,
     });
     setSentEvent(true);
   }

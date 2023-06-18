@@ -20,7 +20,7 @@ export function HomeScreen() {
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(true)
   const navigation = useNavigation<homeScreenProp>();
-
+  const [diff, setDiff] = useState<number>()
   const logout = async () => {
     try {
       await signOut(auth);
@@ -29,9 +29,8 @@ export function HomeScreen() {
     }
   };
 
-  const switchView = () => {
+  const switchView = () => 
     navigation.navigate('consumerRequestsView');
-  }
 
   const createEventRequest = async () => {
     if (auth.currentUser) {
@@ -65,12 +64,10 @@ export function HomeScreen() {
   const endTimeFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setEndTime(selectedDate);
-      const sub = endTime.getTime()-startTime.getTime();
-      const min = Math.floor((sub / (1000 * 60)) % 60);
-      if (min < 10) {
-        setSendable(false);
-        setError('Events must be at least 10 minutes!')
-      }
+      const diffMil = endTime.getTime()-startTime.getTime();
+      console.log(diffMil);
+      
+      setDiff(diffMil);      
     }
   };
   const dateFun = (event: any, selectedDate: any) => {
@@ -79,6 +76,16 @@ export function HomeScreen() {
       setEndTime(selectedDate);
     }
   };
+  useEffect(() => {
+    if (diff) {
+      const min = Math.floor(diff / (1000 * 60));
+      if (min < 10) {
+        setSendable(false);
+        setError('Events must be at least 10 minutes!')
+      } else
+        setSendable(true);
+    }
+  }, [diff])
   
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

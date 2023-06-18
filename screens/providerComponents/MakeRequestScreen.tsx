@@ -71,16 +71,7 @@ export function HomeScreen() {
       setEndTime(selectedDate);
     }
   };
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let newDate = new Date(Date.now())
-      setStartTime(newDate);
-      setEndTime(newDate);
-      
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [startTime]);
+  
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>

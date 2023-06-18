@@ -7,6 +7,7 @@ import { DocumentData, arrayRemove, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
 import { docDataTrio } from '../ConsumerRequestsView'
+import { EventBlock } from './EventBlock'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
 /*
@@ -20,16 +21,12 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataTrio>(event);
 
-  const setAcceptStatus = async (provider_id: string) => {
-    const eventRef = doc(db, 'events/', event.id); 
-    await updateDoc(eventRef, { accepted_provider_id: provider_id });
-    await updateDoc(eventRef, { 
-      interestedProviderIds: arrayRemove(provider_id) 
-    });
-
-    const updatedProviders = removeLocalData(provider_id);
-    await updateDoc(eventRef, { 
+  const setAcceptStatus = async (accepted_provider_id: string) => {
+    const updatedProviders = removeLocalData(accepted_provider_id);
+    await updateDoc(doc(db, 'events/', event.id), { 
+      interestedProviderIds: arrayRemove(accepted_provider_id),
       interestedProviders: updatedProviders,
+      accepted_provider_id
     });
     setSentEvent(true);
   }
@@ -51,35 +48,25 @@ const MultiProviderDetailsView = ({ route }: Props) => {
 
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-            Event {eventData.id.slice(0, 3)}
-        </Text>
-        <View style={{ marginBottom: 10 }} key={eventData.id}>
-        <Text key={eventData.doc.address}>
-            {'Address: ' + eventData.doc.address}
-        </Text>
-        <Text key={eventData.doc.startTime}>
-            {'Time Range: ' + eventData.doc.startTime + '-' + eventData.doc.endTime}
-        </Text>
-        <Text key={eventData.doc.endTime}>
-            {'Accepted: ' + eventData.doc.accepted}
-        </Text>
-        <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
-        <Divider width={5} style={{ marginTop: 10 }}/>
-        {eventData.interestedProviders.map((providerInfo: DocumentData) => (
-            <View key={providerInfo.provider_id}>
-                <Text key={providerInfo.name}>
-                {'Name: ' + providerInfo.name}
-                </Text>
-                <Text key={providerInfo.address}>
-                {'Address: ' + providerInfo.address}
-                </Text>
-                <Button title='Accept' onPress={() => setAcceptStatus(providerInfo.provider_id)} disabled={sentEvent}/>
-                <Button title='Decline' onPress={() => removeLocalData(providerInfo.provider_id)} disabled={sentEvent}/>
-                <Divider width={5} style={{ marginTop: 10 }}/>
-            </View >
-        ))}
-        </View>         
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+          Event {eventData.id.slice(0, 3)}
+      </Text>
+      <EventBlock event={eventData}/>
+      <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
+      <Divider width={5} style={{ marginTop: 10 }}/>
+      {eventData.interestedProviders.map((providerInfo: DocumentData) => (
+        <View key={providerInfo.provider_id}>
+            <Text key={providerInfo.name}>
+            {'Name: ' + providerInfo.name}
+            </Text>
+            <Text key={providerInfo.address}>
+            {'Address: ' + providerInfo.address}
+            </Text>
+            <Button title='Accept' onPress={() => setAcceptStatus(providerInfo.provider_id)} disabled={sentEvent}/>
+            <Button title='Decline' onPress={() => removeLocalData(providerInfo.provider_id)} disabled={sentEvent}/>
+            <Divider width={5} style={{ marginTop: 10 }}/>
+        </View >
+      ))}
     </SafeAreaView>
   )
 }

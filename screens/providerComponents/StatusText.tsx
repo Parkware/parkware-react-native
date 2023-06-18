@@ -20,14 +20,16 @@ export const StatusText = ({ event }: StatusTextProps) => {
       statusWord = 'Status: denied'
       statusColor = 'red';
     }
-    return <View style={{
-              borderRadius: 10,
-              borderColor: statusColor
-            }} >
-              <Text key={event.doc.accepted_provider_id}>
-                  {statusWord}
-              </Text>
-            </View>
+    return (
+      <View style={{
+        borderRadius: 10,
+        borderColor: statusColor
+      }} >
+        <Text key={event.doc.accepted_provider_id}>
+            {statusWord}
+        </Text>
+      </View>
+    )
   }
   return null;
 }

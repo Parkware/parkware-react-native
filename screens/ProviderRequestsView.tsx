@@ -5,6 +5,7 @@ import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { StatusText } from './providerComponents/StatusText';
+import { EventBlock } from './consumerComponents/EventBlock';
 
 export interface docDataPair {
   id: string,
@@ -154,15 +155,7 @@ export function ProviderRequestsView() {
       
       {accEvents.map(event => (
         <View style={{ marginBottom: 10 }} key={event.id}>
-          <Text key={event.doc.endTime}>
-            {'Name: ' + event.doc.name}
-          </Text>
-          <Text key={event.doc.address}>
-            {'Address: ' + event.doc.address}
-          </Text>
-          <Text key={event.doc.startTime}>
-            {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-          </Text>
+          <EventBlock event={event} proView={true}/>
         </View>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
@@ -171,15 +164,7 @@ export function ProviderRequestsView() {
       
       {pendingEvents.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
-          <Text key={event.doc.endTime}>
-            {'Name: ' + event.doc.name}
-          </Text>
-          <Text key={event.doc.address}>
-            {'Address: ' + event.doc.address}
-          </Text>
-          <Text key={event.doc.startTime}>
-            {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-          </Text >
+          <EventBlock event={event} proView={true}/>
           <StatusText event={event} />
         </View>
       ))}
@@ -189,15 +174,7 @@ export function ProviderRequestsView() {
       
       {openEvents.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
-          <Text key={event.doc.endTime}>
-            {'Name: ' + event.doc.name}
-          </Text>
-          <Text key={event.doc.address}>
-            {'Address: ' + event.doc.address}
-          </Text>
-          <Text key={event.doc.startTime}>
-            {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-          </Text>
+          <EventBlock event={event} proView={true}/>
           <Button title='Accept' onPress={() => sendRequest(event.id, true)}/>
           <Button title='Decline' onPress={() => sendRequest(event.id, false)}/>
         </View>

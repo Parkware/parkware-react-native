@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../App';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { EventBlock } from './consumerComponents/EventBlock';
 
 export interface docDataTrio {
   id: string,
@@ -21,7 +22,7 @@ export interface docDataTrio {
   */
 }
 
-type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
+export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
 export function ConsumerRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataTrio[]>([]);
@@ -99,69 +100,53 @@ export function ConsumerRequestsView() {
       accepted
     });
   }
+
+  const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+  const formatDate = (date: any) => date.toDate().toLocaleDateString();
+
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         Pending Requests
       </Text>
       
-      {pendingEvents.map((event) => (
-        <View key={event.id}>
-          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
-            <Text key={event.doc.address}>
-              {'Address: ' + event.doc.address}
-            </Text>
-            <Text key={event.doc.startTime}>
-              {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-            </Text>
-            <Text key={event.doc.endTime}>
-              {'Accepted: ' + event.doc.accepted}
-            </Text>
-            <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-            {event.interestedProviders.map((providerInfo: DocumentData) => (
-              <View key={providerInfo.provider_id}>
-                <Text key={providerInfo.name}>
-                {'Name: ' + providerInfo.name}
-                </Text>
-                <Text key={providerInfo.address}>
-                {'Address: ' + providerInfo.address}
-                </Text>
-              </View >
-            ))}
-            <Divider width={5} style={{ marginTop: 10 }}/>
-          </TouchableOpacity>
-        </View>
+      {pendingEvents.map(event => (
+        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
+          <EventBlock event={event} proView={false}/>
+          <Text style={{ fontSize: 20 }}>Available Providers:</Text>
+          {event.interestedProviders.map((providerInfo: DocumentData) => (
+            <View key={providerInfo.provider_id}>
+              <Text key={providerInfo.name}>
+              {'Name: ' + providerInfo.name}
+              </Text>
+              <Text key={providerInfo.address}>
+              {'Address: ' + providerInfo.address}
+              </Text>
+            </View >
+          ))}
+          <Divider width={5} style={{ marginTop: 10 }}/>
+        </TouchableOpacity>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         Accepted Requests
       </Text>
       
       {completedEvents.map((event) => (
-        <View key={event.id}>
-          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('singleProviderDetailsView', { event })}>
-            <Text key={event.doc.address}>
-              {'Address: ' + event.doc.address}
-            </Text>
-            <Text key={event.doc.startTime}>
-              {'Time Range: ' + event.doc.startTime + '-' + event.doc.endTime}
-            </Text>
-            <Text key={event.doc.endTime}>
-              {'Accepted: ' + event.doc.accepted}
-            </Text>
-            <Text style={{ fontSize: 20 }}>Provider Info</Text>
-            {event.interestedProviders.map((providerInfo: DocumentData) => {
-              if (providerInfo.provider_id === event.doc.accepted_provider_id) {
-                return (
-                  <View key={providerInfo.provider_id}>
-                    <Text>{'Name: ' + providerInfo.name}</Text>
-                    <Text>{'Address: ' + providerInfo.address}</Text>
-                  </View>
-                );
-              }
-            })}
-            <Divider width={5} style={{ marginTop: 10 }}/>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('singleProviderDetailsView', { event })}>
+          <EventBlock event={event} proView={false}/>
+          <Text style={{ fontSize: 20 }}>Provider Info</Text>
+          {event.interestedProviders.map((providerInfo: DocumentData) => {
+            if (providerInfo.provider_id === event.doc.accepted_provider_id) {
+              return (
+                <View key={providerInfo.provider_id}>
+                  <Text>{'Name: ' + providerInfo.name}</Text>
+                  <Text>{'Address: ' + providerInfo.address}</Text>
+                </View>
+              );
+            }
+          })}
+          <Divider width={5} style={{ marginTop: 10 }}/>
+        </TouchableOpacity>
       ))}
     </SafeAreaView>
   );

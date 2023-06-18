@@ -9,7 +9,7 @@ import { HomeScreen } from './screens/providerComponents/MakeRequestScreen';
 import { Signup } from './screens/Signup';
 import { ResetPassword } from './screens/ResetPassword';
 import { Login } from './screens/Login';
-import { ProviderRequestsView } from './screens/ProviderRequestsView';
+import { ProviderRequestsView, docDataPair } from './screens/ProviderRequestsView';
 import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsView';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -19,6 +19,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
 import { CountdownTimer } from './screens/consumerComponents/CountdownTimer';
+import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
 
 export type ConsumerStackParams = {
   Home: undefined;
@@ -32,6 +33,9 @@ export type ConsumerStackParams = {
 }
 export type ProviderStackParams = {
   providerRequestsView: undefined;
+  consumerStatusView: {
+    event: docDataPair;
+  };
 }
 export type AuthStackParams = {
   Login: undefined;
@@ -74,6 +78,7 @@ export default function App() {
         return (
           <ProviderStack.Navigator>
             <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView} />
+            <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="consumerStatusView" component={ConsumerStatusView} />
           </ProviderStack.Navigator>
         )
       } else {

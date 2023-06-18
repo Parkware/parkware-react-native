@@ -51,14 +51,13 @@ const SingleProviderDetailsView = ({ route }: Props) => {
         return (
           <View style={styles.container}>
             <View style={styles.countContainer}>
-              <Text>Mark status as here by clicking on the button below. The provider will be notified.</Text>
+              <Text>Mark status as "here" by clicking on the button below. The provider will be notified.</Text>
             </View>
             <TouchableOpacity style={styles.button} onPress={updateParkingStatus}>
-              <Text>Click Here</Text>
+              <Text>I'm Here!</Text>
             </TouchableOpacity>        
           </View>
         )
-
       } else {
         return (
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>

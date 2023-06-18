@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, Button } from 'react-native';
+import { View, Text, SafeAreaView, Button, TouchableOpacity } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { StatusText } from './providerComponents/StatusText';
 import { EventBlock } from './consumerComponents/EventBlock';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ProviderStackParams } from '../App';
+import { useNavigation } from '@react-navigation/native';
 
 export interface docDataPair {
   id: string,
@@ -22,12 +25,14 @@ export interface docDataPair {
   */
 }
 
-
+export type providerScreenProp = NativeStackNavigationProp<ProviderStackParams, 'providerRequestsView'>;
 
 export function ProviderRequestsView() {
   const [openEvents, setOpenEvents] = useState<docDataPair[]>([]);
   const [accEvents, setAccEvents] = useState<docDataPair[]>([]);
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
+
+  const navigation = useNavigation<providerScreenProp>();
 
   const logout = async () => {
     try {
@@ -76,11 +81,6 @@ export function ProviderRequestsView() {
       console.error('Error fetching events:', error);
     }
   }, []);
-
-  /*
-    Searching through all of the true docs and updating firebase accordingly. 
-    All these fields are local to the eventData object. 
-  */
 
   useEffect(() => {
     const doc_id_accept: docDataPair[] = openEvents.filter(d => d.doc.accepted === true);
@@ -154,9 +154,12 @@ export function ProviderRequestsView() {
       </Text>
       
       {accEvents.map(event => (
-        <View style={{ marginBottom: 10 }} key={event.id}>
-          <EventBlock event={event} proView={true}/>
-        </View>
+        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
+          <Text style={{ fontSize: 15 }}>Click here to see more info about your provider</Text>
+          <View style={{ marginBottom: 10 }} key={event.id}>
+            <EventBlock event={event} proView={true}/>
+          </View>
+        </TouchableOpacity>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
         Pending Requests

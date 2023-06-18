@@ -18,9 +18,9 @@ export function HomeScreen() {
   const [address, setAddress] = useState<string>('');
   const [sentMessage, setSentMessage] = useState(false);
   const [error, setError] = useState('')
-  const [sendable, setSendable] = useState(true)
+  const [sendable, setSendable] = useState(false)
   const navigation = useNavigation<homeScreenProp>();
-  const [diff, setDiff] = useState<number>()
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -58,14 +58,17 @@ export function HomeScreen() {
     }
   }
   const startTimeFun = (event: any, selectedDate: any) => {
-    if (event.type === 'set' && selectedDate)
+    if (event.type === 'set' && selectedDate) {
       setStartTime(selectedDate);
+      const diff = endTime.getTime()-selectedDate.getTime();
+      findDiff(diff);
+    }
   };
   const endTimeFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setEndTime(selectedDate);
-      const diffMil = endTime.getTime()-startTime.getTime();
-      setDiff(diffMil);      
+      const diff = selectedDate.getTime()-startTime.getTime();
+      findDiff(diff);
     }
   };
   const dateFun = (event: any, selectedDate: any) => {
@@ -74,16 +77,17 @@ export function HomeScreen() {
       setEndTime(selectedDate);
     }
   };
-  useEffect(() => {
-    if (diff) {
-      const min = Math.floor(diff / (1000 * 60));
-      if (min < 10) {
-        setSendable(false);
-        setError('Events must be at least 10 minutes!')
-      } else
-        setSendable(true);
-    }
-  }, [diff])
+  const findDiff = (diff: number) => {
+    const min = Math.floor(diff / (1000 * 60));
+    console.log(min);
+    
+    if (min < 10) {
+      setSendable(false);
+      setError('Events must be at least 10 minutes!')
+    } else
+      setSendable(true);
+  }
+  
   
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

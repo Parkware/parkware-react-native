@@ -65,8 +65,6 @@ export function HomeScreen() {
     if (event.type === 'set' && selectedDate) {
       setEndTime(selectedDate);
       const diffMil = endTime.getTime()-startTime.getTime();
-      console.log(diffMil);
-      
       setDiff(diffMil);      
     }
   };

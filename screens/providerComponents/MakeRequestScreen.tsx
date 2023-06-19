@@ -86,7 +86,6 @@ export function HomeScreen() {
       setSendable(true);
   }
   
-  
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>

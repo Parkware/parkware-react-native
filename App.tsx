@@ -11,7 +11,6 @@ import { ResetPassword } from './screens/ResetPassword';
 import { Login } from './screens/Login';
 import { ProviderRequestsView, docDataPair } from './screens/ProviderRequestsView';
 import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsView';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
@@ -95,7 +94,6 @@ export default function App() {
     else return <AuthScreenStack />;
   };
   return <NavigationContainer>{renderContent()}</NavigationContainer>;
-  // return <CountdownTimer />
 }
 
 

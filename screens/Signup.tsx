@@ -32,7 +32,7 @@ export function Signup() {
             .catch(error => {
               console.log('Something went wrong with added user to firestore: ', error)
             });
-            () => navigation.navigate('chooseRoleView')
+            navigation.navigate('chooseRoleView')
           });
         } else {
           setError("Passwords don't match");

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import {
   User,
@@ -14,7 +14,7 @@ import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsVie
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
 import { CountdownTimer } from './screens/consumerComponents/CountdownTimer';
@@ -62,48 +62,79 @@ const AuthScreenStack = () => {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [provider, setProvider] = useState<boolean | null>(null);
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (!provider === null) {
-        const docSnap = await getDoc(doc(db, 'users', user!.uid));
-        if (docSnap.exists())
-          setProvider(docSnap.data().provider);
-      } else {
-        // setProvider(null);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {      
+      console.log("state changed");
+      if (user) {
+        setUser(user);
+        setSignedIn(true);
       }
     });
     return unsubscribe;
-  }, [provider])
+  }, [])
 
-  const renderContent = () => {
+  useEffect(() => {
+    if (auth.currentUser) {
+    const unsub = onSnapshot(doc(db, 'users', auth.currentUser!.uid), async (snapshot) => {
+      if (signedIn) {
+        if (snapshot.exists()) {
+          if (snapshot.data().provider !== null)   
+            setProvider(snapshot.data().provider);
+      }
+    }
+    });
+
+    return unsub;
+  }
+  }, [signedIn])
+  
+  const renderedContent = useMemo(() => {
     if (user) {
-      if (provider === null) {
-        console.log('no provider!');
-        
-        return <ChooseRoleView />;
-      } else if (provider) {
+      if (provider) {
         return (
           <ProviderStack.Navigator>
-            <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView} />
-            <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="consumerStatusView" component={ConsumerStatusView} />
+            <ProviderStack.Screen
+              options={{ title: "", headerTransparent: true }}
+              name="providerRequestsView"
+              component={ProviderRequestsView}
+            />
+            <ProviderStack.Screen
+              options={{ title: "", headerTransparent: true }}
+              name="consumerStatusView"
+              component={ConsumerStatusView}
+            />
           </ProviderStack.Navigator>
-        )
+        );
       } else {
         return (
           <ConsumerStack.Navigator>
             <ConsumerStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
-            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="consumerRequestsView" component={ConsumerRequestsView} />
-            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="multiProviderDetailsView" component={MultiProviderDetailsView} />
-            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="singleProviderDetailsView" component={SingleProviderDetailsView} />
+            <ConsumerStack.Screen
+              options={{ title: "", headerTransparent: true }}
+              name="consumerRequestsView"
+              component={ConsumerRequestsView}
+            />
+            <ConsumerStack.Screen
+              options={{ title: "", headerTransparent: true }}
+              name="multiProviderDetailsView"
+              component={MultiProviderDetailsView}
+            />
+            <ConsumerStack.Screen
+              options={{ title: "", headerTransparent: true }}
+              name="singleProviderDetailsView"
+              component={SingleProviderDetailsView}
+            />
           </ConsumerStack.Navigator>
-        )
+        );
       }
+    } else {
+      return <AuthScreenStack />;
     }
-    else return <AuthScreenStack />;
-  };
-  return <NavigationContainer>{renderContent()}</NavigationContainer>;
+  }, [user, provider]);
+
+  return <NavigationContainer>{renderedContent}</NavigationContainer>;
 }
 
 

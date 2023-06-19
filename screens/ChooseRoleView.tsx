@@ -2,20 +2,24 @@ import { Button, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParams } from '../App';
+import { useNavigation } from '@react-navigation/native';
+
+type chooseRoleViewProp = NativeStackNavigationProp<AuthStackParams, 'chooseRoleView'>;
 
 export function ChooseRoleView() {
+  const navigation = useNavigation<chooseRoleViewProp>();
+
   const setRole = async (provider: boolean) => {
     await updateDoc(doc(db, 'users', auth.currentUser!.uid), {
       provider
     });
   }
-  useEffect(() => {
-    console.log("here!")
-  }, [])
   
   return (
-    <View style={{ marginTop: 40, marginLeft: 49}}>
-      <Text>hi</Text>
+    <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
+      <Text>Choose Role</Text>
       <View style={styles.buttonContainer}>
         <Button title="Provider" onPress={() => setRole(true)}/>
       </View>
@@ -28,6 +32,6 @@ export function ChooseRoleView() {
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        flex: 1,
+        // flex: 1,
     }
 })

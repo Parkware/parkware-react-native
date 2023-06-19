@@ -19,6 +19,7 @@ import MultiProviderDetailsView from './screens/consumerComponents/MultiProvider
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
 import { CountdownTimer } from './screens/consumerComponents/CountdownTimer';
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
+import { ChooseRoleView } from './screens/ChooseRoleView';
 
 export type ConsumerStackParams = {
   Home: undefined;
@@ -40,6 +41,7 @@ export type AuthStackParams = {
   Login: undefined;
   Signup: undefined;
   resetPassword: undefined;
+  chooseRoleView: undefined;
 }
 
 const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
@@ -52,28 +54,36 @@ const AuthScreenStack = () => {
         <AuthStack.Screen options={{ headerShown: false }} name="Login" component={Login}/>
         <AuthStack.Screen options={{ headerShown: false }} name="Signup" component={Signup}/>
         <AuthStack.Screen options={{ headerShown: false, title: "Reset Password" }} name="resetPassword" component={ResetPassword} />
+        <AuthStack.Screen options={{ headerShown: false, title: "Choose Role" }} name="chooseRoleView" component={ChooseRoleView} />
       </AuthStack.Navigator>
   )
 }
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [provider, setProvider] = useState(false);
+  const [provider, setProvider] = useState<boolean | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-        if (user) {
-          const docSnap = await getDoc(doc(db, 'users/', user.uid));
-          if (docSnap.exists()) setProvider(docSnap.data().provider);
-        }
+      if (!provider === null) {
+        const docSnap = await getDoc(doc(db, 'users', user!.uid));
+        if (docSnap.exists())
+          setProvider(docSnap.data().provider);
+      } else {
+        // setProvider(null);
+      }
     });
     return unsubscribe;
-  }, [])
+  }, [provider])
 
   const renderContent = () => {
     if (user) {
-      if (provider) {
+      if (provider === null) {
+        console.log('no provider!');
+        
+        return <ChooseRoleView />;
+      } else if (provider) {
         return (
           <ProviderStack.Navigator>
             <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView} />

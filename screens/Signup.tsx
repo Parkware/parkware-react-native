@@ -25,15 +25,14 @@ export function Signup() {
         if (password === confirmPassword) {
           await createUserWithEmailAndPassword(auth, email, password)
           .then(() => {
-            if (auth.currentUser) {
-              setDoc(doc(db, "users", auth.currentUser.uid), {
-                email, 
-                name
-              })
-              .catch(error => {
-                console.log('Something went wrong with added user to firestore: ', error)
-              });
-            }
+            setDoc(doc(db, "users", auth.currentUser!.uid), {
+              email, 
+              name
+            })
+            .catch(error => {
+              console.log('Something went wrong with added user to firestore: ', error)
+            });
+            () => navigation.navigate('chooseRoleView')
           });
         } else {
           setError("Passwords don't match");

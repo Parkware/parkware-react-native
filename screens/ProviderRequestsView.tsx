@@ -57,15 +57,14 @@ export function ProviderRequestsView() {
             doc: e.data(),
           } as docDataPair
 
-          if (auth.currentUser) {
-            if (e.data().interestedProviderIds.includes(auth.currentUser.uid)) {
-              penEventPromises.push(eventObj);
-            } else if (e.data().accepted_provider_id === auth.currentUser.uid) {
-              accEventPromises.push(eventObj);
-            } else {
-              openEventPromises.push(eventObj);
-            }
-        }});
+          if (e.data().interestedProviderIds.includes(auth.currentUser!.uid)) {
+            penEventPromises.push(eventObj);
+          } else if (e.data().accepted_provider_id === auth.currentUser!.uid) {
+            accEventPromises.push(eventObj);
+          } else {
+            openEventPromises.push(eventObj);
+          }
+        });
       
         const penEvents = await Promise.all(penEventPromises);
         const accEvents = await Promise.all(accEventPromises);
@@ -106,43 +105,41 @@ export function ProviderRequestsView() {
   const updateDB = async (ddPair: docDataPair, accepted: boolean) => {
     const doc_id = ddPair.id;
     const curEventRef = doc(db, 'events/', doc_id);
-    if (auth.currentUser) {
-      const currUid = auth.currentUser.uid;
-      if (accepted) {
-        if (ddPair.doc.consumer_id != currUid) {
-          const currUserRef = doc(db, 'users/', currUid);
-          const currUserSnap = await getDoc(currUserRef);
-          if (currUserSnap.exists()) {
-            let already_providing = false;
-            const eventSnap = await getDoc(curEventRef);
-            // Eventually, this won't be needed since we would disable if already sent, but just to validate
-            if (eventSnap.exists()) {
-              eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
-                  if (prov.provider_id == currUid) already_providing = true
-              });
-            }
-            if (!already_providing) {
-              await setDoc(curEventRef, {
-                interestedProviders: arrayUnion({
-                  provider_id: currUid,
-                  name: currUserSnap.data().name,
-                  address: currUserSnap.data().address
-                }),
-              }, { merge: true });
-              await updateDoc(curEventRef, {
-                interestedProviderIds: arrayUnion(currUid),
-              });
-            }
+    const currUid = auth.currentUser!.uid;
+    if (accepted) {
+      if (ddPair.doc.consumer_id != currUid) {
+        const currUserRef = doc(db, 'users/', currUid);
+        const currUserSnap = await getDoc(currUserRef);
+        if (currUserSnap.exists()) {
+          let already_providing = false;
+          const eventSnap = await getDoc(curEventRef);
+          // Eventually, this won't be needed since we would disable if already sent, but just to validate
+          if (eventSnap.exists()) {
+            eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
+                if (prov.provider_id == currUid) already_providing = true
+            });
+          }
+          if (!already_providing) {
+            await setDoc(curEventRef, {
+              interestedProviders: arrayUnion({
+                provider_id: currUid,
+                name: currUserSnap.data().name,
+                address: currUserSnap.data().address
+              }),
+            }, { merge: true });
+            await updateDoc(curEventRef, {
+              interestedProviderIds: arrayUnion(currUid),
+            });
           }
         }
       }
-      /*
-      A provider may need to be able to revert their acceptance to an event request. 
-      else {
-        await deleteDoc(doc(db, "interested_providers/", auth.currentUser.uid));
-      }
-      */
     }
+    /*
+    A provider may need to be able to revert their acceptance to an event request. 
+    else {
+      await deleteDoc(doc(db, "interested_providers/", auth.currentUser.uid));
+    }
+    */
     await updateDoc(curEventRef, { accepted });
   }
 

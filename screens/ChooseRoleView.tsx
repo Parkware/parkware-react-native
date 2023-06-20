@@ -4,17 +4,19 @@ import { doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from '../App';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 
-type Props = NativeStackNavigationProp<AuthStackParams, 'chooseRoleView'>;
+
+type Props = {
+  navigation: NativeStackNavigationProp<AuthStackParams, 'chooseRoleView'>;
+  route: RouteProp<AuthStackParams, 'chooseRoleView'>;
+};
 
 export const ChooseRoleView = ({ route }: Props) => {
-  // const { user } = route;
+  const { user } = route.params;
 
   const setRole = async (provider: boolean) => {
-    console.log(route);
-    
-    await updateDoc(doc(db, 'users', auth.currentUser!.uid), {
+    await updateDoc(doc(db, 'users', user.uid), {
       provider
     });
   }
@@ -31,6 +33,7 @@ export const ChooseRoleView = ({ route }: Props) => {
     </View>
   )
 }
+
 
 const styles = StyleSheet.create({
     buttonContainer: {

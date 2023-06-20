@@ -29,7 +29,7 @@ export function Signup() {
           email, 
           name
         })
-        navigation.navigate('chooseRoleView', { user })
+        navigation.navigate('Login') //, { user })
         // } else {
         //   setError("Passwords don't match");
         // }

@@ -22,21 +22,17 @@ export function Signup() {
 
     const createAccount = async () => {
       try {
-        if (password === confirmPassword) {
-          await createUserWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            setDoc(doc(db, "users", auth.currentUser!.uid), {
-              email, 
-              name
-            })
-            .catch(error => {
-              console.log('Something went wrong with added user to firestore: ', error)
-            });
-            navigation.navigate('chooseRoleView')
-          });
-        } else {
-          setError("Passwords don't match");
-        }
+        // if (password === confirmPassword) {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password)
+        const user = userCred.user;
+        await setDoc(doc(db, "users", user.uid), {
+          email, 
+          name
+        })
+        navigation.navigate('chooseRoleView', { user })
+        // } else {
+        //   setError("Passwords don't match");
+        // }
       } catch (e) {
         console.log('Something went wrong with sign up: ', e);
       }
@@ -89,7 +85,7 @@ export function Signup() {
           <Button
             title="Create Account"
             onPress={createAccount}
-            disabled={!email || !password || !confirmPassword}
+            disabled={!email || !password }
           />
         </View>
       </View>

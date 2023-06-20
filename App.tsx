@@ -41,7 +41,9 @@ export type AuthStackParams = {
   Login: undefined;
   Signup: undefined;
   resetPassword: undefined;
-  chooseRoleView: undefined;
+  chooseRoleView: {
+    user: User;
+  };
 }
 
 const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
@@ -62,35 +64,28 @@ const AuthScreenStack = () => {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [provider, setProvider] = useState<boolean | null>(null);
-  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {      
-      console.log("state changed");
-      if (user) {
+      if (user) 
         setUser(user);
-        setSignedIn(true);
-      }
     });
     return unsubscribe;
   }, [])
 
   useEffect(() => {
-    if (auth.currentUser) {
-    const unsub = onSnapshot(doc(db, 'users', auth.currentUser!.uid), async (snapshot) => {
-      if (signedIn) {
+    if(user) {
+      const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {
         if (snapshot.exists()) {
           if (snapshot.data().provider !== null)   
             setProvider(snapshot.data().provider);
-      }
+        }
+      });
+      return unsub;
     }
-    });
-
-    return unsub;
-  }
-  }, [signedIn])
+  }, [])
   
-  const renderedContent = useMemo(() => {
+  const RenderContent = () => {
     if (user) {
       if (provider) {
         return (
@@ -132,9 +127,9 @@ export default function App() {
     } else {
       return <AuthScreenStack />;
     }
-  }, [user, provider]);
+  };
 
-  return <NavigationContainer>{renderedContent}</NavigationContainer>;
+  return <NavigationContainer><RenderContent /></NavigationContainer>;
 }
 
 

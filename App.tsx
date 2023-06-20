@@ -17,7 +17,6 @@ import 'react-native-gesture-handler';
 import { doc, getDoc } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
-import { CountdownTimer } from './screens/consumerComponents/CountdownTimer';
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
 
 export type ConsumerStackParams = {

@@ -23,8 +23,6 @@ export function Signup() {
     const navigation = useNavigation<signupScreenProp>();
 
     useEffect(() => {
-      console.log('role view');
-      
       if (user) navigation.navigate('chooseRoleView', { user })
     }, [user])
     

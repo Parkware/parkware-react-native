@@ -3,11 +3,11 @@ import React, { useEffect } from 'react'
 import { doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from '../App';
+import { AuthStackParams, RootStackParams } from '../App';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
 
-type Props = NativeStackNavigationProp<AuthStackParams, 'chooseRoleView'>;
+type Props = NativeStackNavigationProp<RootStackParams, 'chooseRoleView'>;
 
 export const ChooseRoleView = ({ route }: Props) => {
   const { user } = route.params;

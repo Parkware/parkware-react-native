@@ -20,7 +20,7 @@ import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView'
 import { ChooseRoleView } from './screens/ChooseRoleView';
 
 export type RootStackParams = {
-  ConsumerStack: undefined;
+  ConsumerStack: NavigatorScreenParams<ProviderStackParams>;
   ProviderStack: NavigatorScreenParams<ConsumerStackParams>;
   chooseRoleView: {
     user: User;
@@ -134,11 +134,7 @@ export default function App() {
   const RenderContent = () => {
     if (user) {
       return (
-        <RootStack.Navigator screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarActiveTintColor: '#e67a15',
-          tabBarInactiveTintColor: 'gray',
-        })}>
+        <RootStack.Navigator initialRouteName='chooseRoleView'>
           <RootStack.Screen name="ProviderStack" component={ProviderScreenStack} />
           <RootStack.Screen
             name="ConsumerStack"

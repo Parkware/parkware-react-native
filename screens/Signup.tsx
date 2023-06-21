@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import {
+  User,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
@@ -17,9 +18,16 @@ export function Signup() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [user, setUser] = useState<User | null>(null);
 
     const navigation = useNavigation<signupScreenProp>();
 
+    useEffect(() => {
+      console.log('role view');
+      
+      if (user) navigation.navigate('chooseRoleView', { user })
+    }, [user])
+    
     const createAccount = async () => {
       try {
         // if (password === confirmPassword) {
@@ -28,8 +36,8 @@ export function Signup() {
         await setDoc(doc(db, "users", user.uid), {
           email, 
           name
-        })
-        navigation.navigate('Login') //, { user })
+        });
+        setUser(user);
         // } else {
         //   setError("Passwords don't match");
         // }

@@ -7,14 +7,15 @@ import { AuthStackParams } from '../App';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 
 
-type Props = {
-  navigation: NativeStackNavigationProp<AuthStackParams, 'chooseRoleView'>;
-  route: RouteProp<AuthStackParams, 'chooseRoleView'>;
-};
+type Props = NativeStackNavigationProp<AuthStackParams, 'chooseRoleView'>;
 
 export const ChooseRoleView = ({ route }: Props) => {
   const { user } = route.params;
 
+  useEffect(() => {
+    console.log('here!');
+    
+  }, [])
   const setRole = async (provider: boolean) => {
     await updateDoc(doc(db, 'users', user.uid), {
       provider

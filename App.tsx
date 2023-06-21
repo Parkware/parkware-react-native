@@ -120,7 +120,7 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if(user) {
+    if (user) {
       const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {
         if (snapshot.exists()) {
           if (snapshot.data().provider !== null)   
@@ -135,7 +135,10 @@ export default function App() {
     if (user) {
       return (
         <RootStack.Navigator initialRouteName='chooseRoleView'>
-          <RootStack.Screen name="ProviderStack" component={ProviderScreenStack} />
+          <RootStack.Screen 
+            name="ProviderStack" 
+            component={ProviderScreenStack} 
+          />
           <RootStack.Screen
             name="ConsumerStack"
             component={ConsumerScreenStack}

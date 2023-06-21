@@ -1,13 +1,12 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { doc, updateDoc } from 'firebase/firestore'
-import { auth, db } from '../firebaseConfig'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams, RootStackParams } from '../App';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { db } from '../firebaseConfig'
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParams } from '../App';
 
 
-type Props = NativeStackNavigationProp<RootStackParams, 'chooseRoleView'>;
+type Props = NativeStackScreenProps<RootStackParams, 'chooseRoleView'>;
 
 export const ChooseRoleView = ({ route }: Props) => {
   const { user } = route.params;
@@ -16,6 +15,7 @@ export const ChooseRoleView = ({ route }: Props) => {
     console.log('here!');
     
   }, [])
+  
   const setRole = async (provider: boolean) => {
     await updateDoc(doc(db, 'users', user.uid), {
       provider

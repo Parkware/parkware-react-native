@@ -22,9 +22,14 @@ export function Signup() {
 
     const navigation = useNavigation<signupScreenProp>();
 
-    useEffect(() => {
-      if (user) navigation.navigate('chooseRoleView', { user })
-    }, [user])
+    const navChooseView = () => {
+      if (user) 
+        navigation.navigate('RootStack', {
+          screen: 'chooseRoleView',
+          params: { user },
+        })
+      return <Text>loading next view...</Text>
+    }
     
     const createAccount = async () => {
       try {
@@ -94,6 +99,7 @@ export function Signup() {
             disabled={!email || !password }
           />
         </View>
+        {user && navChooseView()}
       </View>
     );
   }

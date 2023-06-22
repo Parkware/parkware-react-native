@@ -22,6 +22,9 @@ import { ChooseRoleView } from './screens/ChooseRoleView';
 export type RootStackParams = {
   ConsumerStack: NavigatorScreenParams<ConsumerStackParams>;
   ProviderStack: NavigatorScreenParams<ProviderStackParams>;
+  chooseRoleView: {
+    user: User;
+  };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
@@ -52,13 +55,6 @@ export type AuthStackParams = {
   Login: undefined;
   Signup: undefined;
   resetPassword: undefined;
-}
-
-export type LoginStackParams = {
-  Login: undefined;
-   chooseRoleView: {
-    user: User;
-  };
 }
 
 const AuthStack = createNativeStackNavigator<AuthStackParams>();

@@ -5,7 +5,7 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParams } from '../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
@@ -19,17 +19,18 @@ export function Signup() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [user, setUser] = useState<User | null>(null);
-
+    const [provider, setProvider] = useState(false)
     const navigation = useNavigation<signupScreenProp>();
 
-    const navChooseView = () => {
-      if (user) 
-        navigation.navigate('RootStack', {
-          screen: 'chooseRoleView',
-          params: { user },
-        })
-      return <Text>loading next view...</Text>
-    }
+    // create another stack prop and navigate that way. 
+    // const navChooseView = () => {
+    //   if (user) 
+    //     navigation.navigate('RootStack', {
+    //       screen: 'chooseRoleView',
+    //       params: { user },
+    //     })
+    //   return <></>
+    // }
     
     const createAccount = async () => {
       try {
@@ -37,8 +38,9 @@ export function Signup() {
         const userCred = await createUserWithEmailAndPassword(auth, email, password)
         const user = userCred.user;
         await setDoc(doc(db, "users", user.uid), {
-          email, 
-          name
+          email,
+          name,
+          provider
         });
         setUser(user);
         // } else {
@@ -92,14 +94,22 @@ export function Signup() {
             placeholderTextColor="#aaa"
             style={styles.input}
           />
-  
           <Button
             title="Create Account"
             onPress={createAccount}
             disabled={!email || !password }
           />
         </View>
-        {user && navChooseView()}
+        <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
+          <Text>Choose Role</Text>
+          <View>
+            <Button title="Provider" onPress={() => setProvider(true)}/>
+          </View>
+          <View>
+            <Button title="Consumer" onPress={() => setProvider(false)}/>
+          </View>
+        </View>
+        {/* {user && navChooseView()} */}
       </View>
     );
   }

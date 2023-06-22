@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
-import { HomeScreen } from './screens/providerComponents/MakeRequestScreen';
+import { MakeRequestScreen } from './screens/providerComponents/MakeRequestScreen';
 import { Signup } from './screens/Signup';
 import { ResetPassword } from './screens/ResetPassword';
 import { Login } from './screens/Login';
@@ -20,17 +20,14 @@ import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView'
 import { ChooseRoleView } from './screens/ChooseRoleView';
 
 export type RootStackParams = {
-  ConsumerStack: NavigatorScreenParams<ProviderStackParams>;
-  ProviderStack: NavigatorScreenParams<ConsumerStackParams>;
-  chooseRoleView: {
-    user: User;
-  };
+  ConsumerStack: NavigatorScreenParams<ConsumerStackParams>;
+  ProviderStack: NavigatorScreenParams<ProviderStackParams>;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
 
 export type ConsumerStackParams = {
-  Home: undefined;
+  makeRequestScreen: undefined;
   consumerRequestsView: any;
   multiProviderDetailsView: {
     event: docDataTrio;
@@ -57,6 +54,13 @@ export type AuthStackParams = {
   resetPassword: undefined;
 }
 
+export type LoginStackParams = {
+  Login: undefined;
+   chooseRoleView: {
+    user: User;
+  };
+}
+
 const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
 const AuthScreenStack = () => {
@@ -71,7 +75,7 @@ const AuthScreenStack = () => {
 
 const ProviderScreenStack = () => {
   return (
-    <ProviderStack.Navigator>
+    <ProviderStack.Navigator initialRouteName='providerRequestsView'>
       <ProviderStack.Screen
         options={{ title: "", headerTransparent: true }}
         name="providerRequestsView"
@@ -88,8 +92,12 @@ const ProviderScreenStack = () => {
 
 const ConsumerScreenStack = () => {
   return (
-    <ConsumerStack.Navigator>
-      <ConsumerStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
+    <ConsumerStack.Navigator initialRouteName='consumerRequestsView'>
+      <ConsumerStack.Screen 
+        options={{ headerShown: false }} 
+        name="makeRequestScreen" 
+        component={MakeRequestScreen} 
+      />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
         name="consumerRequestsView"
@@ -135,11 +143,13 @@ export default function App() {
     if (user) {
       return (
         <RootStack.Navigator initialRouteName='chooseRoleView'>
-          <RootStack.Screen 
+          <RootStack.Screen
+            options={{ headerShown: false }} 
             name="ProviderStack" 
             component={ProviderScreenStack} 
           />
           <RootStack.Screen
+            options={{ headerShown: false }} 
             name="ConsumerStack"
             component={ConsumerScreenStack}
           />
@@ -147,6 +157,7 @@ export default function App() {
             options={{ headerShown: false, title: "Choose Role" }} 
             name="chooseRoleView" 
             component={ChooseRoleView} 
+            initialParams={{ user }}
           />
         </RootStack.Navigator>
       );

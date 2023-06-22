@@ -10,9 +10,9 @@ import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'Home'>;
+type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
-export function HomeScreen() {
+export function MakeRequestScreen() {
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date());
   const [address, setAddress] = useState<string>('');

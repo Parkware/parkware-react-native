@@ -131,7 +131,7 @@ const ProviderScreenStack = (user: any) => {
 
 const ConsumerScreenStack = () => {
   return (
-    <ConsumerStack.Navigator initialRouteName='consumerRequestsView'>
+    <ConsumerStack.Navigator initialRouteName='makeRequestScreen'>
       <ConsumerStack.Screen 
         options={{ headerShown: false }} 
         name="makeRequestScreen" 
@@ -162,10 +162,15 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        console.log('there is a user!');
+        
         setUser(user);
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
-        if (snapshot.exists())
+        if (snapshot.exists()) {
           setIsProvider(snapshot.data().provider);
+          console.log(snapshot.data().provider);
+        }
+        
       } else
         setUser(null);
     });
@@ -174,6 +179,8 @@ export default function App() {
   
   const RenderContent = () => {
     if (user) {
+      console.log(isProvider);
+      
       return (
         <RootStack.Navigator initialRouteName={isProvider ? "ProviderStack" : "ConsumerStack"}>
         <RootStack.Screen

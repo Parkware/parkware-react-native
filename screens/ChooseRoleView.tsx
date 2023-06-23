@@ -1,21 +1,37 @@
 import { Button, Text, View } from 'react-native'
-import React from 'react'
-import { doc, updateDoc } from 'firebase/firestore'
+import React, { useState } from 'react'
+import { doc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SignupStackParams } from '../App';
-import { signOut } from 'firebase/auth';
+import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'chooseRoleView'>;
 
 export const ChooseRoleView = ({ navigation, route }: Props) => {
-  const { user } = route.params;
+  const [user, setUser] = useState<User>();
+  const { name, email, password }  = route.params;
   
   const logout = async () => {
     try {
       await signOut(auth);
     } catch (e) {
       console.error(e);
+    }
+  };
+  
+  const createAccount = async (isProvider: boolean) => {
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCred.user;
+      await setDoc(doc(db, "users", user.uid), {
+        email,
+        name,
+        provider: isProvider
+      });
+      setUser(user);
+    } catch (e) {
+      console.log('Something went wrong with sign up: ', e);
     }
   };
   
@@ -29,26 +45,31 @@ export const ChooseRoleView = ({ navigation, route }: Props) => {
   //       screen: 'consumerRequestsView'
   //     });
   // }
-
-  const setRole = async (provider: boolean) => {
-    await updateDoc(doc(db, 'users', user.uid), {
-      provider
-    });
-    // changeScreen(provider);
-  };
   
-  return (
-    <View>
-      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
-        <Text>Choose Role</Text>
-        <View>
-          <Button title="Provider" onPress={() => setRole(true)}/>
+  const navConsumerReq = () => {
+    // navigation.navigate('ConsumerStack', {
+    //   screen: 'consumerRequestsView'
+    // });
+    
+  }
+  
+  const ChooseView = () => {
+    return (
+      <View>
+        <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
+          <Text>Sign up as a </Text>
+          <View>
+            <Button title="Provider" onPress={() => createAccount(true)}/>
+          </View>
+          <View>
+            <Button title="Consumer" onPress={() => createAccount(false)}/>
+          </View>
         </View>
-        <View>
-          <Button title="Consumer" onPress={() => setRole(false)}/>
-        </View>
+        <Button title="Log out" onPress={logout} />
       </View>
-      <Button title="Log out" onPress={logout} />
-    </View>
+    )
+  }   
+  return (
+    <ChooseView />
   )
 }

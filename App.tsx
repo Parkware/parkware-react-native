@@ -13,7 +13,7 @@ import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsVie
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
@@ -70,7 +70,9 @@ const LoginStack = createNativeStackNavigator<LoginStackParams>();
 export type SignupStackParams = {
   SignupScreen: undefined;
   chooseRoleView: {
-    user: User;
+    name: string,
+    email: string,
+    password: string
   };
 }
 
@@ -110,7 +112,7 @@ const AuthScreenStack = () => {
   )
 }
 
-const ProviderScreenStack = () => {
+const ProviderScreenStack = (user: any) => {
   return (
     <ProviderStack.Navigator initialRouteName='providerRequestsView'>
       <ProviderStack.Screen
@@ -155,40 +157,47 @@ const ConsumerScreenStack = () => {
 }
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [provider, setProvider] = useState<boolean | null>(null);
+  const [isProvider, setIsProvider] = useState<boolean | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log('i see a user!');
-        
-      setUser(user);
+      if (user) {
+        const snapshot = await getDoc(doc(db, 'users', user.uid)) 
+        if (snapshot.exists())
+          setIsProvider(snapshot.data().provider);
+        setUser(user);
+      }
     });
     return unsubscribe;
   }, [])
 
-  useEffect(() => {
-    if (user) {
-      const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {
-        if (snapshot.exists()) {
-          if (snapshot.data().provider !== null)   
-            setProvider(snapshot.data().provider);
-        }
-      });
-      return unsub;
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (user) {
+  //     const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {
+  //       console.log('using snapshot');
+        
+  //       if (snapshot.exists()) {
+  //         if (snapshot.data().provider !== null)   
+  //           setIsProvider(snapshot.data().provider);
+  //       }
+  //     });
+  //     return unsub;
+  //   }
+  // }, [])
   
   const RenderContent = () => {
     if (user) {
+      console.log(isProvider);
+      
       return (
-        <RootStack.Navigator>
-          <RootStack.Screen
-            options={{ headerShown: false }} 
+        <RootStack.Navigator initialRouteName={isProvider ? "ProviderStack" : "ConsumerStack"}>
+        <RootStack.Screen
+            options={{ headerShown: true }} 
             name="ProviderStack" 
-            component={ProviderScreenStack} 
+            component={ProviderScreenStack}
           />
           <RootStack.Screen
-            options={{ headerShown: false }} 
+            options={{ headerShown: true }} 
             name="ConsumerStack"
             component={ConsumerScreenStack}
           />

@@ -23,28 +23,21 @@ export function SignupScreen() {
     const navigation = useNavigation<signupScreenProp>();
 
     const navNextView = () => {
-      if (user) 
-        navigation.navigate('Signup', { screen: 'chooseRoleView', params: {user} })
-      return <></>
+      navigation.navigate('Signup', { 
+                            screen: 'chooseRoleView', 
+                            params: {
+                              name,
+                              email,
+                              password
+                            } 
+                          })
     }
     
-    const createAccount = async () => {
-      try {
-        // if (password === confirmPassword) {
-        const userCred = await createUserWithEmailAndPassword(auth, email, password)
-        const user = userCred.user;
-        await setDoc(doc(db, "users", user.uid), {
-          email,
-          name,
-          provider
-        });
-        setUser(user);
-        // } else {
-        //   setError("Passwords don't match");
-        // }
-      } catch (e) {
-        console.log('Something went wrong with sign up: ', e);
-      }
+    const checkPassword = () => {
+      // if (password !== confirmPassword) {
+      //   setError("Passwords don't match");
+      // } else
+        navNextView();
     };
   
     return (
@@ -92,20 +85,10 @@ export function SignupScreen() {
           />
           <Button
             title="Create Account"
-            onPress={createAccount}
+            onPress={checkPassword}
             disabled={!email || !password }
           />
         </View>
-        <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
-          <Text>Choose Role</Text>
-          <View>
-            <Button title="Provider" onPress={() => setProvider(true)}/>
-          </View>
-          <View>
-            <Button title="Consumer" onPress={() => setProvider(false)}/>
-          </View>
-        </View>
-        {user && navNextView()}
       </View>
     );
   }

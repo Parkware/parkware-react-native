@@ -1,9 +1,9 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthStackParams, LoginStackParams, RootStackParams } from '../App';
+import { LoginStackParams } from '../App';
 import { User, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 
@@ -44,6 +44,7 @@ export const ViewRoleView = ({ navigation, route }: Props) => {
       }
     }
   };
+  
 
   // const changeScreen = (provider: boolean) => {
   //   if (provider)
@@ -68,7 +69,6 @@ export const ViewRoleView = ({ navigation, route }: Props) => {
     // navigation.navigate('ConsumerStack', {
     //   screen: 'consumerRequestsView'
     // });
-    console.log('i am here');
     
   }
   

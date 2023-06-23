@@ -27,22 +27,8 @@ export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 
 export function ConsumerRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataTrio[]>([]);
   const [completedEvents, setCompletedEvents] = useState<docDataTrio[]>([]);
-  const [providers, setProviders] = useState<DocumentData[]>([]);
 
   const navigation = useNavigation<consumerScreenProp>();
-
-  const startProvidersListener = (e_id: string) => {
-    // Get interested providers within each event
-    onSnapshot(collection(db, `events/${e_id}/interested_providers/`), (proSnap) => {   
-      const proList: DocumentData[] = proSnap.docs.map((pro) => ({
-        id: pro.id,
-        doc: pro.data()
-      }));
-      console.log('before ' + JSON.stringify(proList));
-      
-      setProviders(proList);
-    });
-  }
   
   const getEvents = async () => {
     if (auth.currentUser) {

@@ -16,25 +16,19 @@ export function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [user, setUser] = useState<User>();
 
     const navigation = useNavigation<signupScreenProp>();
 
-    const loginUser = async () => {
-      try {
-        const userCred = await signInWithEmailAndPassword(auth, email, password);
-        setUser(userCred.user);
-        // navigation.navigate('Signup', { screen: 'SignupScreen', params: { user } })
-      } catch (error) {
-        if ((error as FirebaseError).code === 'auth/invalid-email' || (error as FirebaseError).code === 'auth/wrong-password') {
-          setError('Your email or password was incorrect');
-        } else if ((error as FirebaseError).code === 'auth/email-already-in-use') {
-          setError('An account with this email already exists');
-        } else {
-          setError('There was a problem with your request');
-        }
-      }
-    };
+    const navNextView = () => {
+      navigation.navigate('Login', { 
+                            screen: 'viewRoleView', 
+                            params: { 
+                              email,
+                              password
+                            } 
+                          })
+      return <></>
+    }
   
     return (
       <View style={styles.outer}>
@@ -70,16 +64,16 @@ export function LoginScreen() {
             <Text style={[styles.link, { color: '#333' }]}>I've forgotten my password</Text>
           </TouchableOpacity>
   
-          <Button title="Login" onPress={loginUser} disabled={!email || !password} />
+          <Button title="Login" onPress={navNextView} disabled={!email || !password} />
           <Button title="Login Consumer" onPress={() => { 
-            setEmail('naren@gmail.com')
-            setPassword('naren1234')
-            loginUser();
+            setEmail('naren@gmail.com');
+            setPassword('naren1234');
+            navNextView();
           }} />
           <Button title="Login Provider" onPress={() => { 
-            setEmail('dhanya@gmail.com')
-            setPassword('dhanya1234')
-            loginUser();
+            setEmail('dhanya@gmail.com');
+            setPassword('dhanya1234');
+            navNextView();
           }} />
         </View>
       </View>

@@ -60,9 +60,10 @@ const AuthStack = createNativeStackNavigator<AuthStackParams>();
 export type LoginStackParams = {
   LoginScreen: undefined;
   viewRoleView: {
-    user: User;
-  };
-}
+    email: string,
+    password: string
+  }
+};
 
 const LoginStack = createNativeStackNavigator<LoginStackParams>();
 
@@ -157,7 +158,9 @@ export default function App() {
   const [provider, setProvider] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {      
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log('i see a user!');
+        
       setUser(user);
     });
     return unsubscribe;

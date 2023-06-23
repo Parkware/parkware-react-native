@@ -1,9 +1,9 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
+import { Button, Text, View } from 'react-native'
+import React from 'react'
 import { doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { AuthStackParams, RootStackParams, SignupStackParams } from '../App';
+import { SignupStackParams } from '../App';
 import { signOut } from 'firebase/auth';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'chooseRoleView'>;

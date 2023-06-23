@@ -22,8 +22,7 @@ export function SignupScreen() {
     const [provider, setProvider] = useState(false)
     const navigation = useNavigation<signupScreenProp>();
 
-    // create another stack prop and navigate that way. 
-    const navChooseView = () => {
+    const navNextView = () => {
       if (user) 
         navigation.navigate('Signup', { screen: 'chooseRoleView', params: {user} })
       return <></>
@@ -106,7 +105,7 @@ export function SignupScreen() {
             <Button title="Consumer" onPress={() => setProvider(false)}/>
           </View>
         </View>
-        {/* {user && navChooseView()} */}
+        {user && navNextView()}
       </View>
     );
   }

@@ -12,7 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/ty
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Signup'>;
 
-export function Signup() {
+export function SignupScreen() {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,14 +23,11 @@ export function Signup() {
     const navigation = useNavigation<signupScreenProp>();
 
     // create another stack prop and navigate that way. 
-    // const navChooseView = () => {
-    //   if (user) 
-    //     navigation.navigate('RootStack', {
-    //       screen: 'chooseRoleView',
-    //       params: { user },
-    //     })
-    //   return <></>
-    // }
+    const navChooseView = () => {
+      if (user) 
+        navigation.navigate('Signup', { screen: 'chooseRoleView', params: {user} })
+      return <></>
+    }
     
     const createAccount = async () => {
       try {
@@ -56,7 +53,7 @@ export function Signup() {
         <View style={styles.inner}>
           <Text style={styles.header}>Sign up</Text>
           {error && <Text style={styles.error}>{error}</Text>}
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login', { screen: 'LoginScreen' })}>
             <Text style={styles.link}>Login to existing account</Text>
           </TouchableOpacity>
           <TextInput

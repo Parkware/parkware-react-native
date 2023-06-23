@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import {
+  User,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
@@ -11,16 +12,19 @@ import { AuthStackParams } from '../App';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Login'>;
 
-export function Login() {
+export function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-  
+    const [user, setUser] = useState<User>();
+
     const navigation = useNavigation<signupScreenProp>();
 
     const loginUser = async () => {
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        setUser(userCred.user);
+        // navigation.navigate('Signup', { screen: 'SignupScreen', params: { user } })
       } catch (error) {
         if ((error as FirebaseError).code === 'auth/invalid-email' || (error as FirebaseError).code === 'auth/wrong-password') {
           setError('Your email or password was incorrect');
@@ -39,7 +43,7 @@ export function Login() {
   
           {error && <Text style={styles.error}>{error}</Text>}
   
-          <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Signup', { screen: 'SignupScreen' })}>
             <Text style={styles.link}>Create an account</Text>
           </TouchableOpacity>
   

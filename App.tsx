@@ -5,9 +5,9 @@ import {
 } from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
 import { MakeRequestScreen } from './screens/providerComponents/MakeRequestScreen';
-import { Signup } from './screens/Signup';
+import { SignupScreen } from './screens/SignupScreen';
 import { ResetPassword } from './screens/ResetPassword';
-import { Login } from './screens/Login';
+import { LoginScreen } from './screens/LoginScreen';
 import { ProviderRequestsView, docDataPair } from './screens/ProviderRequestsView';
 import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
@@ -18,13 +18,11 @@ import MultiProviderDetailsView from './screens/consumerComponents/MultiProvider
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
+import { ViewRoleView } from './screens/ViewRoleView';
 
 export type RootStackParams = {
   ConsumerStack: NavigatorScreenParams<ConsumerStackParams>;
   ProviderStack: NavigatorScreenParams<ProviderStackParams>;
-  chooseRoleView: {
-    user: User;
-  };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
@@ -52,18 +50,60 @@ export type ProviderStackParams = {
 const ProviderStack = createNativeStackNavigator<ProviderStackParams>();
 
 export type AuthStackParams = {
-  Login: undefined;
-  Signup: undefined;
+  Login: NavigatorScreenParams<LoginStackParams>;
+  Signup: NavigatorScreenParams<SignupStackParams>;
   resetPassword: undefined;
 }
 
 const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
+export type LoginStackParams = {
+  LoginScreen: undefined;
+  viewRoleView: {
+    user: User;
+  };
+}
+
+const LoginStack = createNativeStackNavigator<LoginStackParams>();
+
+export type SignupStackParams = {
+  SignupScreen: undefined;
+  chooseRoleView: {
+    user: User;
+  };
+}
+
+const SignupStack = createNativeStackNavigator<SignupStackParams>();
+
+const LoginScreenStack = () => {
+  return (
+    <LoginStack.Navigator>
+      <LoginStack.Screen options={{ headerShown: false }} name="LoginScreen" component={LoginScreen}/>
+      <LoginStack.Screen 
+        options={{ headerShown: false, title: "Choose Role" }} 
+        name="viewRoleView" 
+        component={ViewRoleView} 
+      />
+    </LoginStack.Navigator>
+  )
+}
+const SignupScreenStack = () => {
+  return (
+    <SignupStack.Navigator>
+      <SignupStack.Screen options={{ headerShown: false }} name="SignupScreen" component={SignupScreen}/>
+      <SignupStack.Screen 
+        options={{ headerShown: false, title: "Choose Role" }} 
+        name="chooseRoleView" 
+        component={ChooseRoleView} 
+      />
+    </SignupStack.Navigator>
+  )
+}
 const AuthScreenStack = () => {
   return (
     <AuthStack.Navigator>
-      <AuthStack.Screen options={{ headerShown: false }} name="Login" component={Login}/>
-      <AuthStack.Screen options={{ headerShown: false }} name="Signup" component={Signup}/>
+      <AuthStack.Screen options={{ headerShown: false }} name="Login" component={LoginScreenStack}/>
+      <AuthStack.Screen options={{ headerShown: false }} name="Signup" component={SignupScreenStack}/>
       <AuthStack.Screen options={{ headerShown: false, title: "Reset Password" }} name="resetPassword" component={ResetPassword} />
     </AuthStack.Navigator>
   )
@@ -138,7 +178,7 @@ export default function App() {
   const RenderContent = () => {
     if (user) {
       return (
-        <RootStack.Navigator initialRouteName='chooseRoleView'>
+        <RootStack.Navigator>
           <RootStack.Screen
             options={{ headerShown: false }} 
             name="ProviderStack" 
@@ -148,12 +188,6 @@ export default function App() {
             options={{ headerShown: false }} 
             name="ConsumerStack"
             component={ConsumerScreenStack}
-          />
-          <RootStack.Screen 
-            options={{ headerShown: false, title: "Choose Role" }} 
-            name="chooseRoleView" 
-            component={ChooseRoleView} 
-            initialParams={{ user }}
           />
         </RootStack.Navigator>
       );

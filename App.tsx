@@ -104,7 +104,7 @@ const SignupScreenStack = () => {
 }
 const AuthScreenStack = () => {
   return (
-    <AuthStack.Navigator>
+    <AuthStack.Navigator initialRouteName='Login'>
       <AuthStack.Screen options={{ headerShown: false }} name="Login" component={LoginScreenStack}/>
       <AuthStack.Screen options={{ headerShown: false }} name="Signup" component={SignupScreenStack}/>
       <AuthStack.Screen options={{ headerShown: false, title: "Reset Password" }} name="resetPassword" component={ResetPassword} />
@@ -162,33 +162,18 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        setUser(user);
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
         if (snapshot.exists())
           setIsProvider(snapshot.data().provider);
-        setUser(user);
-      }
+      } else
+        setUser(null);
     });
     return unsubscribe;
   }, [])
-
-  // useEffect(() => {
-  //   if (user) {
-  //     const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {
-  //       console.log('using snapshot');
-        
-  //       if (snapshot.exists()) {
-  //         if (snapshot.data().provider !== null)   
-  //           setIsProvider(snapshot.data().provider);
-  //       }
-  //     });
-  //     return unsub;
-  //   }
-  // }, [])
   
   const RenderContent = () => {
     if (user) {
-      console.log(isProvider);
-      
       return (
         <RootStack.Navigator initialRouteName={isProvider ? "ProviderStack" : "ConsumerStack"}>
         <RootStack.Screen

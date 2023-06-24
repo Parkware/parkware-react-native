@@ -19,6 +19,7 @@ import SingleProviderDetailsView from './screens/consumerComponents/SingleProvid
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
 import { ViewRoleView } from './screens/ViewRoleView';
+import LoadingScreen from './screens/LoadingScreen';
 
 export type RootStackParams = {
   ConsumerStack: NavigatorScreenParams<ConsumerStackParams>;
@@ -158,6 +159,7 @@ const ConsumerScreenStack = () => {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isProvider, setIsProvider] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -166,14 +168,19 @@ export default function App() {
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
         if (snapshot.exists())
           setIsProvider(snapshot.data().provider);
-      } else
+      } else {
         setUser(null);
         setIsProvider(null);
+      }
+      setIsLoading(false);
     });
     return unsubscribe;
   }, [])
   
   const RenderContent = () => {
+    if (isLoading) {
+      return <LoadingScreen />;
+    }
     if (user) {
       console.log('is provider ' + isProvider);
       

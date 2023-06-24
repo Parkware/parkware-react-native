@@ -15,14 +15,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
-<<<<<<< HEAD
-import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
-=======
 import EventTimeView from './screens/consumerComponents/EventTimeView';
->>>>>>> user-mods-test
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
-import { ViewRoleView } from './screens/ViewRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 
 export type ConsumerStackParams = {

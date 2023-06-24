@@ -47,7 +47,7 @@ export const ChooseRoleView = ({ navigation, route }: Props) => {
     }
   };
 
-  const AddressInput = () => {
+  const addressInput = () => {
     return (
       <View>
         <TextInput
@@ -61,26 +61,21 @@ export const ChooseRoleView = ({ navigation, route }: Props) => {
       </View>
     )
   }
-  
-  const ChooseView = () => {
-    return (
-      <View>
-        <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
-          <Text>Sign up as a </Text>
-          <View>
-            <Button title="Provider" onPress={() => setShowAddress(true)}/>
-          </View>
-          <View>
-            <Button title="Consumer" onPress={() => createAccount(false)}/>
-          </View>
-        </View>
-        {showAddress && <AddressInput />}
-        <Button title="Log out" onPress={logout} />
-      </View>
-    )
-  }   
+
   return (
-    <ChooseView />
+    <View>
+      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
+        <Text>Sign up as a </Text>
+        <View>
+          <Button title="Provider" onPress={() => setShowAddress(true)}/>
+        </View>
+        <View>
+          <Button title="Consumer" onPress={() => createAccount(false)}/>
+        </View>
+      </View>
+      {showAddress && addressInput()}
+      <Button title="Log out" onPress={logout} />
+    </View>
   )
 }
 

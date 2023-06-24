@@ -162,24 +162,20 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log('there is a user!');
-        
         setUser(user);
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
-        if (snapshot.exists()) {
+        if (snapshot.exists())
           setIsProvider(snapshot.data().provider);
-          console.log(snapshot.data().provider);
-        }
-        
       } else
         setUser(null);
+        setIsProvider(null);
     });
     return unsubscribe;
   }, [])
   
   const RenderContent = () => {
     if (user) {
-      console.log(isProvider);
+      console.log('is provider ' + isProvider);
       
       return (
         <RootStack.Navigator initialRouteName={isProvider ? "ProviderStack" : "ConsumerStack"}>

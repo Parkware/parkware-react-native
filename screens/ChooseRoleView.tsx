@@ -1,4 +1,4 @@
-import { Button, Text, View } from 'react-native'
+import { Button, Text, TextInput, View, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { doc, setDoc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
@@ -10,6 +10,10 @@ type Props = NativeStackScreenProps<SignupStackParams, 'chooseRoleView'>;
 
 export const ChooseRoleView = ({ navigation, route }: Props) => {
   const [user, setUser] = useState<User>();
+  const [showAddress, setShowAddress] = useState(false);
+  const [address, setAddress] = useState('');
+  const [isProvider, setIsProvider] = useState(false);
+
   const { name, email, password }  = route.params;
   
   const logout = async () => {
@@ -24,33 +28,38 @@ export const ChooseRoleView = ({ navigation, route }: Props) => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCred.user;
-      await setDoc(doc(db, "users", user.uid), {
-        email,
-        name,
-        provider: isProvider
-      });
+      if (address.length !== 0)
+        await setDoc(doc(db, "users", user.uid), {
+          email,
+          name,
+          provider: isProvider,
+          address
+        });
+      else 
+        await setDoc(doc(db, "users", user.uid), {
+          email,
+          name,
+          provider: isProvider
+        });
       setUser(user);
     } catch (e) {
       console.log('Something went wrong with sign up: ', e);
     }
   };
-  
-  // const changeScreen = (provider: boolean) => {
-  //   if (provider)
-  //     navigation.navigate('ProviderStack', {
-  //       screen: 'providerRequestsView'
-  //     });
-  //   else
-  //     navigation.navigate('ConsumerStack', {
-  //       screen: 'consumerRequestsView'
-  //     });
-  // }
-  
-  const navConsumerReq = () => {
-    // navigation.navigate('ConsumerStack', {
-    //   screen: 'consumerRequestsView'
-    // });
-    
+
+  const AddressInput = () => {
+    return (
+      <View>
+        <TextInput
+          value={address}
+          onChangeText={setAddress}
+          placeholder="Enter address"
+          placeholderTextColor="#aaa"
+          style={styles.input}
+        />
+        <Button title="Add address" onPress={() => createAccount(true)} />
+      </View>
+    )
   }
   
   const ChooseView = () => {
@@ -59,12 +68,13 @@ export const ChooseRoleView = ({ navigation, route }: Props) => {
         <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
           <Text>Sign up as a </Text>
           <View>
-            <Button title="Provider" onPress={() => createAccount(true)}/>
+            <Button title="Provider" onPress={() => setShowAddress(true)}/>
           </View>
           <View>
             <Button title="Consumer" onPress={() => createAccount(false)}/>
           </View>
         </View>
+        {showAddress && <AddressInput />}
         <Button title="Log out" onPress={logout} />
       </View>
     )
@@ -73,3 +83,14 @@ export const ChooseRoleView = ({ navigation, route }: Props) => {
     <ChooseView />
   )
 }
+
+const styles = StyleSheet.create({
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+  }
+})

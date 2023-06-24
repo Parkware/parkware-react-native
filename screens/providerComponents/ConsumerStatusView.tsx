@@ -31,25 +31,29 @@ const ConsumerStatusView = ({ route }: Props) => {
     getProviderInfo();
   }, [])
   
-  const hasArrived = () => {
+  const GetArrivalStatus = () => {
     if (eventData.doc.consumerParkingStatus)
       return (
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>The guest has arrived at your space!</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
+          The guest has arrived at your space!
+        </Text>
       )
     return (
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>The guest isn't there yet!</Text>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
+        The guest isn't there yet!
+      </Text>
     )
   
   }
   return (
     <SafeAreaView style={{ marginLeft: 30 }}>
       <Text>Provider Info:</Text>
-      <Text>{providerInfo!.name}</Text>
-      <Text>{providerInfo!.address}</Text>
+      {/* <Text>{providerInfo!.name}</Text>
+      <Text>{providerInfo!.address}</Text> */}
       <Text style={{ paddingTop: 30 }}>Event Info:</Text>
       <EventBlock event={eventData} proView={true}/>
       <View style={{ paddingTop: 30}}>
-        {hasArrived()}
+        <GetArrivalStatus />
       </View>
     </SafeAreaView>
   )

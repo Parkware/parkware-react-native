@@ -1,129 +1,181 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
 import {
   User,
   onAuthStateChanged,
 } from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
-import { HomeScreen } from './screens/providerComponents/MakeRequestScreen';
-import { Signup } from './screens/Signup';
+import { MakeRequestScreen } from './screens/providerComponents/MakeRequestScreen';
+import { SignupScreen } from './screens/SignupScreen';
 import { ResetPassword } from './screens/ResetPassword';
-import { Login } from './screens/Login';
+import { LoginScreen } from './screens/LoginScreen';
 import { ProviderRequestsView, docDataPair } from './screens/ProviderRequestsView';
 import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsView';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
+<<<<<<< HEAD
 import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
+=======
+import EventTimeView from './screens/consumerComponents/EventTimeView';
+>>>>>>> user-mods-test
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
+import { ChooseRoleView } from './screens/ChooseRoleView';
+import { ViewRoleView } from './screens/ViewRoleView';
+import LoadingScreen from './screens/LoadingScreen';
 
 export type ConsumerStackParams = {
-  Home: undefined;
+  makeRequestScreen: undefined;
   consumerRequestsView: any;
   multiProviderDetailsView: {
     event: docDataTrio;
   };
-  singleProviderDetailsView: {
+  eventTimeView: {
     event: docDataTrio;
   };
 }
+
+const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
+
 export type ProviderStackParams = {
   providerRequestsView: undefined;
   consumerStatusView: {
     event: docDataPair;
   };
 }
+
+const ProviderStack = createNativeStackNavigator<ProviderStackParams>();
+
 export type AuthStackParams = {
-  Login: undefined;
-  Signup: undefined;
+  Login: NavigatorScreenParams<LoginStackParams>;
+  Signup: NavigatorScreenParams<SignupStackParams>;
   resetPassword: undefined;
 }
 
-const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
-const ProviderStack = createNativeStackNavigator<ProviderStackParams>();
 const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
+export type LoginStackParams = {
+  LoginScreen: undefined;
+};
+
+const LoginStack = createNativeStackNavigator<LoginStackParams>();
+
+export type SignupStackParams = {
+  SignupScreen: undefined;
+  chooseRoleView: {
+    name: string,
+    email: string,
+    password: string
+  };
+}
+
+const SignupStack = createNativeStackNavigator<SignupStackParams>();
+
+const LoginScreenStack = () => {
+  return (
+    <LoginStack.Navigator>
+      <LoginStack.Screen options={{ headerShown: false }} name="LoginScreen" component={LoginScreen}/>
+    </LoginStack.Navigator>
+  )
+}
+const SignupScreenStack = () => {
+  return (
+    <SignupStack.Navigator>
+      <SignupStack.Screen options={{ headerShown: false }} name="SignupScreen" component={SignupScreen}/>
+      <SignupStack.Screen 
+        options={{ headerShown: false, title: "Choose Role" }} 
+        name="chooseRoleView" 
+        component={ChooseRoleView} 
+      />
+    </SignupStack.Navigator>
+  )
+}
 const AuthScreenStack = () => {
   return (
-      <AuthStack.Navigator>
-        <AuthStack.Screen options={{ headerShown: false }} name="Login" component={Login}/>
-        <AuthStack.Screen options={{ headerShown: false }} name="Signup" component={Signup}/>
-        <AuthStack.Screen options={{ headerShown: false, title: "Reset Password" }} name="resetPassword" component={ResetPassword} />
-      </AuthStack.Navigator>
+    <AuthStack.Navigator initialRouteName='Login'>
+      <AuthStack.Screen options={{ headerShown: false }} name="Login" component={LoginScreenStack}/>
+      <AuthStack.Screen options={{ headerShown: false }} name="Signup" component={SignupScreenStack}/>
+      <AuthStack.Screen options={{ headerShown: false, title: "Reset Password" }} name="resetPassword" component={ResetPassword} />
+    </AuthStack.Navigator>
   )
 }
 
+const ProviderScreenStack = (user: any) => {
+  return (
+    <ProviderStack.Navigator initialRouteName='providerRequestsView'>
+      <ProviderStack.Screen
+        options={{ title: "", headerTransparent: true }}
+        name="providerRequestsView"
+        component={ProviderRequestsView}
+      />
+      <ProviderStack.Screen
+        options={{ title: "", headerTransparent: true }}
+        name="consumerStatusView"
+        component={ConsumerStatusView}
+      />
+    </ProviderStack.Navigator>
+  )
+}
+
+const ConsumerScreenStack = () => {
+  return (
+    <ConsumerStack.Navigator initialRouteName='makeRequestScreen'>
+      <ConsumerStack.Screen 
+        options={{ headerShown: false }} 
+        name="makeRequestScreen" 
+        component={MakeRequestScreen} 
+      />
+      <ConsumerStack.Screen
+        options={{ title: "", headerTransparent: true }}
+        name="consumerRequestsView"
+        component={ConsumerRequestsView}
+      />
+      <ConsumerStack.Screen
+        options={{ title: "", headerTransparent: true }}
+        name="multiProviderDetailsView"
+        component={MultiProviderDetailsView}
+      />
+      <ConsumerStack.Screen
+        options={{ title: "", headerTransparent: true }}
+        name="eventTimeView"
+        component={EventTimeView}
+      />
+    </ConsumerStack.Navigator>
+  );
+}
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [provider, setProvider] = useState(false);
+  const [isProvider, setIsProvider] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-        if (user) {
-          const docSnap = await getDoc(doc(db, 'users/', user.uid));
-          if (docSnap.exists()) setProvider(docSnap.data().provider);
-        }
+      if (user) {
+        setUser(user);
+        const snapshot = await getDoc(doc(db, 'users', user.uid)) 
+        if (snapshot.exists())
+          setIsProvider(snapshot.data().provider);
+      } else {
+        setUser(null);
+        setIsProvider(null);
+      }
+      setIsLoading(false);
     });
     return unsubscribe;
   }, [])
-
-  const renderContent = () => {
+  
+  const RenderContent = () => {
+    if (isLoading)
+      return <LoadingScreen />;
     if (user) {
-      if (provider) {
-        return (
-          <ProviderStack.Navigator>
-            <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="providerRequestsView" component={ProviderRequestsView} />
-            <ProviderStack.Screen options={{ title: "", headerTransparent: true }} name="consumerStatusView" component={ConsumerStatusView} />
-          </ProviderStack.Navigator>
-        )
-      } else {
-        return (
-          <ConsumerStack.Navigator>
-            <ConsumerStack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
-            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="consumerRequestsView" component={ConsumerRequestsView} />
-            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="multiProviderDetailsView" component={MultiProviderDetailsView} />
-            <ConsumerStack.Screen options={{ title: "", headerTransparent: true }} name="singleProviderDetailsView" component={SingleProviderDetailsView} />
-          </ConsumerStack.Navigator>
-        )
-      }
+      if (isProvider) 
+        return <ProviderScreenStack />
+      else
+        return <ConsumerScreenStack />
+    } else {
+      return <AuthScreenStack />;
     }
-    else return <AuthScreenStack />;
   };
-  return <NavigationContainer>{renderContent()}</NavigationContainer>;
+  return <NavigationContainer><RenderContent /></NavigationContainer>;
 }
-
-
-const styles = StyleSheet.create({
-  outer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inner: {
-    width: 240,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
-  },
-  error: {
-    marginBottom: 20,
-    color: 'red',
-  },
-  link: {
-    color: 'blue',
-    marginBottom: 20,
-  },
-});

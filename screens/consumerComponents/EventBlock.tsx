@@ -1,9 +1,6 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import { docDataPair } from "../ProviderRequestsView";
-import { auth, db } from '../../firebaseConfig';
-import { Divider } from "@rneui/base";
-import { consumerScreenProp, docDataTrio } from "../ConsumerRequestsView";
-import { DocumentData } from "firebase/firestore";
+import { docDataTrio } from "../ConsumerRequestsView";
 
 interface StatusTextProps {
   event: docDataTrio | docDataPair;

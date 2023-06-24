@@ -1,24 +1,24 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, doc, updateDoc } from 'firebase/firestore'
-import { Divider } from '@rneui/base'
+import { DocumentData, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 
-type Props = NativeStackScreenProps<ConsumerStackParams, 'singleProviderDetailsView'>
+type Props = NativeStackScreenProps<ConsumerStackParams, 'eventTimeView'>
 /*
     Is there some way that I can have one onSnapshot function listen and update both these pages?
     It isn't necessary since a user may only need updates from one screen, but it could be a good addition
     I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
     since many events could be looked at. 
 */
-const SingleProviderDetailsView = ({ route }: Props) => {
+const EventTimeView = ({ route }: Props) => {
   const { event } = route.params;
   const [timeRemaining, setTimeRemaining] = useState('');
   const targetDate = event.doc.startTime.toDate();
   const [diff, setDiff] = useState<number>();
+  const [providerInfo, setProviderInfo] = useState<DocumentData>();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,6 +45,29 @@ const SingleProviderDetailsView = ({ route }: Props) => {
       consumerParkingStatus: true,
     });
   }
+  const getProviderInfo = async () => {
+    const userSnap = await getDoc(doc(db, 'users/', event.doc.accepted_provider_id))
+    if (userSnap.exists())   
+      setProviderInfo(userSnap.data());
+  }
+
+  useEffect(() => {
+    getProviderInfo();
+  }, [])
+  
+  const RenderProInfo = () => {
+    if (providerInfo)
+      return (
+        <View>
+          <Text>{providerInfo.name}</Text>
+          <Text>{providerInfo.address}</Text>
+        </View>
+      )
+    return (
+      <Text>Loading...</Text>
+    )
+  }
+
   const renderContent = () => {
     if (diff) {
       if (diff <= 0) {
@@ -69,13 +92,15 @@ const SingleProviderDetailsView = ({ route }: Props) => {
   }
 
   return (
-    <SafeAreaView style={{ marginLeft: 20 }}>
-        {renderContent()}
+    <SafeAreaView style={{ marginLeft: 30 }}>
+      <Text>Provider Info:</Text>
+      <RenderProInfo />
+      {renderContent()}
     </SafeAreaView>
   )
 }
 
-export default SingleProviderDetailsView
+export default EventTimeView
 
 const styles = StyleSheet.create({
   container: {

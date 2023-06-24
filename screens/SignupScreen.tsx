@@ -1,46 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import {
+  User,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParams } from '../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Signup'>;
 
-export function Signup() {
+export function SignupScreen() {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-
+    const [user, setUser] = useState<User | null>(null);
+    const [provider, setProvider] = useState(false)
     const navigation = useNavigation<signupScreenProp>();
 
-    const createAccount = async () => {
-      try {
-        if (password === confirmPassword) {
-          await createUserWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            if (auth.currentUser) {
-              setDoc(doc(db, "users", auth.currentUser.uid), {
-                email, 
-                name
-              })
-              .catch(error => {
-                console.log('Something went wrong with added user to firestore: ', error)
-              });
-            }
-          });
-        } else {
-          setError("Passwords don't match");
-        }
-      } catch (e) {
-        console.log('Something went wrong with sign up: ', e);
-      }
+    const navNextView = () => {
+      navigation.navigate('Signup', { 
+                            screen: 'chooseRoleView', 
+                            params: {
+                              name,
+                              email,
+                              password
+                            } 
+                          })
+    }
+    
+    const checkPassword = () => {
+      // if (password !== confirmPassword) {
+      //   setError("Passwords don't match");
+      // } else
+        navNextView();
     };
   
     return (
@@ -48,7 +45,7 @@ export function Signup() {
         <View style={styles.inner}>
           <Text style={styles.header}>Sign up</Text>
           {error && <Text style={styles.error}>{error}</Text>}
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login', { screen: 'LoginScreen' })}>
             <Text style={styles.link}>Login to existing account</Text>
           </TouchableOpacity>
           <TextInput
@@ -86,11 +83,10 @@ export function Signup() {
             placeholderTextColor="#aaa"
             style={styles.input}
           />
-  
           <Button
             title="Create Account"
-            onPress={createAccount}
-            disabled={!email || !password || !confirmPassword}
+            onPress={checkPassword}
+            disabled={!email || !password }
           />
         </View>
       </View>

@@ -15,18 +15,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
-import SingleProviderDetailsView from './screens/consumerComponents/SingleProviderDetailsView';
+import EventTimeView from './screens/consumerComponents/EventTimeView';
 import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
 import { ViewRoleView } from './screens/ViewRoleView';
 import LoadingScreen from './screens/LoadingScreen';
-
-export type RootStackParams = {
-  ConsumerStack: NavigatorScreenParams<ConsumerStackParams>;
-  ProviderStack: NavigatorScreenParams<ProviderStackParams>;
-};
-
-const RootStack = createNativeStackNavigator<RootStackParams>();
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -34,7 +27,7 @@ export type ConsumerStackParams = {
   multiProviderDetailsView: {
     event: docDataTrio;
   };
-  singleProviderDetailsView: {
+  eventTimeView: {
     event: docDataTrio;
   };
 }
@@ -60,10 +53,6 @@ const AuthStack = createNativeStackNavigator<AuthStackParams>();
 
 export type LoginStackParams = {
   LoginScreen: undefined;
-  viewRoleView: {
-    email: string,
-    password: string
-  }
 };
 
 const LoginStack = createNativeStackNavigator<LoginStackParams>();
@@ -83,11 +72,6 @@ const LoginScreenStack = () => {
   return (
     <LoginStack.Navigator>
       <LoginStack.Screen options={{ headerShown: false }} name="LoginScreen" component={LoginScreen}/>
-      <LoginStack.Screen 
-        options={{ headerShown: false, title: "Choose Role" }} 
-        name="viewRoleView" 
-        component={ViewRoleView} 
-      />
     </LoginStack.Navigator>
   )
 }
@@ -150,8 +134,8 @@ const ConsumerScreenStack = () => {
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
-        name="singleProviderDetailsView"
-        component={SingleProviderDetailsView}
+        name="eventTimeView"
+        component={EventTimeView}
       />
     </ConsumerStack.Navigator>
   );
@@ -178,26 +162,13 @@ export default function App() {
   }, [])
   
   const RenderContent = () => {
-    if (isLoading) {
+    if (isLoading)
       return <LoadingScreen />;
-    }
     if (user) {
-      console.log('is provider ' + isProvider);
-      
-      return (
-        <RootStack.Navigator initialRouteName={isProvider ? "ProviderStack" : "ConsumerStack"}>
-        <RootStack.Screen
-            options={{ headerShown: true }} 
-            name="ProviderStack" 
-            component={ProviderScreenStack}
-          />
-          <RootStack.Screen
-            options={{ headerShown: true }} 
-            name="ConsumerStack"
-            component={ConsumerScreenStack}
-          />
-        </RootStack.Navigator>
-      );
+      if (isProvider) 
+        return <ProviderScreenStack />
+      else
+        return <ConsumerScreenStack />
     } else {
       return <AuthScreenStack />;
     }

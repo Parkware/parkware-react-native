@@ -27,6 +27,7 @@ export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 
 export function ConsumerRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataTrio[]>([]);
   const [completedEvents, setCompletedEvents] = useState<docDataTrio[]>([]);
+  // const [providerName, setProviderName] = useState('');
 
   const navigation = useNavigation<consumerScreenProp>();
   
@@ -87,6 +88,13 @@ export function ConsumerRequestsView() {
     });
   }
 
+  const providerNameText = async (proId: any) => {
+    const userSnap = await getDoc(doc(db, 'users/', proId))
+    if (userSnap.exists()){   
+      return <Text>{userSnap.data().name}</Text>
+    }
+  }
+
   const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
   const formatDate = (date: any) => date.toDate().toLocaleDateString();
 
@@ -118,19 +126,10 @@ export function ConsumerRequestsView() {
       </Text>
       
       {completedEvents.map((event) => (
-        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('singleProviderDetailsView', { event })}>
+        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('eventTimeView', { event })}>
           <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
+          {/* {providerNameText(event.doc.accepted_provider_id)} */}
           <EventBlock event={event} proView={false}/>
-          {event.interestedProviders.map((providerInfo: DocumentData) => {
-            if (providerInfo.provider_id === event.doc.accepted_provider_id) {
-              return (
-                <View key={providerInfo.provider_id}>
-                  <Text>{'Name: ' + providerInfo.name}</Text>
-                  <Text>{'Address: ' + providerInfo.address}</Text>
-                </View>
-              );
-            }
-          })}
           <Divider width={5} style={{ marginTop: 10 }}/>
         </TouchableOpacity>
       ))}

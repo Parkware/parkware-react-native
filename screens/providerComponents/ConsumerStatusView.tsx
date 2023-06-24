@@ -20,15 +20,16 @@ type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
 const ConsumerStatusView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataPair>(event);
-  const [providerInfo, setProviderInfo] = useState<DocumentData>();
+  const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
   
-  const getProviderInfo = async () => {
-    const userSnap = await getDoc(doc(db, 'users/', eventData.doc.accepted_provider_id))
+  const getConsumerInfo = async () => {
+    const userSnap = await getDoc(doc(db, 'users/', eventData.doc.consumer_id))
     if (userSnap.exists())   
-      setProviderInfo(userSnap.data());
-  }
+      setConsumerInfo(userSnap.data());
+    }
   useEffect(() => {
-    getProviderInfo();
+    getConsumerInfo();
+    
   }, [])
   
   const GetArrivalStatus = () => {
@@ -43,13 +44,24 @@ const ConsumerStatusView = ({ route }: Props) => {
         The guest isn't there yet!
       </Text>
     )
-  
+  }
+
+  const RenderConsInfo = () => {
+    if (consumerInfo)
+      return (
+        <View>
+          <Text>{consumerInfo.name}</Text>
+          <Text>{consumerInfo.email}</Text>
+        </View>
+      )
+    return (
+      <Text>Loading...</Text>
+    )
   }
   return (
     <SafeAreaView style={{ marginLeft: 30 }}>
-      <Text>Provider Info:</Text>
-      {/* <Text>{providerInfo!.name}</Text>
-      <Text>{providerInfo!.address}</Text> */}
+      <Text>Consumer Info:</Text>
+      <RenderConsInfo />
       <Text style={{ paddingTop: 30 }}>Event Info:</Text>
       <EventBlock event={eventData} proView={true}/>
       <View style={{ paddingTop: 30}}>

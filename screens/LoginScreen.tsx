@@ -21,17 +21,6 @@ export function LoginScreen() {
     const [provider, setProvider] = useState(false);
     const navigation = useNavigation<signupScreenProp>();
 
-    const navNextView = () => {
-      navigation.navigate('Login', { 
-                            screen: 'viewRoleView', 
-                            params: { 
-                              email,
-                              password
-                            } 
-                          })
-      return <></>
-    }
-
     const loginUser = async () => {
       try {
         const userCred = await signInWithEmailAndPassword(auth, email, password);

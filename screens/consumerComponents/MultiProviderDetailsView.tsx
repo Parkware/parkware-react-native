@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayRemove, doc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
 import { docDataTrio } from '../ConsumerRequestsView'
@@ -21,12 +21,9 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataTrio>(event);
 
-  const setAcceptStatus = async (accepted_provider_id: string) => {
-    const updatedProviders = removeLocalData(accepted_provider_id);
+  const setAcceptStatus = async (currProviderId: string) => {
     await updateDoc(doc(db, 'events/', event.id), { 
-      interestedProviderIds: arrayRemove(accepted_provider_id),
-      interestedProviders: updatedProviders,
-      accepted_provider_id,
+      acceptedProviderIds: arrayUnion(currProviderId),
       consumerParkingStatus: false,
     });
     setSentEvent(true);

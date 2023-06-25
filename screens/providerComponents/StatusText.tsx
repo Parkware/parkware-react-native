@@ -10,10 +10,10 @@ export const StatusText = ({ event }: StatusTextProps) => {
   if (auth.currentUser) {
     let statusWord = '';
     let statusColor = '';
-    if (event.doc.accepted_provider_id == auth.currentUser.uid) {
+    if (event.doc.acceptedProviderIds == auth.currentUser.uid) {
       statusWord = 'Status: accepted'
       statusColor = 'green';
-    } else if (event.doc.accepted_provider_id.length == 0) {
+    } else if (event.doc.acceptedProviderIds.length == 0) {
       statusWord = 'Status: pending'
       statusColor = 'yellow';
     } else {
@@ -25,7 +25,7 @@ export const StatusText = ({ event }: StatusTextProps) => {
         borderRadius: 10,
         borderColor: statusColor
       }} >
-        <Text key={event.doc.accepted_provider_id}>
+        <Text key={event.doc.acceptedProviderIds}>
             {statusWord}
         </Text>
       </View>

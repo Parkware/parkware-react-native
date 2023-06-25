@@ -46,29 +46,24 @@ const EventTimeView = ({ route }: Props) => {
     });
   }
   const getProviderInfo = async () => {
-    const userSnap = await getDoc(doc(db, 'users/', event.doc.accepted_provider_id))
-    if (userSnap.exists())   
-      setProviderInfo(userSnap.data());
+    const eventSnap = await getDoc(doc(db, 'events/', event.id))
+    if (eventSnap.exists()) {
+      let a: any = eventSnap.data().acceptedProviderIds
+      .map((proId: string) => eventSnap.data().interestedProviders
+      .find((proObj: any) => proObj.provider_id == proId))
+      
+      let f_a = await Promise.all(a)
+      setProviderInfo(f_a)
+    }
   }
 
   useEffect(() => {
+    console.log();
+    
     getProviderInfo();
   }, [])
-  
-  const RenderProInfo = () => {
-    if (providerInfo)
-      return (
-        <View>
-          <Text>{providerInfo.name}</Text>
-          <Text>{providerInfo.address}</Text>
-        </View>
-      )
-    return (
-      <Text>Loading...</Text>
-    )
-  }
 
-  const renderContent = () => {
+  const RenderContent = () => {
     if (diff) {
       if (diff <= 0) {
         return (
@@ -89,13 +84,21 @@ const EventTimeView = ({ route }: Props) => {
         )
       }
     }
+    return <Text>Loading...</Text>
   }
 
   return (
     <SafeAreaView style={{ marginLeft: 30 }}>
       <Text>Provider Info:</Text>
-      <RenderProInfo />
-      {renderContent()}
+      {providerInfo ? providerInfo.map((proObj: any) => {
+        return (
+          <View>
+            <Text>{proObj.name}</Text>
+            <Text>{proObj.address}</Text>
+          </View>
+        )
+      }) : <Text>Loading...</Text>}
+      <RenderContent />
     </SafeAreaView>
   )
 }

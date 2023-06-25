@@ -21,7 +21,8 @@ export interface docDataPair {
     startTime
     endTime
     accepted
-    accepted_provider_id
+    acceptedProviderIds
+    isOpen
   */
 }
 
@@ -42,26 +43,29 @@ export function ProviderRequestsView() {
     }
   };
   
+  // Reading the event data and setting eventData to it. 
   useEffect(() => {
     try {
-      // Reading the event data and setting eventData to it. 
       const unsub = onSnapshot(collection(db, 'events'), async (snapshot) => {            
-        // i can remove an array element interestedprovider and then add it to the accepted providers
         const openEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
         const accEventPromises: docDataPair[] = [];
+        let currUid: string = '';
+        if (auth.currentUser)
+          currUid = auth.currentUser.uid;
 
         snapshot.docs.map(e => {
           let eventObj = {
             id: e.id,
             doc: e.data(),
           } as docDataPair
-
-          if (e.data().interestedProviderIds.includes(auth.currentUser!.uid)) {
-            penEventPromises.push(eventObj);
-          } else if (e.data().accepted_provider_id === auth.currentUser!.uid) {
+          
+          // Order matters!
+          if (e.data().acceptedProviderIds.includes(currUid)) {
             accEventPromises.push(eventObj);
-          } else {
+          } else if (e.data().interestedProviderIds.includes(currUid)) {
+            penEventPromises.push(eventObj);
+          } else if (e.data().isOpen) {
             openEventPromises.push(eventObj);
           }
         });
@@ -126,10 +130,10 @@ export function ProviderRequestsView() {
                 name: currUserSnap.data().name,
                 address: currUserSnap.data().address
               }),
-            }, { merge: true });
-            await updateDoc(curEventRef, {
               interestedProviderIds: arrayUnion(currUid),
-            });
+            }, { merge: true });
+            // await updateDoc(curEventRef, {
+            // });
           }
         }
       }

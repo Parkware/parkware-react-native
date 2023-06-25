@@ -1,12 +1,10 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ConsumerStackParams, ProviderStackParams } from '../../App'
-import { DocumentData, arrayRemove, doc, getDoc, updateDoc } from 'firebase/firestore'
-import { Divider } from '@rneui/base'
+import { ProviderStackParams } from '../../App'
+import { DocumentData, doc, getDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
-import { docDataTrio } from '../ConsumerRequestsView'
 import { EventBlock } from '../consumerComponents/EventBlock'
 import { docDataPair } from '../ProviderRequestsView'
 
@@ -26,10 +24,10 @@ const ConsumerStatusView = ({ route }: Props) => {
     const userSnap = await getDoc(doc(db, 'users/', eventData.doc.consumer_id))
     if (userSnap.exists())   
       setConsumerInfo(userSnap.data());
-    }
+  }
+  
   useEffect(() => {
     getConsumerInfo();
-    
   }, [])
   
   const GetArrivalStatus = () => {

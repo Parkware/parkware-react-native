@@ -9,6 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import NumericInput from 'react-native-numeric-input'
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
@@ -19,6 +20,7 @@ export function MakeRequestScreen() {
   const [sentMessage, setSentMessage] = useState(false);
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
+  const [parkingSpaces, setParkingSpaces] = useState<number>(0);
   const navigation = useNavigation<homeScreenProp>();
 
   const logout = async () => {
@@ -44,9 +46,11 @@ export function MakeRequestScreen() {
           startTime,
           endTime,
           accepted: false, 
-          accepted_provider_id: '',
+          acceptedProviderIds: [],
           interestedProviders: [],
-          interestedProviderIds: []
+          interestedProviderIds: [],
+          parkingSpaces,
+          isOpen: true
         });
                 
         setStartTime(new Date());
@@ -121,6 +125,7 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
+      <NumericInput initValue={1} rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setParkingSpaces(value)} />
       {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"

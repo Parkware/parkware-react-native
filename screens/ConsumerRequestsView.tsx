@@ -26,17 +26,14 @@ export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 
 export function ConsumerRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataTrio[]>([]);
   const [completedEvents, setCompletedEvents] = useState<docDataTrio[]>([]);
-  // const [providerName, setProviderName] = useState('');
 
   const navigation = useNavigation<consumerScreenProp>();
   
   const modProviders = (eventData: DocumentData) => {
-    const updatedProviders = eventData.interestedProviders
-    .filter((proData: DocumentData) => 
-            eventData.interestedProviderIds.includes(proData.provider_id))
-    console.log(updatedProviders);
-    
-    return updatedProviders;
+    if (eventData)
+      return eventData.interestedProviders
+      .filter((proData: DocumentData) => 
+        eventData.interestedProviderIds.includes(proData.provider_id));
   }
 
   const getEvents = async () => {
@@ -47,12 +44,13 @@ export function ConsumerRequestsView() {
         const penEventPromises: docDataTrio[] = [];
         snap.docs.map(e => {
           const newPros = modProviders(e.data());
-          const eventData = e.data();
-          eventData.interestedProviders = newPros;
                             
           let eventObj = {
             id: e.id,
-            doc: eventData,
+            doc: {
+              ...e.data(),
+              interestedProviders: newPros
+            },
           } as docDataTrio;
           // The number below is some arbitrary number. I need to check against requested 
           // parking spaces

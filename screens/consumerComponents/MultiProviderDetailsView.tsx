@@ -26,8 +26,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       ...prevState,
       [providerId]: true, // Set the specific provider's button as disabled
     }));
-    console.log(disabledButtons);
-    
     setAcceptStatus(providerId);
   };
   
@@ -38,20 +36,28 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     });
   }
   
+  useEffect(() => {
+    // console.log(eventData.doc.interestedProviders);
+  }, [eventData])
+  
   // Removing a provider from the consumer view if they have been declined...sorry:(
   const removeLocalData = (provider_id: string) => {
-    const updatedProviders = eventData.doc.interestedProviders.filter((pro: DocumentData) => {
-      if (pro.provider_id !== provider_id) return pro;
-    })
+    declineUserId(provider_id);
+    const updatedProviders = eventData.doc.interestedProviders
+    .filter((pro: DocumentData) => pro.provider_id !== provider_id);
+    // console.log('updated providers');
+    // console.log(updatedProviders);
+    
     setEventData(prevEventData => {
-      return {
+      let retVal = {
         ...prevEventData,
         interestedProviders: updatedProviders
       }
-    });
-    console.log(updatedProviders);
+      console.log("set event data to:", retVal);
+      return retVal;
+  });
+    // console.log(eventData.doc.interestedProviders);
     
-    declineUserId(provider_id);
     return updatedProviders
   }
 
@@ -60,34 +66,34 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       interestedProviderIds: arrayRemove(decProId),
     });
   }
-
+  console.log("interested:", eventData.doc.interestedProviders);
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-          Event {eventData.id.slice(0, 3)}
+          Event: {eventData.doc.eventName}
       </Text>
       <EventBlock event={eventData} proView={false}/>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.interestedProviders.map((providerInfo: DocumentData) => (
         <View key={providerInfo.provider_id}>
-            <Text key={providerInfo.name}>
-            {'Name: ' + providerInfo.name}
-            </Text>
-            <Text key={providerInfo.address}>
-            {'Address: ' + providerInfo.address}
-            </Text>
-            <Button 
-              title='Accept' 
-              onPress={() => disableButton(providerInfo.provider_id)} 
-              disabled={disabledButtons[providerInfo.provider_id]} 
-            />
-            <Button 
-              title='Decline' 
-              onPress={() => removeLocalData(providerInfo.provider_id)} 
-              disabled={disabledButtons[providerInfo.provider_id]} 
-            />
-            <Divider width={5} style={{ marginTop: 10 }}/>
+          <Text key={providerInfo.name}>
+          {'Name: ' + providerInfo.name}
+          </Text>
+          <Text key={providerInfo.address}>
+          {'Address: ' + providerInfo.address}
+          </Text>
+          <Button 
+            title='Accept' 
+            onPress={() => disableButton(providerInfo.provider_id)} 
+            disabled={disabledButtons[providerInfo.provider_id]} 
+          />
+          <Button 
+            title='Decline' 
+            onPress={() => removeLocalData(providerInfo.provider_id)} 
+            disabled={disabledButtons[providerInfo.provider_id]} 
+          />
+          <Divider width={5} style={{ marginTop: 10 }}/>
         </View >
       ))}
     </SafeAreaView>

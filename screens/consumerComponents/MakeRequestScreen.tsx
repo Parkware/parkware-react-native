@@ -18,6 +18,7 @@ export function MakeRequestScreen() {
   const [endTime, setEndTime] = useState<Date>(new Date());
   const [address, setAddress] = useState<string>('');
   const [sentMessage, setSentMessage] = useState(false);
+  const [eventName, setEventName] = useState<string>();
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
   const [parkingSpaces, setParkingSpaces] = useState<number>();
@@ -40,6 +41,7 @@ export function MakeRequestScreen() {
       const consSnap = await getDoc(consRef)
       if (consSnap.exists()) {
         await addDoc(collection(db, 'events/'), {
+          eventName,
           consumer_id: auth.currentUser.uid,
           name: consSnap.data().name,
           address,
@@ -94,6 +96,16 @@ export function MakeRequestScreen() {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
       <Button title="Log out" onPress={logout} />
+      <TextInput
+        value={eventName}
+        onChangeText={setEventName}
+        keyboardType="default"
+        placeholder="Event Name"
+        autoCapitalize="none"
+        placeholderTextColor="#aaa"
+        autoCorrect={false}
+        style={styles.input}
+      />
       <DateTimePicker
         testID="dateTimePicker"
         value={startTime}

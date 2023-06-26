@@ -26,6 +26,8 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       ...prevState,
       [providerId]: true, // Set the specific provider's button as disabled
     }));
+    console.log(disabledButtons);
+    
     setAcceptStatus(providerId);
   };
   
@@ -47,13 +49,15 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         interestedProviders: updatedProviders
       }
     });
+    console.log(updatedProviders);
+    
     declineUserId(provider_id);
     return updatedProviders
   }
 
   const declineUserId = async (decProId: string) => {
     await updateDoc(doc(db, 'events/', event.id), { 
-      acceptedProviderIds: arrayRemove(decProId),
+      interestedProviderIds: arrayRemove(decProId),
     });
   }
 

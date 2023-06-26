@@ -78,27 +78,6 @@ export function ConsumerRequestsView() {
       }
   }, []);
 
-  useEffect(() => {
-    const doc_id_true = pendingEvents.find(d => d.doc.accepted === true)?.id;
-    const doc_id_false: docDataTrio[] = pendingEvents.filter(d => d.doc.accepted === false);
-
-    if (doc_id_true) {
-      updateDB(doc_id_true, true);
-    }
-    if (doc_id_false) {
-      doc_id_false.map((d) => {
-        updateDB(d.id, false);
-      })
-    }
-  }, [pendingEvents]);
-  
-  const updateDB = async (doc_id: string, accepted: boolean) => {
-    const docRef = doc(collection(db, 'events/'), doc_id);
-    await updateDoc(docRef, {
-      accepted
-    });
-  }
-
   const providerNameText = async (proId: any) => {
     const userSnap = await getDoc(doc(db, 'users/', proId))
     if (userSnap.exists()){   

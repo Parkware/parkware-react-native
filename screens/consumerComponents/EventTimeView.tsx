@@ -58,8 +58,6 @@ const EventTimeView = ({ route }: Props) => {
   }
 
   useEffect(() => {
-    console.log();
-    
     getProviderInfo();
   }, [])
 

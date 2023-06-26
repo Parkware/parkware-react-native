@@ -20,7 +20,7 @@ export function MakeRequestScreen() {
   const [sentMessage, setSentMessage] = useState(false);
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
-  const [parkingSpaces, setParkingSpaces] = useState<number>(0);
+  const [parkingSpaces, setParkingSpaces] = useState<number>();
   const navigation = useNavigation<homeScreenProp>();
 
   const logout = async () => {
@@ -125,7 +125,7 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
-      <NumericInput initValue={1} rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setParkingSpaces(value)} />
+      <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setParkingSpaces(value)} />
       {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"

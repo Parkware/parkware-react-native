@@ -92,9 +92,9 @@ const EventTimeView = ({ route }: Props) => {
       <Text>Provider Info:</Text>
       {providerInfo ? providerInfo.map((proObj: any) => {
         return (
-          <View>
-            <Text>{proObj.name}</Text>
-            <Text>{proObj.address}</Text>
+          <View key={proObj.id}>
+            <Text key={proObj.name}>{proObj.name}</Text>
+            <Text key={proObj.address}>{proObj.address}</Text>
           </View>
         )
       }) : <Text>Loading...</Text>}

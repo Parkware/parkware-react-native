@@ -45,7 +45,7 @@ export function ConsumerRequestsView() {
           } as docDataTrio;
           // The number below is some arbitrary number. I need to check against requested 
           // parking spaces
-          if (e.data().acceptedProviderIds.length == 1) 
+          if (e.data().acceptedProviderIds.length == 2) 
             compEventPromises.push(eventObj);
           else 
             penEventPromises.push(eventObj);

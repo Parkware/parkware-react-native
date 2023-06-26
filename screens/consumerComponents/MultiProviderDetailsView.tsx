@@ -38,7 +38,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   
   // Removing a provider from the consumer view if they have been declined...sorry:(
   const removeLocalData = (provider_id: string) => {
-    const updatedProviders = eventData.interestedProviders.filter(pro => {
+    const updatedProviders = eventData.doc.interestedProviders.filter((pro: DocumentData) => {
       if (pro.provider_id !== provider_id) return pro;
     })
     setEventData(prevEventData => {
@@ -65,7 +65,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       <EventBlock event={eventData} proView={false}/>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
-      {eventData.interestedProviders.map((providerInfo: DocumentData) => (
+      {eventData.doc.interestedProviders.map((providerInfo: DocumentData) => (
         <View key={providerInfo.provider_id}>
             <Text key={providerInfo.name}>
             {'Name: ' + providerInfo.name}

@@ -12,7 +12,6 @@ import { EventBlock } from './consumerComponents/EventBlock';
 export interface docDataTrio {
   id: string,
   doc: DocumentData,
-  interestedProviders: DocumentData[]
   /*
   Fields:
     address
@@ -31,6 +30,15 @@ export function ConsumerRequestsView() {
 
   const navigation = useNavigation<consumerScreenProp>();
   
+  const modProviders = (eventData: DocumentData) => {
+    const updatedProviders = eventData.interestedProviders
+    .filter((proData: DocumentData) => 
+            eventData.interestedProviderIds.includes(proData.provider_id))
+    console.log(updatedProviders);
+    
+    return updatedProviders;
+  }
+
   const getEvents = async () => {
     if (auth.currentUser) {
       const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
@@ -38,10 +46,13 @@ export function ConsumerRequestsView() {
         const compEventPromises: docDataTrio[] = [];
         const penEventPromises: docDataTrio[] = [];
         snap.docs.map(e => {
+          const newPros = modProviders(e.data());
+          const eventData = e.data();
+          eventData.interestedProviders = newPros;
+                            
           let eventObj = {
             id: e.id,
-            doc: e.data(),
-            interestedProviders: e.data().interestedProviders
+            doc: eventData,
           } as docDataTrio;
           // The number below is some arbitrary number. I need to check against requested 
           // parking spaces
@@ -110,7 +121,7 @@ export function ConsumerRequestsView() {
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
           <EventBlock event={event} proView={false}/>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-          {event.interestedProviders.map((providerInfo: DocumentData) => (
+          {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
             <View key={providerInfo.provider_id}>
               <Text key={providerInfo.name}>
               {'Name: ' + providerInfo.name}

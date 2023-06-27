@@ -20,6 +20,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataTrio>(event);
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
+  const [unwantedPros, setUnwantedPros] = useState<string[]>([]);
 
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
@@ -36,13 +37,11 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     });
   }
   
-  useEffect(() => {
-    // console.log(eventData.doc.interestedProviders);
-  }, [eventData])
-  
   // Removing a provider from the consumer view if they have been declined...sorry:(
   const removeLocalData = (provider_id: string) => {
+    unwantedPros.push(provider_id);
     declineUserId(provider_id);
+    
     const updatedProviders = eventData.doc.interestedProviders
     .filter((pro: DocumentData) => pro.provider_id !== provider_id);
     // console.log('updated providers');
@@ -75,7 +74,9 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       <EventBlock event={eventData} proView={false}/>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
-      {eventData.doc.interestedProviders.map((providerInfo: DocumentData) => (
+      {eventData.doc.interestedProviders
+        .filter((pro: DocumentData) => !unwantedPros.includes(pro.provider_id))
+        .map((providerInfo: DocumentData) => (
         <View key={providerInfo.provider_id}>
           <Text key={providerInfo.name}>
           {'Name: ' + providerInfo.name}

@@ -39,23 +39,18 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   
   // Removing a provider from the consumer view if they have been declined...sorry:(
   const removeLocalData = (provider_id: string) => {
-    unwantedPros.push(provider_id);
+    setUnwantedPros(current => [...current, provider_id]);
     declineUserId(provider_id);
-    
+
     const updatedProviders = eventData.doc.interestedProviders
     .filter((pro: DocumentData) => pro.provider_id !== provider_id);
-    // console.log('updated providers');
-    // console.log(updatedProviders);
     
     setEventData(prevEventData => {
-      let retVal = {
+      return {
         ...prevEventData,
         interestedProviders: updatedProviders
       }
-      console.log("set event data to:", retVal);
-      return retVal;
-  });
-    // console.log(eventData.doc.interestedProviders);
+    });
     
     return updatedProviders
   }
@@ -65,7 +60,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       interestedProviderIds: arrayRemove(decProId),
     });
   }
-  console.log("interested:", eventData.doc.interestedProviders);
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>

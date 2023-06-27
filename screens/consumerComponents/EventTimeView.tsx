@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
+import { Divider } from '@rneui/base'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'eventTimeView'>
 /*
@@ -40,20 +41,22 @@ const EventTimeView = ({ route }: Props) => {
     return () => clearInterval(interval);
   }, []);
 
-  const updateParkingStatus = async () => {
+  const updateParkingStatus = async (proId: string) => {
+    console.log(proId);
+    
     await updateDoc(doc(db, 'events/', event.id), { 
-      consumerParkingStatus: true,
+      arrivedProviderSpaces: arrayUnion(proId),
     });
   }
+
   const getProviderInfo = async () => {
     const eventSnap = await getDoc(doc(db, 'events/', event.id))
     if (eventSnap.exists()) {
-      let a: any = eventSnap.data().acceptedProviderIds
-      .map((proId: string) => eventSnap.data().interestedProviders
-      .find((proObj: any) => proObj.provider_id == proId))
+      const proInfo: any = eventSnap.data().acceptedProviderIds
+        .map((proId: string) => eventSnap.data().interestedProviders
+        .find((proObj: any) => proObj.id == proId))
       
-      let f_a = await Promise.all(a)
-      setProviderInfo(f_a)
+      setProviderInfo(proInfo)
     }
   }
 
@@ -61,7 +64,7 @@ const EventTimeView = ({ route }: Props) => {
     getProviderInfo();
   }, [])
 
-  const RenderContent = () => {
+  const RenderStatus = (proId: any) => {
     if (diff) {
       if (diff <= 0) {
         return (
@@ -69,7 +72,7 @@ const EventTimeView = ({ route }: Props) => {
             <View style={styles.countContainer}>
               <Text>Mark status as "here" by clicking on the button below. The provider will be notified.</Text>
             </View>
-            <TouchableOpacity style={styles.button} onPress={updateParkingStatus}>
+            <TouchableOpacity style={styles.button} onPress={() => updateParkingStatus(proId)}>
               <Text>I'm Here!</Text>
             </TouchableOpacity>        
           </View>
@@ -87,16 +90,16 @@ const EventTimeView = ({ route }: Props) => {
 
   return (
     <SafeAreaView style={{ marginLeft: 30 }}>
-      <Text>Provider Info:</Text>
       {providerInfo ? providerInfo.map((proObj: any) => {
         return (
           <View key={proObj.id}>
             <Text key={proObj.name}>{proObj.name}</Text>
             <Text key={proObj.address}>{proObj.address}</Text>
+            <RenderStatus proId={proObj}/>
+            <Divider width={5} style={{ marginTop: 10 }}/>
           </View>
         )
       }) : <Text>Loading...</Text>}
-      <RenderContent />
     </SafeAreaView>
   )
 }
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 300,
+    marginTop: 30,
   },
   button: {
     alignItems: 'center',

@@ -38,12 +38,12 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   }
   
   // Removing a provider from the consumer view if they have been declined...sorry:(
-  const removeLocalData = (provider_id: string) => {
-    setUnwantedPros(current => [...current, provider_id]);
-    declineUserId(provider_id);
+  const removeLocalData = (id: string) => {
+    setUnwantedPros(current => [...current, id]);
+    declineUserId(id);
 
     const updatedProviders = eventData.doc.interestedProviders
-    .filter((pro: DocumentData) => pro.provider_id !== provider_id);
+    .filter((pro: DocumentData) => pro.id !== id);
     
     setEventData(prevEventData => {
       return {
@@ -69,9 +69,9 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.interestedProviders
-        .filter((pro: DocumentData) => !unwantedPros.includes(pro.provider_id))
+        .filter((pro: DocumentData) => !unwantedPros.includes(pro.id))
         .map((providerInfo: DocumentData) => (
-        <View key={providerInfo.provider_id}>
+        <View key={providerInfo.id}>
           <Text key={providerInfo.name}>
           {'Name: ' + providerInfo.name}
           </Text>
@@ -80,13 +80,13 @@ const MultiProviderDetailsView = ({ route }: Props) => {
           </Text>
           <Button 
             title='Accept' 
-            onPress={() => disableButton(providerInfo.provider_id)} 
-            disabled={disabledButtons[providerInfo.provider_id]} 
+            onPress={() => disableButton(providerInfo.id)} 
+            disabled={disabledButtons[providerInfo.id]} 
           />
           <Button 
             title='Decline' 
-            onPress={() => removeLocalData(providerInfo.provider_id)} 
-            disabled={disabledButtons[providerInfo.provider_id]} 
+            onPress={() => removeLocalData(providerInfo.id)} 
+            disabled={disabledButtons[providerInfo.id]} 
           />
           <Divider width={5} style={{ marginTop: 10 }}/>
         </View >

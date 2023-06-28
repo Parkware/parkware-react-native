@@ -6,7 +6,7 @@ interface StatusTextProps {
   event: docDataPair;
 }
     
-export const StatusText = ({ event }: StatusTextProps) => {
+export const EventStatusText = ({ event }: StatusTextProps) => {
   if (auth.currentUser) {
     let statusWord = '';
     let statusColor = '';

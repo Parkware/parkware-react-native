@@ -4,7 +4,7 @@ import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, 
 import { auth, db } from '../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import { StatusText } from './providerComponents/StatusText';
+import { EventStatusText } from './providerComponents/EventStatusText';
 import { EventBlock } from './consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../App';
@@ -169,7 +169,7 @@ export function ProviderRequestsView() {
       {pendingEvents.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
           <EventBlock event={event} proView={true}/>
-          <StatusText event={event} />
+          <EventStatusText event={event} />
         </View>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>

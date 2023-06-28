@@ -17,14 +17,24 @@ type Props = NativeStackScreenProps<ConsumerStackParams, 'eventTimeView'>
 const EventTimeView = ({ route }: Props) => {
   const { event } = route.params;
   const [timeRemaining, setTimeRemaining] = useState('');
-  const targetDate = event.doc.startTime.toDate();
+  const startTime = event.doc.startTime.toDate();
   const [diff, setDiff] = useState<number>();
   const [providerInfo, setProviderInfo] = useState<DocumentData>();
+  const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
 
+  const disableButton = (providerId: string) => {
+    setDisabledButtons((prevState) => ({
+      ...prevState,
+      [providerId]: true,
+    }));
+
+    updateParkingStatus(providerId)
+  };
+  
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      const difference = targetDate.getTime() - now.getTime();
+      const difference = startTime.getTime() - now.getTime();
       setDiff(difference);
       if (difference <= 0) {
         clearInterval(interval);
@@ -42,8 +52,6 @@ const EventTimeView = ({ route }: Props) => {
   }, []);
 
   const updateParkingStatus = async (proId: string) => {
-    console.log(proId);
-    
     await updateDoc(doc(db, 'events/', event.id), { 
       arrivedProviderSpaces: arrayUnion(proId),
     });
@@ -65,14 +73,16 @@ const EventTimeView = ({ route }: Props) => {
   }, [])
 
   const RenderStatus = (proId: any) => {
+    const proIdString: string = Object.values(proId).toString();
     if (diff) {
       if (diff <= 0) {
         return (
           <View style={styles.container}>
-            <View style={styles.countContainer}>
-              <Text>Mark status as "here" by clicking on the button below. The provider will be notified.</Text>
-            </View>
-            <TouchableOpacity style={styles.button} onPress={() => updateParkingStatus(proId)}>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() => disableButton(proIdString)}
+              disabled={disabledButtons[proIdString]} 
+            >
               <Text>I'm Here!</Text>
             </TouchableOpacity>        
           </View>
@@ -90,16 +100,17 @@ const EventTimeView = ({ route }: Props) => {
 
   return (
     <SafeAreaView style={{ marginLeft: 30 }}>
-      {providerInfo ? providerInfo.map((proObj: any) => {
-        return (
-          <View key={proObj.id}>
-            <Text key={proObj.name}>{proObj.name}</Text>
-            <Text key={proObj.address}>{proObj.address}</Text>
-            <RenderStatus proId={proObj}/>
-            <Divider width={5} style={{ marginTop: 10 }}/>
-          </View>
-        )
-      }) : <Text>Loading...</Text>}
+      <View style={styles.countContainer}>
+        <Text>Mark status as "here" by clicking on the button below. The provider will be notified.</Text>
+      </View>
+      {providerInfo ? providerInfo.map((proObj: DocumentData) => (
+        <View key={proObj.id}>
+          <Text key={proObj.name}>{proObj.name}</Text>
+          <Text key={proObj.address}>{proObj.address}</Text>
+          <RenderStatus proId={proObj.id}/>
+          <Divider width={5} style={{ marginTop: 10 }}/>
+        </View>
+      )) : <Text>Loading...</Text>}
     </SafeAreaView>
   )
 }
@@ -119,5 +130,6 @@ const styles = StyleSheet.create({
   },
   countContainer: {
     alignItems: 'center',
+    marginBottom: 30,
   },
 })

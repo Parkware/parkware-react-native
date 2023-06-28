@@ -16,7 +16,7 @@ import 'react-native-gesture-handler';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import EventTimeView from './screens/consumerComponents/EventTimeView';
-import ConsumerStatusView from './screens/providerComponents/ConsumerStatusView';
+import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 
@@ -107,7 +107,7 @@ const ProviderScreenStack = (user: any) => {
       <ProviderStack.Screen
         options={{ title: "", headerTransparent: true }}
         name="consumerStatusView"
-        component={ConsumerStatusView}
+        component={ParkingStatusView}
       />
     </ProviderStack.Navigator>
   )

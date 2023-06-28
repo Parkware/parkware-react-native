@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../App'
-import { DocumentData, doc, getDoc } from 'firebase/firestore'
-import { db } from '../../firebaseConfig'
+import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore'
+import { auth, db } from '../../firebaseConfig'
 import { EventBlock } from '../consumerComponents/EventBlock'
 import { docDataPair } from '../ProviderRequestsView'
 
@@ -15,11 +15,15 @@ type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
     I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
     since many events could be looked at. 
 */
-const ConsumerStatusView = ({ route }: Props) => {
+const ParkingStatusView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataPair>(event);
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
-  
+  const [firstProArrived, setFirstProArrived] = useState(false);
+  const [diff, setDiff] = useState<number>();
+  const endTime = event.doc.endTime.toDate();
+  const [timeRemaining, setTimeRemaining] = useState('');
+
   const getConsumerInfo = async () => {
     const userSnap = await getDoc(doc(db, 'users/', eventData.doc.consumer_id))
     if (userSnap.exists())   
@@ -30,12 +34,40 @@ const ConsumerStatusView = ({ route }: Props) => {
     getConsumerInfo();
   }, [])
   
+  useEffect(() => {
+    if (firstProArrived) {
+      const interval = setInterval(() => {
+        const now = new Date();
+        const difference = endTime.getTime() - now.getTime();
+        setDiff(difference);
+        if (difference <= 0) {
+          clearInterval(interval);
+          setTimeRemaining("Parking Time!");
+        } else {
+          const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+          const minutes = Math.floor((difference / (1000 * 60)) % 60);
+
+          setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, []);
+
   const GetArrivalStatus = () => {
-    if (eventData.doc.consumerParkingStatus)
+    if (eventData.doc.arrivedProviderSpaces.includes(auth.currentUser!.uid))
       return (
+        <View>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
-          The guest has arrived at your space!
+          {consumerInfo && consumerInfo.name} has arrived at your space!
         </Text>
+        <Text>
+        {timeRemaining} till time's up for that lil' boi
+        </Text>
+        </View>
+        
       )
     return (
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
@@ -69,6 +101,6 @@ const ConsumerStatusView = ({ route }: Props) => {
   )
 }
 
-export default ConsumerStatusView
+export default ParkingStatusView
 
 const styles = StyleSheet.create({})

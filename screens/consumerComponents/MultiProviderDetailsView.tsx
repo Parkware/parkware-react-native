@@ -71,26 +71,27 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       {eventData.doc.interestedProviders
         .filter((pro: DocumentData) => !unwantedPros.includes(pro.id))
         .map((providerInfo: DocumentData) => (
-        <View key={providerInfo.id}>
-          <Text key={providerInfo.name}>
-          {'Name: ' + providerInfo.name}
-          </Text>
-          <Text key={providerInfo.address}>
-          {'Address: ' + providerInfo.address}
-          </Text>
-          <Button 
-            title='Accept' 
-            onPress={() => disableButton(providerInfo.id)} 
-            disabled={disabledButtons[providerInfo.id]} 
-          />
-          <Button 
-            title='Decline' 
-            onPress={() => removeLocalData(providerInfo.id)} 
-            disabled={disabledButtons[providerInfo.id]} 
-          />
-          <Divider width={5} style={{ marginTop: 10 }}/>
-        </View >
-      ))}
+          <View key={providerInfo.id}>
+            <Text key={providerInfo.name}>
+            {'Name: ' + providerInfo.name}
+            </Text>
+            <Text key={providerInfo.address}>
+            {'Address: ' + providerInfo.address}
+            </Text>
+            <Button 
+              title='Accept' 
+              onPress={() => disableButton(providerInfo.id)} 
+              disabled={disabledButtons[providerInfo.id]} 
+            />
+            <Button 
+              title='Decline' 
+              onPress={() => removeLocalData(providerInfo.id)} 
+              disabled={disabledButtons[providerInfo.id]} 
+            />
+            <Divider width={5} style={{ marginTop: 10 }}/>
+          </View >
+        ))
+      }
     </SafeAreaView>
   )
 }

@@ -1,31 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, Button } from 'react-native';
 import { DocumentData, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig';
+import { auth, db } from '../../firebaseConfig';
 import { Divider } from '@rneui/themed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ConsumerStackParams } from '../App';
+import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { EventBlock } from './consumerComponents/EventBlock';
-
-export interface docDataTrio {
-  id: string,
-  doc: DocumentData,
-  /*
-  Fields:
-    address
-    startTime
-    endTime
-    interestedProviders
-  */
-}
+import { EventBlock } from './EventBlock';
+import { docDataPair } from '../providerComponents/ProviderRequestsView';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
 export function ConsumerRequestsView() {
-  const [pendingEvents, setPendingEvents] = useState<docDataTrio[]>([]);
-  const [completedEvents, setCompletedEvents] = useState<docDataTrio[]>([]);
+  const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
+  const [completedEvents, setCompletedEvents] = useState<docDataPair[]>([]);
 
   const navigation = useNavigation<consumerScreenProp>();
   
@@ -40,8 +29,8 @@ export function ConsumerRequestsView() {
     if (auth.currentUser) {
       const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
       const unsub = onSnapshot(q, async (snap) => {
-        const compEventPromises: docDataTrio[] = [];
-        const penEventPromises: docDataTrio[] = [];
+        const compEventPromises: docDataPair[] = [];
+        const penEventPromises: docDataPair[] = [];
         snap.docs.map(e => {
           const newPros = modProviders(e.data());
                             
@@ -51,7 +40,7 @@ export function ConsumerRequestsView() {
               ...e.data(),
               interestedProviders: newPros
             },
-          } as docDataTrio;
+          } as docDataPair;
           // The number below is some arbitrary number. I need to check against requested 
           // parking spaces
           if (e.data().acceptedProviderIds.length == 2) 
@@ -116,7 +105,7 @@ export function ConsumerRequestsView() {
       </Text>
       
       {completedEvents.map((event) => (
-        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('eventTimeView', { event })}>
+        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
           <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
           {/* {providerNameText(event.doc.accepted_provider_id)} */}
           <EventBlock event={event} proView={false}/>

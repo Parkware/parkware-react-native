@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
-import { docDataPair } from "../ProviderRequestsView";
-import { docDataTrio } from "../ConsumerRequestsView";
+import { docDataPair } from "../providerComponents/ProviderRequestsView";
+import { docDataTrio } from "./ConsumerRequestsView";
 
 interface StatusTextProps {
   event: docDataTrio | docDataPair;

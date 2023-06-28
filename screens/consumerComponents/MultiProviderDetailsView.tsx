@@ -6,7 +6,7 @@ import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
-import { docDataTrio } from '../ConsumerRequestsView'
+import { docDataTrio } from './ConsumerRequestsView'
 import { EventBlock } from './EventBlock'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>

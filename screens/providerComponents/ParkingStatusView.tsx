@@ -6,7 +6,7 @@ import { ProviderStackParams } from '../../App'
 import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore'
 import { auth, db } from '../../firebaseConfig'
 import { EventBlock } from '../consumerComponents/EventBlock'
-import { docDataPair } from '../ProviderRequestsView'
+import { docDataPair } from './ProviderRequestsView'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
 /*
@@ -23,7 +23,21 @@ const ParkingStatusView = ({ route }: Props) => {
   const [diff, setDiff] = useState<number>();
   const endTime = event.doc.endTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
+  const [guestStillParking, setGuestStillParking] = useState(false);
 
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'events/', eventData.id), (eventSnap) => {
+      if (eventSnap.exists()) {
+        if (eventSnap.data().arrivedProviderSpaces.includes(auth.currentUser!.uid))
+          setGuestStillParking(true);
+        else
+          setGuestStillParking(false);
+      }
+    })
+  
+    return () => unsub()
+  }, [])
+  
   const getConsumerInfo = async () => {
     const userSnap = await getDoc(doc(db, 'users/', eventData.doc.consumer_id))
     if (userSnap.exists())   
@@ -35,40 +49,48 @@ const ParkingStatusView = ({ route }: Props) => {
   }, [])
   
   useEffect(() => {
-    if (firstProArrived) {
-      const interval = setInterval(() => {
-        const now = new Date();
-        const difference = endTime.getTime() - now.getTime();
-        setDiff(difference);
-        if (difference <= 0) {
-          clearInterval(interval);
-          setTimeRemaining("Parking Time!");
-        } else {
-          const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-          const minutes = Math.floor((difference / (1000 * 60)) % 60);
+    const interval = setInterval(() => {
+      const now = new Date();
+      const difference = endTime.getTime() - now.getTime();
+      setDiff(difference);
+      if (difference <= 0) {
+        clearInterval(interval);
+        setTimeRemaining("Parking Time!");
+      } else {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / (1000 * 60)) % 60);
 
-          setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
-        }
-      }, 1000);
+        setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
+      }
+    }, 1000);
 
-      return () => clearInterval(interval);
-    }
+    return () => clearInterval(interval);
   }, []);
 
-  const GetArrivalStatus = () => {
-    if (eventData.doc.arrivedProviderSpaces.includes(auth.currentUser!.uid))
-      return (
-        <View>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
-          {consumerInfo && consumerInfo.name} has arrived at your space!
-        </Text>
-        <Text>
-        {timeRemaining} till time's up for that lil' boi
-        </Text>
-        </View>
-        
-      )
+  const ShowArrivalStatus = () => {
+    if (eventData.doc.arrivedProviderSpaces.includes(auth.currentUser!.uid)) {
+      if (diff) {
+        if (diff <= 0) 
+          return (
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+              {guestStillParking} ? your guest has not left the spot yet : your guest has left the spot
+            </Text>
+          )
+        else 
+          return (
+            <View>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
+                {consumerInfo && consumerInfo.name} has arrived at your space!
+              </Text>
+              <Text>
+                {timeRemaining} till time's up for that lil' boi
+              </Text>
+            </View>
+          )
+      }
+      return <Text>Loading...</Text>
+    }
     return (
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         The guest isn't there yet!
@@ -90,12 +112,12 @@ const ParkingStatusView = ({ route }: Props) => {
   }
   return (
     <SafeAreaView style={{ marginLeft: 30 }}>
-      <Text>Consumer Info:</Text>
+      <Text>Organizer Info:</Text>
       <RenderConsInfo />
       <Text style={{ paddingTop: 30 }}>Event Info:</Text>
       <EventBlock event={eventData} proView={true}/>
       <View style={{ paddingTop: 30}}>
-        <GetArrivalStatus />
+        <ShowArrivalStatus />
       </View>
     </SafeAreaView>
   )

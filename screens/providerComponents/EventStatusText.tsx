@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { docDataPair } from "../ProviderRequestsView";
+import { docDataPair } from "./ProviderRequestsView";
 import { auth, db } from '../../firebaseConfig';
 
 interface StatusTextProps {

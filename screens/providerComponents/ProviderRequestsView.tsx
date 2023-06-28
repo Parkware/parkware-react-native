@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, Button, TouchableOpacity } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig';
+import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import { EventStatusText } from './providerComponents/EventStatusText';
-import { EventBlock } from './consumerComponents/EventBlock';
+import { EventStatusText } from './EventStatusText';
+import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ProviderStackParams } from '../App';
+import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 
 export interface docDataPair {

@@ -3,24 +3,25 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
 
-type Props = NativeStackScreenProps<ConsumerStackParams, 'eventTimeView'>
+type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
 /*
     Is there some way that I can have one onSnapshot function listen and update both these pages?
     It isn't necessary since a user may only need updates from one screen, but it could be a good addition
     I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
     since many events could be looked at. 
 */
-const EventTimeView = ({ route }: Props) => {
+const ChooseProviderView = ({ navigation, route }: Props) => {
   const { event } = route.params;
   const [timeRemaining, setTimeRemaining] = useState('');
   const startTime = event.doc.startTime.toDate();
   const [diff, setDiff] = useState<number>();
   const [providerInfo, setProviderInfo] = useState<DocumentData>();
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
+  const [markedHere, setMarkedHere] = useState(false);
 
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
@@ -28,7 +29,8 @@ const EventTimeView = ({ route }: Props) => {
       [providerId]: true,
     }));
 
-    updateParkingStatus(providerId)
+    setMarkedHere(true);
+    setArrivedStatus(providerId)
   };
   
   useEffect(() => {
@@ -51,7 +53,7 @@ const EventTimeView = ({ route }: Props) => {
     return () => clearInterval(interval);
   }, []);
 
-  const updateParkingStatus = async (proId: string) => {
+  const setArrivedStatus = async (proId: string) => {
     await updateDoc(doc(db, 'events/', event.id), { 
       arrivedProviderSpaces: arrayUnion(proId),
     });
@@ -87,15 +89,21 @@ const EventTimeView = ({ route }: Props) => {
             </TouchableOpacity>        
           </View>
         )
-      } else {
-        return (
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-            {timeRemaining} till your parking event.
-          </Text>
-        )
-      }
+      } else
+        return <></>
     }
     return <Text>Loading...</Text>
+  }
+
+  const navNext = () => {
+    if (providerInfo) {
+      navigation.navigate('departureGuestView',
+        {
+          providerInfo, 
+          eventId: event.id 
+        })
+    }
+    return <></>
   }
 
   return (
@@ -111,11 +119,18 @@ const EventTimeView = ({ route }: Props) => {
           <Divider width={5} style={{ marginTop: 10 }}/>
         </View>
       )) : <Text>Loading...</Text>}
+      {diff && diff > 0 && 
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+          {timeRemaining} till your parking event.
+        </Text>
+      }
+
+      {markedHere && navNext()}
     </SafeAreaView>
   )
 }
 
-export default EventTimeView
+export default ChooseProviderView
 
 const styles = StyleSheet.create({
   container: {

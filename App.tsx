@@ -8,14 +8,14 @@ import { MakeRequestScreen } from './screens/consumerComponents/MakeRequestScree
 import { SignupScreen } from './screens/SignupScreen';
 import { ResetPassword } from './screens/ResetPassword';
 import { LoginScreen } from './screens/LoginScreen';
-import { ProviderRequestsView, docDataPair } from './screens/ProviderRequestsView';
-import { ConsumerRequestsView, docDataTrio } from './screens/ConsumerRequestsView';
+import { ProviderRequestsView, docDataPair } from './screens/providerComponents/ProviderRequestsView';
+import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
-import EventTimeView from './screens/consumerComponents/EventTimeView';
+import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
 import LoadingScreen from './screens/LoadingScreen';
@@ -24,11 +24,15 @@ export type ConsumerStackParams = {
   makeRequestScreen: undefined;
   consumerRequestsView: any;
   multiProviderDetailsView: {
-    event: docDataTrio;
+    event: docDataPair;
   };
-  eventTimeView: {
-    event: docDataTrio;
+  chooseProviderView: {
+    event: docDataPair;
   };
+  departureGuestView: {
+    providerInfo: DocumentData;
+    eventId: string;
+  }
 }
 
 const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
@@ -133,8 +137,8 @@ const ConsumerScreenStack = () => {
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
-        name="eventTimeView"
-        component={EventTimeView}
+        name="chooseProviderView"
+        component={ChooseProviderView}
       />
     </ConsumerStack.Navigator>
   );

@@ -24,13 +24,13 @@ export function SignupScreen() {
 
     const navNextView = () => {
       navigation.navigate('Signup', { 
-                            screen: 'chooseRoleView', 
-                            params: {
-                              name,
-                              email,
-                              password
-                            } 
-                          })
+        screen: 'chooseRoleView', 
+        params: {
+          name,
+          email,
+          password
+        } 
+      });
     }
     
     const checkPassword = () => {

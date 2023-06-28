@@ -8,11 +8,10 @@ import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'chooseRoleView'>;
 
-export const ChooseRoleView = ({ navigation, route }: Props) => {
+export const ChooseRoleView = ({ route }: Props) => {
   const [user, setUser] = useState<User>();
   const [showAddress, setShowAddress] = useState(false);
   const [address, setAddress] = useState('');
-  const [isProvider, setIsProvider] = useState(false);
 
   const { name, email, password }  = route.params;
   

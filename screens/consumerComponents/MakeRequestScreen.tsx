@@ -9,6 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import NumericInput from 'react-native-numeric-input'
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
@@ -17,8 +18,10 @@ export function MakeRequestScreen() {
   const [endTime, setEndTime] = useState<Date>(new Date());
   const [address, setAddress] = useState<string>('');
   const [sentMessage, setSentMessage] = useState(false);
+  const [eventName, setEventName] = useState<string>();
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
+  const [parkingSpaces, setParkingSpaces] = useState<number>();
   const navigation = useNavigation<homeScreenProp>();
 
   const logout = async () => {
@@ -38,15 +41,18 @@ export function MakeRequestScreen() {
       const consSnap = await getDoc(consRef)
       if (consSnap.exists()) {
         await addDoc(collection(db, 'events/'), {
+          eventName,
           consumer_id: auth.currentUser.uid,
           name: consSnap.data().name,
           address,
           startTime,
           endTime,
           accepted: false, 
-          accepted_provider_id: '',
+          acceptedProviderIds: [],
           interestedProviders: [],
-          interestedProviderIds: []
+          interestedProviderIds: [],
+          parkingSpaces,
+          isOpen: true
         });
                 
         setStartTime(new Date());
@@ -90,6 +96,16 @@ export function MakeRequestScreen() {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
       <Button title="Log out" onPress={logout} />
+      <TextInput
+        value={eventName}
+        onChangeText={setEventName}
+        keyboardType="default"
+        placeholder="Event Name"
+        autoCapitalize="none"
+        placeholderTextColor="#aaa"
+        autoCorrect={false}
+        style={styles.input}
+      />
       <DateTimePicker
         testID="dateTimePicker"
         value={startTime}
@@ -121,6 +137,7 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
+      <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setParkingSpaces(value)} />
       {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"

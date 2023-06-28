@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayRemove, doc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
-import { docDataTrio } from '../ConsumerRequestsView'
+import { docDataTrio } from './ConsumerRequestsView'
 import { EventBlock } from './EventBlock'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
@@ -17,57 +17,81 @@ type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsVi
     since many events could be looked at. 
 */
 const MultiProviderDetailsView = ({ route }: Props) => {
-  const [sentEvent, setSentEvent] = useState(false);
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataTrio>(event);
+  const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
+  const [unwantedPros, setUnwantedPros] = useState<string[]>([]);
 
-  const setAcceptStatus = async (accepted_provider_id: string) => {
-    const updatedProviders = removeLocalData(accepted_provider_id);
+  const disableButton = (providerId: string) => {
+    setDisabledButtons((prevState) => ({
+      ...prevState,
+      [providerId]: true, // Set the specific provider's button as disabled
+    }));
+    setAcceptStatus(providerId);
+  };
+  
+  const setAcceptStatus = async (currProviderId: string) => {
     await updateDoc(doc(db, 'events/', event.id), { 
-      interestedProviderIds: arrayRemove(accepted_provider_id),
-      interestedProviders: updatedProviders,
-      accepted_provider_id,
+      acceptedProviderIds: arrayUnion(currProviderId),
       consumerParkingStatus: false,
     });
-    setSentEvent(true);
   }
   
   // Removing a provider from the consumer view if they have been declined...sorry:(
-  const removeLocalData = (provider_id: string) => {
-    const updatedProviders = eventData.interestedProviders.filter(pro => {
-      if (pro.provider_id !== provider_id) return pro;
-    })
+  const removeLocalData = (id: string) => {
+    setUnwantedPros(current => [...current, id]);
+    declineUserId(id);
+
+    const updatedProviders = eventData.doc.interestedProviders
+    .filter((pro: DocumentData) => pro.id !== id);
     
     setEventData(prevEventData => {
       return {
         ...prevEventData,
         interestedProviders: updatedProviders
       }
-    })
+    });
+    
     return updatedProviders
   }
 
+  const declineUserId = async (decProId: string) => {
+    await updateDoc(doc(db, 'events/', event.id), { 
+      interestedProviderIds: arrayRemove(decProId),
+    });
+  }
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-          Event {eventData.id.slice(0, 3)}
+          Event: {eventData.doc.eventName}
       </Text>
       <EventBlock event={eventData} proView={false}/>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
-      {eventData.interestedProviders.map((providerInfo: DocumentData) => (
-        <View key={providerInfo.provider_id}>
+      {eventData.doc.interestedProviders
+        .filter((pro: DocumentData) => !unwantedPros.includes(pro.id))
+        .map((providerInfo: DocumentData) => (
+          <View key={providerInfo.id}>
             <Text key={providerInfo.name}>
             {'Name: ' + providerInfo.name}
             </Text>
             <Text key={providerInfo.address}>
             {'Address: ' + providerInfo.address}
             </Text>
-            <Button title='Accept' onPress={() => setAcceptStatus(providerInfo.provider_id)} disabled={sentEvent}/>
-            <Button title='Decline' onPress={() => removeLocalData(providerInfo.provider_id)} disabled={sentEvent}/>
+            <Button 
+              title='Accept' 
+              onPress={() => disableButton(providerInfo.id)} 
+              disabled={disabledButtons[providerInfo.id]} 
+            />
+            <Button 
+              title='Decline' 
+              onPress={() => removeLocalData(providerInfo.id)} 
+              disabled={disabledButtons[providerInfo.id]} 
+            />
             <Divider width={5} style={{ marginTop: 10 }}/>
-        </View >
-      ))}
+          </View >
+        ))
+      }
     </SafeAreaView>
   )
 }

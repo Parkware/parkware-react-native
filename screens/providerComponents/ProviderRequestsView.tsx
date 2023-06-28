@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, Button, TouchableOpacity } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig';
+import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import { StatusText } from './providerComponents/StatusText';
-import { EventBlock } from './consumerComponents/EventBlock';
+import { EventStatusText } from './EventStatusText';
+import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ProviderStackParams } from '../App';
+import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 
 export interface docDataPair {
@@ -21,7 +21,8 @@ export interface docDataPair {
     startTime
     endTime
     accepted
-    accepted_provider_id
+    acceptedProviderIds
+    isOpen
   */
 }
 
@@ -42,26 +43,29 @@ export function ProviderRequestsView() {
     }
   };
   
+  // Reading the event data and setting eventData to it. 
   useEffect(() => {
     try {
-      // Reading the event data and setting eventData to it. 
       const unsub = onSnapshot(collection(db, 'events'), async (snapshot) => {            
-        // i can remove an array element interestedprovider and then add it to the accepted providers
         const openEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
         const accEventPromises: docDataPair[] = [];
+        let currUid: string = '';
+        if (auth.currentUser)
+          currUid = auth.currentUser.uid;
 
         snapshot.docs.map(e => {
           let eventObj = {
             id: e.id,
             doc: e.data(),
           } as docDataPair
-
-          if (e.data().interestedProviderIds.includes(auth.currentUser!.uid)) {
-            penEventPromises.push(eventObj);
-          } else if (e.data().accepted_provider_id === auth.currentUser!.uid) {
+          
+          // Order matters!
+          if (e.data().acceptedProviderIds.includes(currUid)) {
             accEventPromises.push(eventObj);
-          } else {
+          } else if (e.data().interestedProviderIds.includes(currUid)) {
+            penEventPromises.push(eventObj);
+          } else if (e.data().isOpen) {
             openEventPromises.push(eventObj);
           }
         });
@@ -126,10 +130,10 @@ export function ProviderRequestsView() {
                 name: currUserSnap.data().name,
                 address: currUserSnap.data().address
               }),
-            }, { merge: true });
-            await updateDoc(curEventRef, {
               interestedProviderIds: arrayUnion(currUid),
-            });
+            }, { merge: true });
+            // await updateDoc(curEventRef, {
+            // });
           }
         }
       }
@@ -165,7 +169,7 @@ export function ProviderRequestsView() {
       {pendingEvents.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
           <EventBlock event={event} proView={true}/>
-          <StatusText event={event} />
+          <EventStatusText event={event} />
         </View>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>

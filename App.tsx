@@ -19,6 +19,7 @@ import ChooseProviderView from './screens/consumerComponents/ChooseProviderView'
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
 import LoadingScreen from './screens/LoadingScreen';
+import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -139,6 +140,11 @@ const ConsumerScreenStack = () => {
         options={{ title: "", headerTransparent: true }}
         name="chooseProviderView"
         component={ChooseProviderView}
+      />
+      <ConsumerStack.Screen
+        options={{ title: "", headerTransparent: true }}
+        name="departureGuestView"
+        component={DepartureGuestView}
       />
     </ConsumerStack.Navigator>
   );

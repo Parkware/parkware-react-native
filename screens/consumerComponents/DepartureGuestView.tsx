@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
 import { arrayRemove, doc, updateDoc } from 'firebase/firestore'
@@ -11,22 +11,24 @@ const DepartureGuestView = ({ route }: Props) => {
   const { providerInfo, eventId } = route.params;
   
   const setLeftStatus = async (proId: string) => {
-    const proIdString: string = Object.values(proId).toString();
-
     await updateDoc(doc(db, 'events/', eventId), { 
-      arrivedProviderSpaces: arrayRemove(proIdString),
+      arrivedProviderSpaces: arrayRemove(proId),
     });
   }
   
   return (
-    <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => setLeftStatus(providerInfo.id)}
-      >
-        <Text>I have left</Text>
-      </TouchableOpacity>        
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Text key={providerInfo.name}>{providerInfo.name}</Text>
+        <Text style={{ marginBottom: 10 }}key={providerInfo.address}>{providerInfo.address}</Text>
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => setLeftStatus(providerInfo.id)}
+        >
+          <Text>I have left</Text>
+        </TouchableOpacity>        
+      </View>
+    </SafeAreaView>
   )
 }
 

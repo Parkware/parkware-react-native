@@ -8,12 +8,18 @@ import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
+
 /*
+  type Props = {
+    navigation: NativeStackNavigationProp<ConsumerStackParams, 'chooseProviderView'>;
+    route: NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>;
+  }
     Is there some way that I can have one onSnapshot function listen and update both these pages?
     It isn't necessary since a user may only need updates from one screen, but it could be a good addition
     I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
     since many events could be looked at. 
 */
+
 const ChooseProviderView = ({ navigation, route }: Props) => {
   const { event } = route.params;
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -22,6 +28,7 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   const [providerInfo, setProviderInfo] = useState<DocumentData>();
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [markedHere, setMarkedHere] = useState(false);
+  const [chosenProviderId, setChosenProviderId] = useState('');
 
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
@@ -29,8 +36,9 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
       [providerId]: true,
     }));
 
-    setMarkedHere(true);
     setArrivedStatus(providerId)
+    setChosenProviderId(providerId);
+    setMarkedHere(true);
   };
   
   useEffect(() => {
@@ -97,13 +105,12 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
 
   const navNext = () => {
     if (providerInfo) {
-      navigation.navigate('departureGuestView',
-        {
-          providerInfo, 
-          eventId: event.id 
-        })
+      const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
+      navigation.replace('departureGuestView', {
+        providerInfo: chosenProInfo, 
+        eventId: event.id 
+      })
     }
-    return <></>
   }
 
   return (

@@ -21,7 +21,7 @@ export function MakeRequestScreen() {
   const [eventName, setEventName] = useState<string>();
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
-  const [parkingSpaces, setParkingSpaces] = useState<number>();
+  const [requestedSpaces, setParkingSpaces] = useState<number>();
   const navigation = useNavigation<homeScreenProp>();
 
   const logout = async () => {
@@ -51,7 +51,7 @@ export function MakeRequestScreen() {
           acceptedProviderIds: [],
           interestedProviders: [],
           interestedProviderIds: [],
-          parkingSpaces,
+          parkingSpaces: requestedSpaces,
           isOpen: true
         });
                 

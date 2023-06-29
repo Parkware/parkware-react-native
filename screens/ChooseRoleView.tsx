@@ -5,6 +5,7 @@ import { auth, db } from '../firebaseConfig'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SignupStackParams } from '../App';
 import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import NumericInput from 'react-native-numeric-input';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'chooseRoleView'>;
 
@@ -12,7 +13,8 @@ export const ChooseRoleView = ({ route }: Props) => {
   const [user, setUser] = useState<User>();
   const [showAddress, setShowAddress] = useState(false);
   const [address, setAddress] = useState('');
-
+  const [providerSpaces, setProviderSpaces] = useState<number>();
+  
   const { name, email, password }  = route.params;
   
   const logout = async () => {
@@ -27,26 +29,31 @@ export const ChooseRoleView = ({ route }: Props) => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCred.user;
+      let userObj: any;
+
       if (address.length !== 0)
-        await setDoc(doc(db, "users", user.uid), {
+        userObj = {
           email,
           name,
-          provider: isProvider,
-          address
-        });
+          isProvider,
+          address,
+          providerSpaces
+        };
       else 
-        await setDoc(doc(db, "users", user.uid), {
+        userObj = {
           email,
           name,
           provider: isProvider
-        });
+        };
+
+      await setDoc(doc(db, "users", user.uid), userObj);
       setUser(user);
     } catch (e) {
       console.log('Something went wrong with sign up: ', e);
     }
   };
 
-  const addressInput = () => {
+  const ProviderInput = () => {
     return (
       <View>
         <TextInput
@@ -56,7 +63,8 @@ export const ChooseRoleView = ({ route }: Props) => {
           placeholderTextColor="#aaa"
           style={styles.input}
         />
-        <Button title="Add address" onPress={() => createAccount(true)} />
+        <Button title="Add details" onPress={() => createAccount(true)} />
+        <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setProviderSpaces(value)} />
       </View>
     )
   }
@@ -72,7 +80,7 @@ export const ChooseRoleView = ({ route }: Props) => {
           <Button title="Consumer" onPress={() => createAccount(false)}/>
         </View>
       </View>
-      {showAddress && addressInput()}
+      {showAddress && <ProviderInput />}
       <Button title="Log out" onPress={logout} />
     </View>
   )

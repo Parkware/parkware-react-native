@@ -20,6 +20,7 @@ import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
+import { LinkTest } from './screens/LinkTest';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -183,4 +184,5 @@ export default function App() {
     }
   };
   return <NavigationContainer><RenderContent /></NavigationContainer>;
+  // return <LinkTest />
 }

@@ -41,9 +41,10 @@ export function ConsumerRequestsView() {
               interestedProviders: newPros
             },
           } as docDataPair;
-          // The number below is some arbitrary number. I need to check against requested 
-          // parking spaces
-          if (e.data().acceptedProviderIds.length == 2) 
+
+          // Will need to ensure that accepted providers are never greater than the requested number
+          // need to check if the total spaces of the accepted providers is equal to the requestedSpaces
+          if (e.data().acceptedProviderIds.length >= e.data().requestedSpaces) 
             compEventPromises.push(eventObj);
           else 
             penEventPromises.push(eventObj);
@@ -95,7 +96,7 @@ export function ConsumerRequestsView() {
               <Text key={providerInfo.address}>
               {'Address: ' + providerInfo.address}
               </Text>
-            </View >
+            </View>
           ))}
           <Divider width={5} style={{ marginTop: 10 }}/>
         </TouchableOpacity>
@@ -107,8 +108,7 @@ export function ConsumerRequestsView() {
       {completedEvents.map((event) => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
           <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
-          {/* {providerNameText(event.doc.accepted_provider_id)} */}
-          <EventBlock event={event} proView={false}/>
+          <EventBlock event={event} proView={true}/>
           <Divider width={5} style={{ marginTop: 10 }}/>
         </TouchableOpacity>
       ))}

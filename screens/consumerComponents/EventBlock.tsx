@@ -1,9 +1,8 @@
 import { View, Text } from "react-native";
 import { docDataPair } from "../providerComponents/ProviderRequestsView";
-import { docDataTrio } from "./ConsumerRequestsView";
 
 interface StatusTextProps {
-  event: docDataTrio | docDataPair;
+  event: docDataPair;
   proView: boolean;
 }
     

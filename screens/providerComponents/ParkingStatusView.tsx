@@ -19,7 +19,6 @@ const ParkingStatusView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataPair>(event);
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
-  const [firstProArrived, setFirstProArrived] = useState(false);
   const [diff, setDiff] = useState<number>();
   const endTime = event.doc.endTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -74,7 +73,7 @@ const ParkingStatusView = ({ route }: Props) => {
         if (diff <= 0) 
           return (
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-              {guestStillParking} ? your guest has not left the spot yet : your guest has left the spot
+              {guestStillParking ? "your guest has not left the spot yet" : "your guest has left the spot"}
             </Text>
           )
         else 

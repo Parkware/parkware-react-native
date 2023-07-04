@@ -6,6 +6,7 @@ import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
+import { A } from '@expo/html-elements'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
 
@@ -25,6 +26,7 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [markedHere, setMarkedHere] = useState(false);
   const [chosenProviderId, setChosenProviderId] = useState('');
+  const [shareableLink, setShareableLink] = useState('');
 
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
@@ -69,8 +71,8 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
       const proInfo: any = eventSnap.data().acceptedProviderIds
         .map((proId: string) => eventSnap.data().interestedProviders
         .find((proObj: any) => proObj.id == proId))
-      
-      setProviderInfo(proInfo)
+      setProviderInfo(proInfo);
+      setShareableLink('https://localhost:5173/' + event.id); // need to change to real url. only for testing!
     }
   }
 
@@ -99,14 +101,12 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
     return <Text>Loading...</Text>
   }
 
-  const navNext = () => {
-    if (providerInfo) {
-      const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
-      navigation.replace('departureGuestView', {
-        providerInfo: chosenProInfo, 
-        eventId: event.id 
-      })
-    }
+  if (providerInfo && chosenProviderId.length != 0) {
+    const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
+    navigation.replace('departureGuestView', {
+      providerInfo: chosenProInfo, 
+      eventId: event.id 
+    })
   }
 
   return (
@@ -127,8 +127,12 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
           {timeRemaining} till your parking event.
         </Text>
       }
-
-      {markedHere && navNext()}
+      <View style={{ marginTop: 75 }}>
+        <Text style={{ marginBottom: 10 }}>
+          Share the link below with other guests so that they can update their status to the providers
+        </Text>
+        <A href={shareableLink}>{shareableLink.replace('https://', '')}</A>
+      </View>
     </SafeAreaView>
   )
 }

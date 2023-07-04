@@ -6,8 +6,8 @@ import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
-import { docDataTrio } from './ConsumerRequestsView'
 import { EventBlock } from './EventBlock'
+import { docDataPair } from '../providerComponents/ProviderRequestsView'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
 /*
@@ -18,7 +18,7 @@ type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsVi
 */
 const MultiProviderDetailsView = ({ route }: Props) => {
   const { event } = route.params;
-  const [eventData, setEventData] = useState<docDataTrio>(event);
+  const [eventData, setEventData] = useState<docDataPair>(event);
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [unwantedPros, setUnwantedPros] = useState<string[]>([]);
 

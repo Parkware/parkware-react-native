@@ -151,19 +151,16 @@ const ConsumerScreenStack = () => {
 }
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [isProvider, setIsProvider] = useState<boolean | null>(null);
+  const [isProvider, setIsProvider] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
       if (user) {
-        setUser(user);
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
         if (snapshot.exists())
-          setIsProvider(snapshot.data().provider);
-      } else {
-        setUser(null);
-        setIsProvider(null);
+          setIsProvider(snapshot.data().isProvider);
       }
       setIsLoading(false);
     });
@@ -182,5 +179,6 @@ export default function App() {
       return <AuthScreenStack />;
     }
   };
+
   return <NavigationContainer><RenderContent /></NavigationContainer>;
 }

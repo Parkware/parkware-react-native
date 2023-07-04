@@ -77,7 +77,6 @@ export function ProviderRequestsView() {
         setPendingEvents(penEvents);
         setAccEvents(accEvents);
         setOpenEvents(openEvents);
-          
       });
       return () => unsub();
     } catch (error) {
@@ -120,7 +119,7 @@ export function ProviderRequestsView() {
           // Eventually, this won't be needed since we would disable if already sent, but just to validate
           if (eventSnap.exists()) {
             eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
-                if (prov.provider_id == currUid) already_providing = true
+              if (prov.provider_id == currUid) already_providing = true
             });
           }
           if (!already_providing) {
@@ -132,8 +131,6 @@ export function ProviderRequestsView() {
               }),
               interestedProviderIds: arrayUnion(currUid),
             }, { merge: true });
-            // await updateDoc(curEventRef, {
-            // });
           }
         }
       }

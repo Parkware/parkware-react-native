@@ -20,7 +20,6 @@ import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { ChooseRoleView } from './screens/ChooseRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
-import { LinkTest } from './screens/LinkTest';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -102,7 +101,7 @@ const AuthScreenStack = () => {
   )
 }
 
-const ProviderScreenStack = (user: any) => {
+const ProviderScreenStack = () => {
   return (
     <ProviderStack.Navigator initialRouteName='providerRequestsView'>
       <ProviderStack.Screen

@@ -41,8 +41,6 @@ export function ConsumerRequestsView() {
             .filter((proObj: any) => proObj.id == id)
             .map((pro: DocumentData) => accSpaceCount += pro.providerSpaces));
 
-          console.log(e.data().eventName + ' : ' + accSpaceCount);
-          
           let eventObj = {
             id: e.id,
             doc: {
@@ -51,14 +49,15 @@ export function ConsumerRequestsView() {
               accSpaceCount
             },
           } as docDataPair;
-
+          
           // Will need to ensure that accepted providers are never greater than the requested number
           if (accSpaceCount >= e.data().requestedSpaces) {
             // this should not be updated in the client-side. needs to be a separate cloud function
             compEventPromises.push(eventObj);
+            
             await updateDoc(doc(db, 'events', e.id), {
               isOpen: false,
-            })
+            });
           } else 
             penEventPromises.push(eventObj);
         });
@@ -81,19 +80,6 @@ export function ConsumerRequestsView() {
     }
   }, []);
 
-  const ShowSpaceCount = (event: any) => {
-    let showString = '';
-    if (!event.doc.accSpaceCount)
-      return <Text>Loading...</Text>
-    else {
-      if (event.doc.accSpaceCount == 0)
-        showString = 'No spaces available yet'
-      else
-        showString = event.doc.accSpaceCount
-    }
-
-    return <Text>{showString}</Text>
-  }
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
@@ -103,7 +89,7 @@ export function ConsumerRequestsView() {
       {pendingEvents.map(event => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
           <EventBlock event={event} proView={false}/>
-          <ShowSpaceCount event={event}/>
+          <Text>{event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking spaces ${event.doc.accSpaceCount}`}</Text>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
           {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
             <View key={providerInfo.id}>

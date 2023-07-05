@@ -24,7 +24,7 @@ export const EventBlock = ({ event, proView }: StatusTextProps) => {
       <Text key={event.doc.startTime}>
         {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
       </Text>
-      <Text key={event.doc.requestedSpaces+1}>
+      <Text key={event.doc.requestedSpaces + 1}>
         {'Requested Spaces: ' + event.doc.requestedSpaces}
       </Text>
       {!proView && 

@@ -33,19 +33,27 @@ export function ConsumerRequestsView() {
         const penEventPromises: docDataPair[] = [];
         snap.docs.map(async e => {
           // Getting only the provider data where the provider is included in the array of provider ids. 
-          const newPros = modProviders(e.data());
-                            
+          const interestedProviders = modProviders(e.data());
+          
+          let accSpaceCount = 0;
+          e.data().acceptedProviderIds
+            .map((id: string) => e.data().interestedProviders
+            .filter((proObj: any) => proObj.id == id)
+            .map((pro: DocumentData) => accSpaceCount += pro.providerSpaces));
+
+          console.log(e.data().eventName + ' : ' + accSpaceCount);
+          
           let eventObj = {
             id: e.id,
             doc: {
               ...e.data(),
-              interestedProviders: newPros
+              interestedProviders,
+              accSpaceCount
             },
           } as docDataPair;
 
           // Will need to ensure that accepted providers are never greater than the requested number
-          // need to check if the total spaces of the accepted providers is equal to the requestedSpaces
-          if (e.data().acceptedProviderIds.length >= e.data().requestedSpaces) {
+          if (accSpaceCount >= e.data().requestedSpaces) {
             // this should not be updated in the client-side. needs to be a separate cloud function
             compEventPromises.push(eventObj);
             await updateDoc(doc(db, 'events', e.id), {
@@ -66,13 +74,26 @@ export function ConsumerRequestsView() {
   }
 
   useEffect(() => {
-      try {
-        getEvents();
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
+    try {
+      getEvents();
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
   }, []);
 
+  const ShowSpaceCount = (event: any) => {
+    let showString = '';
+    if (!event.doc.accSpaceCount)
+      return <Text>Loading...</Text>
+    else {
+      if (event.doc.accSpaceCount == 0)
+        showString = 'No spaces available yet'
+      else
+        showString = event.doc.accSpaceCount
+    }
+
+    return <Text>{showString}</Text>
+  }
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
@@ -82,6 +103,7 @@ export function ConsumerRequestsView() {
       {pendingEvents.map(event => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
           <EventBlock event={event} proView={false}/>
+          <ShowSpaceCount event={event}/>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
           {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
             <View key={providerInfo.id}>

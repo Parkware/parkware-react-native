@@ -52,7 +52,7 @@ export function MakeRequestScreen() {
           interestedProviders: [],
           interestedProviderIds: [],
           arrivedProviderSpaces: [],
-          parkingSpaces: requestedSpaces,
+          requestedSpaces,
           isOpen: true
         });
                 

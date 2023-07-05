@@ -21,7 +21,16 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const [eventData, setEventData] = useState<docDataPair>(event);
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [unwantedPros, setUnwantedPros] = useState<string[]>([]);
+  const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
 
+  useEffect(() => {
+    let spaceCount = 0;
+    eventData.doc.interestedProviders.map((pro: any) => {
+      spaceCount += pro.providerSpaces;
+    });
+    setCurrAvailPros(spaceCount);
+  }, [])
+  
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
       ...prevState,
@@ -31,7 +40,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   };
   
   const setAcceptStatus = async (currProviderId: string) => {
-    await updateDoc(doc(db, 'events/', event.id), { 
+    await updateDoc(doc(db, 'events', event.id), { 
       acceptedProviderIds: arrayUnion(currProviderId),
       consumerParkingStatus: false,
     });
@@ -41,10 +50,9 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const removeLocalData = (id: string) => {
     setUnwantedPros(current => [...current, id]);
     declineUserId(id);
-
     const updatedProviders = eventData.doc.interestedProviders
     .filter((pro: DocumentData) => pro.id !== id);
-    
+
     setEventData(prevEventData => {
       return {
         ...prevEventData,
@@ -56,7 +64,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   }
 
   const declineUserId = async (decProId: string) => {
-    await updateDoc(doc(db, 'events/', event.id), { 
+    await updateDoc(doc(db, 'events', event.id), { 
       interestedProviderIds: arrayRemove(decProId),
     });
   }
@@ -79,7 +87,12 @@ const MultiProviderDetailsView = ({ route }: Props) => {
             <Text key={providerInfo.address}>
             {'Address: ' + providerInfo.address}
             </Text>
-            <Button 
+            <Text>
+              {currAvailPros 
+                ? `Spaces able to provide: ${currAvailPros} / ${eventData.doc.requestedSpaces}`
+                : "Loading..."}
+            </Text>
+            <Button
               title='Accept' 
               onPress={() => disableButton(providerInfo.id)} 
               disabled={disabledButtons[providerInfo.id]} 

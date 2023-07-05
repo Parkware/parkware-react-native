@@ -115,7 +115,7 @@ const ParkingStatusView = ({ route }: Props) => {
       <Text>Organizer Info:</Text>
       <RenderConsInfo />
       <Text style={{ paddingTop: 30 }}>Event Info:</Text>
-      <EventBlock event={eventData} proView={true}/>
+      <EventBlock event={eventData} showSpaces={true}/>
       <View style={{ paddingTop: 30}}>
         <ShowArrivalStatus />
       </View>

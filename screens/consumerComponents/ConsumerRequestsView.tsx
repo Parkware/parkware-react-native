@@ -88,7 +88,7 @@ export function ConsumerRequestsView() {
       
       {pendingEvents.map(event => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
-          <EventBlock event={event} proView={false}/>
+          <EventBlock event={event} showSpaces={false}/>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
           {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
             <View key={providerInfo.id}>
@@ -110,7 +110,7 @@ export function ConsumerRequestsView() {
       {completedEvents.map((event) => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
           <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
-          <EventBlock event={event} proView={true}/>
+          <EventBlock event={event} showSpaces={true}/>
           <Divider width={5} style={{ marginTop: 10 }}/>
         </TouchableOpacity>
       ))}

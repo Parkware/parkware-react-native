@@ -26,7 +26,7 @@ export const EventStatusText = ({ event }: StatusTextProps) => {
         borderColor: statusColor
       }} >
         <Text key={event.doc.acceptedProviderIds}>
-            {statusWord}
+          {statusWord}
         </Text>
       </View>
     )

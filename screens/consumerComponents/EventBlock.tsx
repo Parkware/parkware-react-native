@@ -3,10 +3,10 @@ import { docDataPair } from "../providerComponents/ProviderRequestsView";
 
 interface StatusTextProps {
   event: docDataPair;
-  proView: boolean;
+  showSpaces: boolean;
 }
     
-export const EventBlock = ({ event, proView }: StatusTextProps) => {
+export const EventBlock = ({ event, showSpaces }: StatusTextProps) => {
   const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
   const formatDate = (date: any) => date.toDate().toLocaleDateString();
 
@@ -27,15 +27,12 @@ export const EventBlock = ({ event, proView }: StatusTextProps) => {
       <Text key={event.doc.requestedSpaces + 1}>
         {'Requested Spaces: ' + event.doc.requestedSpaces}
       </Text>
-      {!proView && 
+      {!showSpaces && 
       <View>
-      <Text>
-        {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking spaces ${event.doc.accSpaceCount}`}
-      </Text>
-        <Text key={event.doc.endTime}>
-          {'Accepted: ' + event.doc.accepted}
+        <Text>
+          {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking spaces ${event.doc.accSpaceCount}`}
         </Text>
-        </View>}
+      </View>}
     </View>
   );
 }

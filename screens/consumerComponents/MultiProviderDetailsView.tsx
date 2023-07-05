@@ -46,7 +46,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     });
   }
   
-  // Removing a provider from the consumer view if they have been declined...sorry:(
+  // Removing a provider from the consumer view if they have been declined
   const removeLocalData = (id: string) => {
     setUnwantedPros(current => [...current, id]);
     const updatedProviders = eventData.doc.interestedProviders
@@ -58,7 +58,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         interestedProviders: updatedProviders
       }
     });
-    
+
     declineUserId(id);
   }
 
@@ -71,9 +71,9 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-          Event: {eventData.doc.eventName}
+        Event: {eventData.doc.eventName}
       </Text>
-      <EventBlock event={eventData} proView={false}/>
+      <EventBlock event={eventData} showSpaces={false}/>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.interestedProviders
@@ -105,6 +105,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
           </View >
         ))
       }
+      <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
     </SafeAreaView>
   )
 }

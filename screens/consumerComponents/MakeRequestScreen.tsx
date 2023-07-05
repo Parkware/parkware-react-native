@@ -52,6 +52,7 @@ export function MakeRequestScreen() {
           interestedProviders: [],
           interestedProviderIds: [],
           arrivedProviderSpaces: [],
+          unwantedProviders: [],
           requestedSpaces,
           isOpen: true
         });

@@ -59,12 +59,14 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       }
     });
 
-    declineUserId(id);
+    declineUserId(id, updatedProviders);
   }
 
-  const declineUserId = async (decProId: string) => {
+  const declineUserId = async (id: string, updatedProviders: any) => {
     await updateDoc(doc(db, 'events', event.id), { 
-      interestedProviderIds: arrayRemove(decProId),
+      interestedProviderIds: arrayRemove(id),
+      interestedProviders: updatedProviders,
+      unwantedPros: arrayUnion(id)
     });
   }
   

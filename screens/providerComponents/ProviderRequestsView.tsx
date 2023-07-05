@@ -66,7 +66,8 @@ export function ProviderRequestsView() {
             accEventPromises.push(eventObj);
           } else if (e.data().interestedProviderIds.includes(currUid)) {
             penEventPromises.push(eventObj);
-          } else if (e.data().isOpen) {
+          } else if (e.data().isOpen 
+                    && !e.data().unwantedProviders.includes(auth.currentUser!.uid)) {
             openEventPromises.push(eventObj);
           }
         });
@@ -87,8 +88,7 @@ export function ProviderRequestsView() {
 
   const removeLocalEventData = (id: string) => {
     setUnwantedEvents(current => [...current, id]);
-    setOpenEvents(openEvents
-    .filter((e: DocumentData) => e.id !== id));
+    setOpenEvents(openEvents.filter((e: DocumentData) => e.id !== id));
   }
   
   const updateDB = async (eventData: docDataPair) => {

@@ -49,7 +49,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   // Removing a provider from the consumer view if they have been declined...sorry:(
   const removeLocalData = (id: string) => {
     setUnwantedPros(current => [...current, id]);
-    declineUserId(id);
     const updatedProviders = eventData.doc.interestedProviders
     .filter((pro: DocumentData) => pro.id !== id);
 
@@ -60,7 +59,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       }
     });
     
-    return updatedProviders
+    declineUserId(id);
   }
 
   const declineUserId = async (decProId: string) => {

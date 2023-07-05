@@ -28,9 +28,14 @@ export const EventBlock = ({ event, proView }: StatusTextProps) => {
         {'Requested Spaces: ' + event.doc.requestedSpaces}
       </Text>
       {!proView && 
+      <View>
+      <Text>
+        {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking spaces ${event.doc.accSpaceCount}`}
+      </Text>
         <Text key={event.doc.endTime}>
           {'Accepted: ' + event.doc.accepted}
-        </Text>}
+        </Text>
+        </View>}
     </View>
   );
 }

@@ -52,12 +52,12 @@ export function ConsumerRequestsView() {
           
           // Will need to ensure that accepted providers are never greater than the requested number
           if (accSpaceCount >= e.data().requestedSpaces) {
-            // this should not be updated in the client-side. needs to be a separate cloud function
             compEventPromises.push(eventObj);
             
-            await updateDoc(doc(db, 'events', e.id), {
-              isOpen: false,
-            });
+            // this should not be updated in the client-side. needs to be a separate cloud function
+            // await updateDoc(doc(db, 'events', e.id), {
+            //   isOpen: false,
+            // });
           } else 
             penEventPromises.push(eventObj);
         });
@@ -89,7 +89,6 @@ export function ConsumerRequestsView() {
       {pendingEvents.map(event => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
           <EventBlock event={event} proView={false}/>
-          <Text>{event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking spaces ${event.doc.accSpaceCount}`}</Text>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
           {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
             <View key={providerInfo.id}>

@@ -18,8 +18,6 @@ export function SignupScreen() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    const [user, setUser] = useState<User | null>(null);
-    const [provider, setProvider] = useState(false)
     const navigation = useNavigation<signupScreenProp>();
 
     const navNextView = () => {

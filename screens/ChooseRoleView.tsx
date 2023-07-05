@@ -33,7 +33,7 @@ export const ChooseRoleView = ({ route }: Props) => {
         email,
         name,
         isProvider
-      };;
+      };
 
       if (address.length !== 0)
         userObj = {

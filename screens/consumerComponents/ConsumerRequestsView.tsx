@@ -73,16 +73,6 @@ export function ConsumerRequestsView() {
       }
   }, []);
 
-  const providerNameText = async (proId: any) => {
-    const userSnap = await getDoc(doc(db, 'users/', proId))
-    if (userSnap.exists()){   
-      return <Text>{userSnap.data().name}</Text>
-    }
-  }
-
-  const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-  const formatDate = (date: any) => date.toDate().toLocaleDateString();
-
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>

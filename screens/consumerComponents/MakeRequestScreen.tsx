@@ -92,7 +92,15 @@ export function MakeRequestScreen() {
     } else
       setSendable(true);
   }
-  
+  const spaceCountFun = (count: number) => {
+    if (count < 1) {
+      setSendable(false);
+      setError('At least one parking spot needs to be requested!')
+    } else {
+      setParkingSpaces(count)
+      setSendable(true);
+    }
+  }
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
@@ -138,12 +146,12 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
-      <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setParkingSpaces(value)} />
+      <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
       {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"
         onPress={createEventRequest}
-        disabled={!sendable || address.length == 0}
+        disabled={!sendable || address.length == 0 }
       />
       <Button
         title="Skip"

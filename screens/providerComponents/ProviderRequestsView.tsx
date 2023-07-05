@@ -127,7 +127,8 @@ export function ProviderRequestsView() {
               interestedProviders: arrayUnion({
                 id: currUid,
                 name: currUserSnap.data().name,
-                address: currUserSnap.data().address
+                address: currUserSnap.data().address,
+                providerSpaces: currUserSnap.data().providerSpaces
               }),
               interestedProviderIds: arrayUnion(currUid),
             }, { merge: true });

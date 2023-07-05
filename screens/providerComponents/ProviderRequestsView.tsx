@@ -119,13 +119,13 @@ export function ProviderRequestsView() {
           // Eventually, this won't be needed since we would disable if already sent, but just to validate
           if (eventSnap.exists()) {
             eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
-              if (prov.provider_id == currUid) already_providing = true
+              if (prov.id == currUid) already_providing = true
             });
           }
           if (!already_providing) {
             await setDoc(curEventRef, {
               interestedProviders: arrayUnion({
-                provider_id: currUid,
+                id: currUid,
                 name: currUserSnap.data().name,
                 address: currUserSnap.data().address
               }),

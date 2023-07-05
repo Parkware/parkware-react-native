@@ -29,22 +29,18 @@ export const ChooseRoleView = ({ route }: Props) => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCred.user;
-      let userObj: any;
+      let userObj: any = {
+        email,
+        name,
+        isProvider
+      };;
 
       if (address.length !== 0)
         userObj = {
-          email,
-          name,
-          isProvider,
+          ...userObj,
           address,
           providerSpaces
-        };
-      else 
-        userObj = {
-          email,
-          name,
-          provider: isProvider
-        };
+        }
 
       await setDoc(doc(db, "users", user.uid), userObj);
       setUser(user);

@@ -24,7 +24,6 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   const [diff, setDiff] = useState<number>();
   const [providerInfo, setProviderInfo] = useState<DocumentData>();
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
-  const [markedHere, setMarkedHere] = useState(false);
   const [chosenProviderId, setChosenProviderId] = useState('');
   const [shareableLink, setShareableLink] = useState('');
 
@@ -34,7 +33,6 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
       [providerId]: true,
     }));
 
-    setChosenProviderId(providerId);
     updateArrivedStatus(providerId)
   };
   
@@ -59,10 +57,10 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   }, []);
 
   const updateArrivedStatus = async (proId: string) => {
-    await updateDoc(doc(db, 'events/', event.id), { 
+    await updateDoc(doc(db, 'events', event.id), { 
       arrivedProviderSpaces: arrayUnion(proId),
     });
-    setMarkedHere(true);
+    setChosenProviderId(proId);
   }
 
   const getProviderInfo = async () => {
@@ -116,8 +114,8 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
       </View>
       {providerInfo ? providerInfo.map((proObj: DocumentData) => (
         <View key={proObj.id}>
-          <Text key={proObj.name}>{proObj.name}</Text>
-          <Text key={proObj.address}>{proObj.address}</Text>
+          <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
+          <Text key={proObj.address}>Provider Address: {proObj.address}</Text>
           <RenderStatus proId={proObj.id}/>
           <Divider width={5} style={{ marginTop: 10 }}/>
         </View>

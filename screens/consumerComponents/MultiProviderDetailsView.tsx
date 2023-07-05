@@ -60,6 +60,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       interestedProviderIds: arrayRemove(decProId),
     });
   }
+  
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>

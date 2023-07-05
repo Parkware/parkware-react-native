@@ -25,7 +25,7 @@ const ParkingStatusView = ({ route }: Props) => {
   const [guestStillParking, setGuestStillParking] = useState(false);
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'events/', eventData.id), (eventSnap) => {
+    const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
         if (eventSnap.data().arrivedProviderSpaces.includes(auth.currentUser!.uid))
           setGuestStillParking(true);
@@ -77,6 +77,7 @@ const ParkingStatusView = ({ route }: Props) => {
             </Text>
           )
         else 
+        // need to create push notifications if the guest leaves. this needs to alert the provider
           return (
             <View>
               <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>

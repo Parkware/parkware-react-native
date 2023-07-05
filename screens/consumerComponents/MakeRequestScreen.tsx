@@ -51,6 +51,7 @@ export function MakeRequestScreen() {
           acceptedProviderIds: [],
           interestedProviders: [],
           interestedProviderIds: [],
+          arrivedProviderSpaces: [],
           parkingSpaces: requestedSpaces,
           isOpen: true
         });

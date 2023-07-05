@@ -22,7 +22,7 @@ export function ConsumerRequestsView() {
     if (eventData)
       return eventData.interestedProviders
       .filter((proData: DocumentData) => 
-        eventData.interestedProviderIds.includes(proData.provider_id));
+        eventData.interestedProviderIds.includes(proData.id));
   }
 
   const getEvents = async () => {
@@ -31,7 +31,8 @@ export function ConsumerRequestsView() {
       const unsub = onSnapshot(q, async (snap) => {
         const compEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
-        snap.docs.map(e => {
+        snap.docs.map(async e => {
+          // Getting only the provider data where the provider is included in the array of provider ids. 
           const newPros = modProviders(e.data());
                             
           let eventObj = {
@@ -44,9 +45,13 @@ export function ConsumerRequestsView() {
 
           // Will need to ensure that accepted providers are never greater than the requested number
           // need to check if the total spaces of the accepted providers is equal to the requestedSpaces
-          if (e.data().acceptedProviderIds.length >= e.data().requestedSpaces) 
+          if (e.data().acceptedProviderIds.length >= e.data().requestedSpaces) {
+            // this should not be updated in the client-side. needs to be a separate cloud function
             compEventPromises.push(eventObj);
-          else 
+            await updateDoc(doc(db, 'events', e.id), {
+              isOpen: false,
+            })
+          } else 
             penEventPromises.push(eventObj);
         });
         
@@ -89,7 +94,7 @@ export function ConsumerRequestsView() {
           <EventBlock event={event} proView={false}/>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
           {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
-            <View key={providerInfo.provider_id}>
+            <View key={providerInfo.id}>
               <Text key={providerInfo.name}>
               {'Name: ' + providerInfo.name}
               </Text>

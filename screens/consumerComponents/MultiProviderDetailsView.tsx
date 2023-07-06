@@ -20,15 +20,16 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataPair>(event);
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
-  const [unwantedPros, setUnwantedPros] = useState<string[]>([]);
+  const [unwantedProviders, setUnwantedProviders] = useState<string[]>([]);
   const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
 
+  // Getting the number of already available parking spaces
   useEffect(() => {
     let spaceCount = 0;
     eventData.doc.acceptedProviderIds
-            .map((id: string) => eventData.doc.interestedProviders
-            .filter((proObj: any) => proObj.id == id)
-            .map((pro: DocumentData) => spaceCount += pro.providerSpaces));
+      .map((id: string) => eventData.doc.interestedProviders
+      .filter((proObj: any) => proObj.id == id)
+      .map((pro: DocumentData) => spaceCount += pro.providerSpaces));
 
     setCurrAvailPros(spaceCount);
     updateSpaceCount(spaceCount);
@@ -57,7 +58,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   
   // Removing a provider from the consumer view if they have been declined
   const removeLocalData = (id: string) => {
-    setUnwantedPros(current => [...current, id]);
+    setUnwantedProviders(current => [...current, id]);
     const updatedProviders = eventData.doc.interestedProviders
     .filter((pro: DocumentData) => pro.id !== id);
 
@@ -75,7 +76,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     await updateDoc(doc(db, 'events', event.id), { 
       interestedProviderIds: arrayRemove(id),
       interestedProviders: updatedProviders,
-      unwantedPros: arrayUnion(id)
+      unwantedProviders: arrayUnion(id)
     });
   }
   
@@ -88,7 +89,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.interestedProviders
-        .filter((pro: DocumentData) => (!unwantedPros.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
+        .filter((pro: DocumentData) => (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
         .map((providerInfo: DocumentData) => (
           <View key={providerInfo.id}>
             <Text key={providerInfo.name}>
@@ -115,7 +116,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         ))
       }
       <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
-
       <Text style={{ fontSize: 20, marginTop: 170 }}>Accepted Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.acceptedProviderIds

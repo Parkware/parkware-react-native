@@ -90,7 +90,9 @@ export function ConsumerRequestsView() {
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
           <EventBlock event={event} showSpaces={false}/>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-          {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
+          {event.doc.interestedProviders
+            .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
+            .map((providerInfo: DocumentData) => (
             <View key={providerInfo.id}>
               <Text key={providerInfo.name}>
               {'Name: ' + providerInfo.name}

@@ -76,10 +76,15 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         Event: {eventData.doc.eventName}
       </Text>
       <EventBlock event={eventData} showSpaces={false}/>
-      <Text style={{ fontSize: 20, marginTop: 10 }}>Available Providers:</Text>
+      <Text>
+        {currAvailPros 
+          ? `Available Parking Spaces: ${currAvailPros}`
+          : "Loading..."}
+      </Text>
+      <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.interestedProviders
-        .filter((pro: DocumentData) => !unwantedPros.includes(pro.id))
+        .filter((pro: DocumentData) => (!unwantedPros.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
         .map((providerInfo: DocumentData) => (
           <View key={providerInfo.id}>
             <Text key={providerInfo.name}>
@@ -90,7 +95,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
             </Text>
             <Text>
               {currAvailPros 
-                ? `Spaces able to provide: ${currAvailPros} / ${eventData.doc.requestedSpaces}`
+                ? `Spaces able to provide: ${providerInfo.providerSpaces} / ${eventData.doc.requestedSpaces}`
                 : "Loading..."}
             </Text>
             <Button
@@ -108,6 +113,29 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         ))
       }
       <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
+
+      <Text style={{ fontSize: 20, marginTop: 170 }}>Accepted Providers:</Text>
+      <Divider width={5} style={{ marginTop: 10 }}/>
+      {eventData.doc.acceptedProviderIds
+        .map((proId: string) => eventData.doc.interestedProviders
+        .find((proObj: any) => proObj.id == proId))
+        .map((accProInfo: DocumentData) => (
+          <View key={accProInfo.id}>
+            <Text key={accProInfo.name}>
+            {'Name: ' + accProInfo.name}
+            </Text>
+            <Text key={accProInfo.address}>
+            {'Address: ' + accProInfo.address}
+            </Text>
+            <Text>
+              {currAvailPros 
+                ? `Spaces able to provide: ${accProInfo.providerSpaces} / ${eventData.doc.requestedSpaces}`
+                : "Loading..."}
+            </Text>
+            <Divider width={5} style={{ marginTop: 10 }}/>
+          </View >
+        ))
+      }
     </SafeAreaView>
   )
 }

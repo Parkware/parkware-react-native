@@ -19,14 +19,13 @@ const ParkingStatusView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<docDataPair>(event);
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
-  const [firstProArrived, setFirstProArrived] = useState(false);
   const [diff, setDiff] = useState<number>();
   const endTime = event.doc.endTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
   const [guestStillParking, setGuestStillParking] = useState(false);
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'events/', eventData.id), (eventSnap) => {
+    const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
         if (eventSnap.data().arrivedProviderSpaces.includes(auth.currentUser!.uid))
           setGuestStillParking(true);
@@ -74,10 +73,11 @@ const ParkingStatusView = ({ route }: Props) => {
         if (diff <= 0) 
           return (
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-              {guestStillParking} ? your guest has not left the spot yet : your guest has left the spot
+              {guestStillParking ? "your guest has not left the spot yet" : "your guest has left the spot"}
             </Text>
           )
         else 
+        // need to create push notifications if the guest leaves. this needs to alert the provider
           return (
             <View>
               <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
@@ -115,7 +115,7 @@ const ParkingStatusView = ({ route }: Props) => {
       <Text>Organizer Info:</Text>
       <RenderConsInfo />
       <Text style={{ paddingTop: 30 }}>Event Info:</Text>
-      <EventBlock event={eventData} proView={true}/>
+      <EventBlock event={eventData} showSpaces={true}/>
       <View style={{ paddingTop: 30}}>
         <ShowArrivalStatus />
       </View>

@@ -21,7 +21,7 @@ export function MakeRequestScreen() {
   const [eventName, setEventName] = useState<string>();
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
-  const [parkingSpaces, setParkingSpaces] = useState<number>();
+  const [requestedSpaces, setParkingSpaces] = useState<number>();
   const navigation = useNavigation<homeScreenProp>();
 
   const logout = async () => {
@@ -38,20 +38,21 @@ export function MakeRequestScreen() {
   const createEventRequest = async () => {
     if (auth.currentUser) {
       const consRef = doc(db, 'users/', auth.currentUser.uid);
-      const consSnap = await getDoc(consRef)
-      if (consSnap.exists()) {
+      const userSnap = await getDoc(consRef)
+      if (userSnap.exists()) {
         await addDoc(collection(db, 'events/'), {
           eventName,
           consumer_id: auth.currentUser.uid,
-          name: consSnap.data().name,
+          name: userSnap.data().name,
           address,
           startTime,
           endTime,
-          accepted: false, 
           acceptedProviderIds: [],
           interestedProviders: [],
           interestedProviderIds: [],
-          parkingSpaces,
+          arrivedProviderSpaces: [],
+          unwantedProviders: [],
+          requestedSpaces,
           isOpen: true
         });
                 
@@ -91,7 +92,15 @@ export function MakeRequestScreen() {
     } else
       setSendable(true);
   }
-  
+  const spaceCountFun = (count: number) => {
+    if (count < 1) {
+      setSendable(false);
+      setError('At least one parking spot needs to be requested!')
+    } else {
+      setParkingSpaces(count)
+      setSendable(true);
+    }
+  }
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
@@ -137,12 +146,12 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
-      <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setParkingSpaces(value)} />
+      <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
       {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"
         onPress={createEventRequest}
-        disabled={!sendable || address.length == 0}
+        disabled={!sendable || address.length == 0 }
       />
       <Button
         title="Skip"

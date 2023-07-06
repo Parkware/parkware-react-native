@@ -1,18 +1,20 @@
 import { View, Text } from "react-native";
 import { docDataPair } from "../providerComponents/ProviderRequestsView";
-import { docDataTrio } from "./ConsumerRequestsView";
 
 interface StatusTextProps {
-  event: docDataTrio | docDataPair;
-  proView: boolean;
+  event: docDataPair;
+  showSpaces: boolean;
 }
     
-export const EventBlock = ({ event, proView }: StatusTextProps) => {
+export const EventBlock = ({ event, showSpaces }: StatusTextProps) => {
   const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
   const formatDate = (date: any) => date.toDate().toLocaleDateString();
 
   return (
     <View>
+      <Text key={event.doc.eventName}>
+        {'Event name: ' + event.doc.eventName}
+      </Text>
       <Text key={event.doc.address}>
         {'Address: ' + event.doc.address}
       </Text>
@@ -22,10 +24,15 @@ export const EventBlock = ({ event, proView }: StatusTextProps) => {
       <Text key={event.doc.startTime}>
         {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
       </Text>
-      {!proView && 
-        <Text key={event.doc.endTime}>
-          {'Accepted: ' + event.doc.accepted}
-        </Text>}
+      {!showSpaces && 
+      <View>
+        <Text>
+          {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking Spaces ${event.doc.accSpaceCount}`}
+        </Text>
+      </View>}
+      <Text key={event.doc.requestedSpaces + 1}>
+        {'Requested Spaces: ' + event.doc.requestedSpaces}
+      </Text>
     </View>
   );
 }

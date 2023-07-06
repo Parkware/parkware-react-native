@@ -22,7 +22,7 @@ export function ConsumerRequestsView() {
     if (eventData)
       return eventData.interestedProviders
       .filter((proData: DocumentData) => 
-        eventData.interestedProviderIds.includes(proData.provider_id));
+        eventData.interestedProviderIds.includes(proData.id));
   }
 
   const getEvents = async () => {
@@ -31,21 +31,34 @@ export function ConsumerRequestsView() {
       const unsub = onSnapshot(q, async (snap) => {
         const compEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
-        snap.docs.map(e => {
-          const newPros = modProviders(e.data());
-                            
+        snap.docs.map(async e => {
+          // Getting only the provider data where the provider is included in the array of provider ids. 
+          const interestedProviders = modProviders(e.data());
+          
+          let accSpaceCount = 0;
+          e.data().acceptedProviderIds
+            .map((id: string) => e.data().interestedProviders
+            .filter((proObj: any) => proObj.id == id)
+            .map((pro: DocumentData) => accSpaceCount += pro.providerSpaces));
+
           let eventObj = {
             id: e.id,
             doc: {
               ...e.data(),
-              interestedProviders: newPros
+              interestedProviders,
+              accSpaceCount
             },
           } as docDataPair;
-          // The number below is some arbitrary number. I need to check against requested 
-          // parking spaces
-          if (e.data().acceptedProviderIds.length == 2) 
+          
+          // Will need to ensure that accepted providers are never greater than the requested number
+          if (accSpaceCount >= e.data().requestedSpaces) {
             compEventPromises.push(eventObj);
-          else 
+            
+            // this should not be updated in the client-side. needs to be a separate cloud function
+            // await updateDoc(doc(db, 'events', e.id), {
+            //   isOpen: false,
+            // });
+          } else 
             penEventPromises.push(eventObj);
         });
         
@@ -60,22 +73,12 @@ export function ConsumerRequestsView() {
   }
 
   useEffect(() => {
-      try {
-        getEvents();
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      }
-  }, []);
-
-  const providerNameText = async (proId: any) => {
-    const userSnap = await getDoc(doc(db, 'users/', proId))
-    if (userSnap.exists()){   
-      return <Text>{userSnap.data().name}</Text>
+    try {
+      getEvents();
+    } catch (error) {
+      console.error('Error fetching events:', error);
     }
-  }
-
-  const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-  const formatDate = (date: any) => date.toDate().toLocaleDateString();
+  }, []);
 
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -85,17 +88,19 @@ export function ConsumerRequestsView() {
       
       {pendingEvents.map(event => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
-          <EventBlock event={event} proView={false}/>
+          <EventBlock event={event} showSpaces={false}/>
           <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-          {event.doc.interestedProviders.map((providerInfo: DocumentData) => (
-            <View key={providerInfo.provider_id}>
+          {event.doc.interestedProviders
+            .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
+            .map((providerInfo: DocumentData) => (
+            <View key={providerInfo.id}>
               <Text key={providerInfo.name}>
               {'Name: ' + providerInfo.name}
               </Text>
               <Text key={providerInfo.address}>
               {'Address: ' + providerInfo.address}
               </Text>
-            </View >
+            </View>
           ))}
           <Divider width={5} style={{ marginTop: 10 }}/>
         </TouchableOpacity>
@@ -107,8 +112,7 @@ export function ConsumerRequestsView() {
       {completedEvents.map((event) => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
           <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
-          {/* {providerNameText(event.doc.accepted_provider_id)} */}
-          <EventBlock event={event} proView={false}/>
+          <EventBlock event={event} showSpaces={true}/>
           <Divider width={5} style={{ marginTop: 10 }}/>
         </TouchableOpacity>
       ))}

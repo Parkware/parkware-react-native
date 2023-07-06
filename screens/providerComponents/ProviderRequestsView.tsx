@@ -32,6 +32,7 @@ export function ProviderRequestsView() {
   const [openEvents, setOpenEvents] = useState<docDataPair[]>([]);
   const [accEvents, setAccEvents] = useState<docDataPair[]>([]);
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
+  const [unwantedEvents, setUnwantedEvents] = useState<string[]>([]);
 
   const navigation = useNavigation<providerScreenProp>();
 
@@ -65,7 +66,8 @@ export function ProviderRequestsView() {
             accEventPromises.push(eventObj);
           } else if (e.data().interestedProviderIds.includes(currUid)) {
             penEventPromises.push(eventObj);
-          } else if (e.data().isOpen) {
+          } else if (e.data().isOpen 
+                    && !e.data().unwantedProviders.includes(auth.currentUser!.uid)) {
             openEventPromises.push(eventObj);
           }
         });
@@ -77,7 +79,6 @@ export function ProviderRequestsView() {
         setPendingEvents(penEvents);
         setAccEvents(accEvents);
         setOpenEvents(openEvents);
-          
       });
       return () => unsub();
     } catch (error) {
@@ -85,56 +86,36 @@ export function ProviderRequestsView() {
     }
   }, []);
 
-  useEffect(() => {
-    const doc_id_accept: docDataPair[] = openEvents.filter(d => d.doc.accepted === true);
-    const doc_id_decline: docDataPair[] = openEvents.filter(d => d.doc.accepted === false);
-    
-    if (doc_id_accept) 
-      doc_id_accept.map(d => updateDB(d, true));
-    if (doc_id_decline) 
-      doc_id_decline.map(d => updateDB(d, false));
-  }, [openEvents]);
+  const removeLocalEventData = (id: string) => {
+    setUnwantedEvents(current => [...current, id]);
+    setOpenEvents(openEvents.filter((e: DocumentData) => e.id !== id));
+  }
   
-  const sendRequest = (id: any, to_accept: boolean) => {
-    setOpenEvents(prevEventData => {
-      return prevEventData.map(e => {
-        // If the user is removing acceptance, I only want to change that event's value. Else if putting acceptance, I want only that event request to be selected. 
-        // if (to_accept && e.id !== id && e.doc.accepted) return { id: e.id, doc: { ...e.doc, accepted: false } }
-        if (e.id === id) return { id: e.id, doc: { ...e.doc, accepted: to_accept } };
-        return e;
-      });
-    });
-  };
-  
-  const updateDB = async (ddPair: docDataPair, accepted: boolean) => {
-    const doc_id = ddPair.id;
-    const curEventRef = doc(db, 'events/', doc_id);
+  const updateDB = async (eventData: docDataPair) => {
+    const curEventRef = doc(db, 'events/', eventData.id);
     const currUid = auth.currentUser!.uid;
-    if (accepted) {
-      if (ddPair.doc.consumer_id != currUid) {
-        const currUserRef = doc(db, 'users/', currUid);
-        const currUserSnap = await getDoc(currUserRef);
-        if (currUserSnap.exists()) {
-          let already_providing = false;
-          const eventSnap = await getDoc(curEventRef);
-          // Eventually, this won't be needed since we would disable if already sent, but just to validate
-          if (eventSnap.exists()) {
-            eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
-                if (prov.provider_id == currUid) already_providing = true
-            });
-          }
-          if (!already_providing) {
-            await setDoc(curEventRef, {
-              interestedProviders: arrayUnion({
-                provider_id: currUid,
-                name: currUserSnap.data().name,
-                address: currUserSnap.data().address
-              }),
-              interestedProviderIds: arrayUnion(currUid),
-            }, { merge: true });
-            // await updateDoc(curEventRef, {
-            // });
-          }
+    if (eventData.doc.consumer_id != currUid) {
+      const currUserRef = doc(db, 'users/', currUid);
+      const currUserSnap = await getDoc(currUserRef);
+      if (currUserSnap.exists()) {
+        let already_providing = false;
+        const eventSnap = await getDoc(curEventRef);
+        // Eventually, this won't be needed since we would disable if already sent, but just to validate
+        if (eventSnap.exists()) {
+          eventSnap.data().interestedProviders.forEach((prov: any | undefined) => {
+            if (prov.id == currUid) already_providing = true
+          });
+        }
+        if (!already_providing) {
+          await setDoc(curEventRef, {
+            interestedProviders: arrayUnion({
+              id: currUid,
+              name: currUserSnap.data().name,
+              address: currUserSnap.data().address,
+              providerSpaces: currUserSnap.data().providerSpaces
+            }),
+            interestedProviderIds: arrayUnion(currUid),
+          }, { merge: true });
         }
       }
     }
@@ -144,7 +125,6 @@ export function ProviderRequestsView() {
       await deleteDoc(doc(db, "interested_providers/", auth.currentUser.uid));
     }
     */
-    await updateDoc(curEventRef, { accepted });
   }
 
   return (
@@ -158,7 +138,7 @@ export function ProviderRequestsView() {
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
           <Text style={{ fontSize: 15 }}>Click here to see more info about your provider</Text>
           <View style={{ marginBottom: 10 }} key={event.id}>
-            <EventBlock event={event} proView={true}/>
+            <EventBlock event={event} showSpaces={true}/>
           </View>
         </TouchableOpacity>
       ))}
@@ -168,7 +148,7 @@ export function ProviderRequestsView() {
       
       {pendingEvents.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
-          <EventBlock event={event} proView={true}/>
+          <EventBlock event={event} showSpaces={true}/>
           <EventStatusText event={event} />
         </View>
       ))}
@@ -176,11 +156,13 @@ export function ProviderRequestsView() {
         Open Requests
       </Text>
       
-      {openEvents.map((event) => (
+      {openEvents
+        .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
+        .map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
-          <EventBlock event={event} proView={true}/>
-          <Button title='Accept' onPress={() => sendRequest(event.id, true)}/>
-          <Button title='Decline' onPress={() => sendRequest(event.id, false)}/>
+          <EventBlock event={event} showSpaces={true}/>
+          <Button title='Accept' onPress={() => updateDB(event)}/>
+          <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
         </View>
       ))}
       <Button title="Log out" onPress={logout} />

@@ -6,14 +6,11 @@ import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
+import { A } from '@expo/html-elements'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
 
 /*
-  type Props = {
-    navigation: NativeStackNavigationProp<ConsumerStackParams, 'chooseProviderView'>;
-    route: NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>;
-  }
     Is there some way that I can have one onSnapshot function listen and update both these pages?
     It isn't necessary since a user may only need updates from one screen, but it could be a good addition
     I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
@@ -27,8 +24,8 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   const [diff, setDiff] = useState<number>();
   const [providerInfo, setProviderInfo] = useState<DocumentData>();
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
-  const [markedHere, setMarkedHere] = useState(false);
   const [chosenProviderId, setChosenProviderId] = useState('');
+  const [shareableLink, setShareableLink] = useState('');
 
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
@@ -36,9 +33,7 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
       [providerId]: true,
     }));
 
-    setArrivedStatus(providerId)
-    setChosenProviderId(providerId);
-    setMarkedHere(true);
+    updateArrivedStatus(providerId)
   };
   
   useEffect(() => {
@@ -61,10 +56,11 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
     return () => clearInterval(interval);
   }, []);
 
-  const setArrivedStatus = async (proId: string) => {
-    await updateDoc(doc(db, 'events/', event.id), { 
+  const updateArrivedStatus = async (proId: string) => {
+    await updateDoc(doc(db, 'events', event.id), { 
       arrivedProviderSpaces: arrayUnion(proId),
     });
+    setChosenProviderId(proId);
   }
 
   const getProviderInfo = async () => {
@@ -73,8 +69,8 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
       const proInfo: any = eventSnap.data().acceptedProviderIds
         .map((proId: string) => eventSnap.data().interestedProviders
         .find((proObj: any) => proObj.id == proId))
-      
-      setProviderInfo(proInfo)
+      setProviderInfo(proInfo);
+      setShareableLink('https://localhost:5173/' + event.id); // need to change to real url. only for testing!
     }
   }
 
@@ -103,14 +99,12 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
     return <Text>Loading...</Text>
   }
 
-  const navNext = () => {
-    if (providerInfo) {
-      const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
-      navigation.replace('departureGuestView', {
-        providerInfo: chosenProInfo, 
-        eventId: event.id 
-      })
-    }
+  if (providerInfo && chosenProviderId.length != 0) {
+    const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
+    navigation.replace('departureGuestView', {
+      providerInfo: chosenProInfo, 
+      eventId: event.id 
+    })
   }
 
   return (
@@ -120,8 +114,8 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
       </View>
       {providerInfo ? providerInfo.map((proObj: DocumentData) => (
         <View key={proObj.id}>
-          <Text key={proObj.name}>{proObj.name}</Text>
-          <Text key={proObj.address}>{proObj.address}</Text>
+          <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
+          <Text key={proObj.address}>Provider Address: {proObj.address}</Text>
           <RenderStatus proId={proObj.id}/>
           <Divider width={5} style={{ marginTop: 10 }}/>
         </View>
@@ -131,8 +125,12 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
           {timeRemaining} till your parking event.
         </Text>
       }
-
-      {markedHere && navNext()}
+      <View style={{ marginTop: 75 }}>
+        <Text style={{ marginBottom: 10 }}>
+          Share the link below with other guests so that they can update their status to the providers
+        </Text>
+        <A href={shareableLink}>{shareableLink.replace('https://', '')}</A>
+      </View>
     </SafeAreaView>
   )
 }

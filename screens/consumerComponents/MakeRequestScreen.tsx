@@ -38,16 +38,15 @@ export function MakeRequestScreen() {
   const createEventRequest = async () => {
     if (auth.currentUser) {
       const consRef = doc(db, 'users/', auth.currentUser.uid);
-      const consSnap = await getDoc(consRef)
-      if (consSnap.exists()) {
+      const userSnap = await getDoc(consRef)
+      if (userSnap.exists()) {
         await addDoc(collection(db, 'events/'), {
           eventName,
           consumer_id: auth.currentUser.uid,
-          name: consSnap.data().name,
+          name: userSnap.data().name,
           address,
           startTime,
           endTime,
-          accepted: false, 
           acceptedProviderIds: [],
           interestedProviders: [],
           interestedProviderIds: [],

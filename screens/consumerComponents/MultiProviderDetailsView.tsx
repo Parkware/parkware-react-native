@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayRemove, arrayUnion, doc, setDoc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
 import { EventBlock } from './EventBlock'
@@ -25,11 +25,20 @@ const MultiProviderDetailsView = ({ route }: Props) => {
 
   useEffect(() => {
     let spaceCount = 0;
-    eventData.doc.interestedProviders.map((pro: any) => {
-      spaceCount += pro.providerSpaces;
-    });
+    eventData.doc.acceptedProviderIds
+            .map((id: string) => eventData.doc.interestedProviders
+            .filter((proObj: any) => proObj.id == id)
+            .map((pro: DocumentData) => spaceCount += pro.providerSpaces));
+
     setCurrAvailPros(spaceCount);
+    updateSpaceCount(spaceCount);
   }, [])
+
+  const updateSpaceCount = async (accSpaceCount: number) => {
+    await setDoc(doc(db, 'events', eventData.id), {
+      accSpaceCount
+    }, { merge: true });
+  }
   
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
@@ -76,11 +85,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         Event: {eventData.doc.eventName}
       </Text>
       <EventBlock event={eventData} showSpaces={false}/>
-      <Text>
-        {currAvailPros 
-          ? `Available Parking Spaces: ${currAvailPros}`
-          : "Loading..."}
-      </Text>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.interestedProviders
@@ -94,9 +98,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
             {'Address: ' + providerInfo.address}
             </Text>
             <Text>
-              {currAvailPros 
-                ? `Spaces able to provide: ${providerInfo.providerSpaces} / ${eventData.doc.requestedSpaces}`
-                : "Loading..."}
+              Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
             </Text>
             <Button
               title='Accept' 

@@ -24,12 +24,12 @@ export const EventBlock = ({ event, showSpaces }: StatusTextProps) => {
       <Text key={event.doc.startTime}>
         {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
       </Text>
-      {/* {!showSpaces && 
+      {!showSpaces && 
       <View>
         <Text>
           {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking Spaces ${event.doc.accSpaceCount}`}
         </Text>
-      </View>} */}
+      </View>}
       <Text key={event.doc.requestedSpaces + 1}>
         {'Requested Spaces: ' + event.doc.requestedSpaces}
       </Text>

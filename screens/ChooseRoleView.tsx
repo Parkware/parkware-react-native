@@ -59,8 +59,8 @@ export const ChooseRoleView = ({ route }: Props) => {
           placeholderTextColor="#aaa"
           style={styles.input}
         />
-        <Button title="Add details" onPress={() => createAccount(true)} />
         <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setProviderSpaces(value)} />
+        <Button title="Add details" onPress={() => createAccount(true)} />
       </View>
     )
   }

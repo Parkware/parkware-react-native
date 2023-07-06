@@ -27,7 +27,7 @@ export const EventBlock = ({ event, showSpaces }: StatusTextProps) => {
       {!showSpaces && 
       <View>
         <Text>
-          {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Available Parking Spaces ${event.doc.accSpaceCount}`}
+          {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
         </Text>
       </View>}
       <Text key={event.doc.requestedSpaces + 1}>

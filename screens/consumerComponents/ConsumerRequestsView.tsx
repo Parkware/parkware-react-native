@@ -34,24 +34,17 @@ export function ConsumerRequestsView() {
         snap.docs.map(async e => {
           // Getting only the provider data where the provider is included in the array of provider ids. 
           const interestedProviders = modProviders(e.data());
-          
-          let accSpaceCount = 0;
-          e.data().acceptedProviderIds
-            .map((id: string) => e.data().interestedProviders
-            .filter((proObj: any) => proObj.id == id)
-            .map((pro: DocumentData) => accSpaceCount += pro.providerSpaces));
 
           let eventObj = {
             id: e.id,
             doc: {
               ...e.data(),
               interestedProviders,
-              accSpaceCount
             },
           } as docDataPair;
           
           // Will need to ensure that accepted providers are never greater than the requested number
-          if (accSpaceCount >= e.data().requestedSpaces) {
+          if (e.data().accSpaceCount >= e.data().requestedSpaces) {
             compEventPromises.push(eventObj);
             
             // this should not be updated in the client-side. needs to be a separate cloud function
@@ -85,7 +78,6 @@ export function ConsumerRequestsView() {
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         Pending Requests
       </Text>
-      
       {pendingEvents.map(event => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
           <EventBlock event={event} showSpaces={false}/>
@@ -105,10 +97,10 @@ export function ConsumerRequestsView() {
           <Divider width={5} style={{ marginTop: 10 }}/>
         </TouchableOpacity>
       ))}
+
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         Accepted Requests
       </Text>
-      
       {completedEvents.map((event) => (
         <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
           <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>

@@ -13,7 +13,6 @@ export const SignupRoleView = ({ route }: Props) => {
   const [showAddress, setShowAddress] = useState(false);
   const [address, setAddress] = useState('');
   const [providerSpaces, setProviderSpaces] = useState<number>();
-  
   const { name, email, password }  = route.params;
   
   const logout = async () => {

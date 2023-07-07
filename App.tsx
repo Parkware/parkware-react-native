@@ -13,13 +13,14 @@ import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerReque
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-gesture-handler';
-import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
+import { LoginRoleView } from './screens/LoginRoleView';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -40,6 +41,7 @@ const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
 
 export type ProviderStackParams = {
   providerRequestsView: undefined;
+  loginRoleView: undefined;
   consumerStatusView: {
     event: docDataPair;
   };
@@ -103,7 +105,7 @@ const AuthScreenStack = () => {
 
 const ProviderScreenStack = (user: any) => {
   return (
-    <ProviderStack.Navigator initialRouteName='providerRequestsView'>
+    <ProviderStack.Navigator initialRouteName='loginRoleView'>
       <ProviderStack.Screen
         options={{ title: "", headerTransparent: true }}
         name="providerRequestsView"
@@ -113,6 +115,11 @@ const ProviderScreenStack = (user: any) => {
         options={{ title: "", headerTransparent: true }}
         name="consumerStatusView"
         component={ParkingStatusView}
+      />
+      <ProviderStack.Screen
+        options={{ title: "", headerTransparent: true }}
+        name="loginRoleView"
+        component={LoginRoleView}
       />
     </ProviderStack.Navigator>
   )
@@ -156,17 +163,12 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('state ' + isProvider);
-  }, [isProvider])
-  
-  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
         if (snapshot.exists()) {
           setIsProvider(snapshot.data().isProvider);
-          // setLoggedAs(snapshot.data().loggedAsProvider);
         }
       }
       setIsLoading(false);
@@ -190,8 +192,8 @@ export default function App() {
     if (isLoading)
       return <LoadingScreen />;
     if (user) {
-      if (isProvider || loggedAs) 
-        return <ProviderScreenStack />
+      if (loggedAs)
+        return <ProviderScreenStack /> 
       else
         return <ConsumerScreenStack />
     } else {

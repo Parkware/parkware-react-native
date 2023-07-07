@@ -1,52 +1,59 @@
-// import { Button, Text, TextInput, View, StyleSheet } from 'react-native'
-// import React, { useState } from 'react'
-// import { doc, setDoc, updateDoc } from 'firebase/firestore'
-// import { auth, db } from '../firebaseConfig'
-// import { NativeStackScreenProps } from '@react-navigation/native-stack';
-// import { SignupStackParams } from '../App';
-// import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-// import NumericInput from 'react-native-numeric-input';
+import { Button, Text, TextInput, View, StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { doc, setDoc, updateDoc } from 'firebase/firestore'
+import { auth, db } from '../firebaseConfig'
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ProviderStackParams, SignupStackParams } from '../App';
+import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import NumericInput from 'react-native-numeric-input';
+import { useNavigation } from '@react-navigation/native';
 
-// type Props = NativeStackScreenProps<SignupStackParams, 'chooseRoleView'>;
+type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleView'>;
 
-// export const ChooseRoleView = ({ route }: Props) => {
-//   const [showAddress, setShowAddress] = useState(false);
-//   const [address, setAddress] = useState('');
-//   const [providerSpaces, setProviderSpaces] = useState<number>();
+export const LoginRoleView = () => {
+  const [showAddress, setShowAddress] = useState(false);
   
-//   const { name, email, password }  = route.params;
-  
-//   const logout = async () => {
-//     try {
-//       await signOut(auth);
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   };
+  const navigation = useNavigation<roleScreenProp>();
 
-//   return (
-//     <View>
-//       <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
-//         <Text>Continue as a </Text>
-//         <View>
-//           <Button title="Provider" onPress={() => setShowAddress(true)}/>
-//         </View>
-//         <View>
-//           <Button title="Consumer" onPress={() => createAccount(false)}/>
-//         </View>
-//       </View>
-//       <Button title="Log out" onPress={logout} />
-//     </View>
-//   )
-// }
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-// const styles = StyleSheet.create({
-//   input: {
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     borderRadius: 4,
-//     paddingVertical: 8,
-//     paddingHorizontal: 12,
-//     marginBottom: 16,
-//   }
-// })
+  const chooseConsumer = async () => {
+    await updateDoc(doc(db, 'users/', auth.currentUser!.uid), { loggedAsProvider: false })
+  }
+
+  const chooseProvider = async () => {
+    navigation.navigate('providerRequestsView')
+  }
+
+  return (
+    <View>
+      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
+        <Text>Continue as a </Text>
+        <View>
+          <Button title="Provider" onPress={chooseProvider}/>
+        </View>
+        <View>
+          <Button title="Consumer" onPress={chooseConsumer}/>
+        </View>
+      </View>
+      <Button title="Log out" onPress={logout} />
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+  }
+})

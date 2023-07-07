@@ -26,6 +26,10 @@ export function MakeRequestScreen() {
 
   const logout = async () => {
     try {
+      const userRef = doc(db, 'users/', auth.currentUser!.uid);
+      const userSnap = await getDoc(userRef)
+      if (userSnap.exists() && userSnap.data().isProvider)
+        await updateDoc(userRef, { loggedAsProvider: true })
       await signOut(auth);
     } catch (e) {
       console.error(e);
@@ -33,8 +37,6 @@ export function MakeRequestScreen() {
   };
   
   const clicked = async () => {
-    console.log('clicked');
-    
     await updateDoc(doc(db, 'users/', auth.currentUser!.uid), {loggedAsProvider: true})
   }
   

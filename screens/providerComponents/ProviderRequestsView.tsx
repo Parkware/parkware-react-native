@@ -33,7 +33,7 @@ export function ProviderRequestsView() {
   const [accEvents, setAccEvents] = useState<docDataPair[]>([]);
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
   const [unwantedEvents, setUnwantedEvents] = useState<string[]>([]);
-  const [deniedEventArr, setDeniedEventArr] = useState([]);
+  const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
 
   const navigation = useNavigation<providerScreenProp>();
 
@@ -48,7 +48,8 @@ export function ProviderRequestsView() {
   const updateDeniedEvents = async () => {
     const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', auth.currentUser!.uid))
     const eventsSnap = await getDocs(q);
-    eventsSnap.docs.map((e: DocumentData) => e.doc.eventName)
+    const deniedNames: string[] = eventsSnap.docs.map((e: DocumentData) => e.data().eventName)
+    setDeniedEventArr(deniedNames);
   };
 
   // Reading the event data and setting eventData to it. 
@@ -86,6 +87,7 @@ export function ProviderRequestsView() {
         setPendingEvents(penEvents);
         setAccEvents(accEvents);
         setOpenEvents(openEvents);
+        updateDeniedEvents();
       });
       return () => unsub();
     } catch (error) {
@@ -154,9 +156,15 @@ export function ProviderRequestsView() {
           <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
         </View>
       ))}
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+      <Text style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 10 }}>
         Denied Events
       </Text>
+      {deniedEventArr
+        .map((name: string) => (
+          <View style={{ marginBottom: 10 }} key={name}>
+            <Text>{name}</Text>
+          </View>
+        ))}
       <Button title="Log out" onPress={logout} />
     </SafeAreaView>
     </View>

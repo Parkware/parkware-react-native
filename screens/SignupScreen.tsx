@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import {
-  User,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth';
-import { auth, db } from '../firebaseConfig';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParams } from '../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
@@ -22,7 +16,7 @@ export function SignupScreen() {
 
     const navNextView = () => {
       navigation.navigate('Signup', { 
-        screen: 'chooseRoleView', 
+        screen: 'signupRoleView', 
         params: {
           name,
           email,

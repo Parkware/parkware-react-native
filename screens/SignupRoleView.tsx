@@ -7,10 +7,9 @@ import { SignupStackParams } from '../App';
 import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
 
-type Props = NativeStackScreenProps<SignupStackParams, 'chooseRoleView'>;
+type Props = NativeStackScreenProps<SignupStackParams, 'signupRoleView'>;
 
-export const ChooseRoleView = ({ route }: Props) => {
-  const [user, setUser] = useState<User>();
+export const SignupRoleView = ({ route }: Props) => {
   const [showAddress, setShowAddress] = useState(false);
   const [address, setAddress] = useState('');
   const [providerSpaces, setProviderSpaces] = useState<number>();
@@ -32,7 +31,8 @@ export const ChooseRoleView = ({ route }: Props) => {
       let userObj: any = {
         email,
         name,
-        isProvider
+        isProvider,
+        loggedAsProvider: isProvider
       };
 
       if (address.length !== 0)
@@ -43,7 +43,6 @@ export const ChooseRoleView = ({ route }: Props) => {
         }
 
       await setDoc(doc(db, "users", user.uid), userObj);
-      setUser(user);
     } catch (e) {
       console.log('Something went wrong with sign up: ', e);
     }

@@ -17,7 +17,7 @@ import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
-import { ChooseRoleView } from './screens/ChooseRoleView';
+import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
 
@@ -63,7 +63,7 @@ const LoginStack = createNativeStackNavigator<LoginStackParams>();
 
 export type SignupStackParams = {
   SignupScreen: undefined;
-  chooseRoleView: {
+  signupRoleView: {
     name: string,
     email: string,
     password: string
@@ -85,8 +85,8 @@ const SignupScreenStack = () => {
       <SignupStack.Screen options={{ headerShown: false }} name="SignupScreen" component={SignupScreen}/>
       <SignupStack.Screen 
         options={{ headerShown: false, title: "Choose Role" }} 
-        name="chooseRoleView" 
-        component={ChooseRoleView} 
+        name="signupRoleView" 
+        component={SignupRoleView} 
       />
     </SignupStack.Navigator>
   )
@@ -152,26 +152,45 @@ const ConsumerScreenStack = () => {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isProvider, setIsProvider] = useState<boolean>(false);
+  const [loggedAs, setLoggedAs] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    console.log('state ' + isProvider);
+  }, [isProvider])
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
-        if (snapshot.exists())
+        if (snapshot.exists()) {
           setIsProvider(snapshot.data().isProvider);
+          // setLoggedAs(snapshot.data().loggedAsProvider);
+        }
       }
       setIsLoading(false);
     });
     return unsubscribe;
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {            
+        if (snapshot.exists()) {
+          setLoggedAs(snapshot.data().loggedAsProvider);
+        }
+      });
+
+      return () => unsub()
+    }
   }, [])
   
   const RenderContent = () => {
     if (isLoading)
       return <LoadingScreen />;
     if (user) {
-      if (isProvider) 
+      if (isProvider || loggedAs) 
         return <ProviderScreenStack />
       else
         return <ConsumerScreenStack />

@@ -75,7 +75,8 @@ export function ProviderRequestsView() {
           } else if (e.data().interestedProviderIds.includes(currUid)) {
             penEventPromises.push(eventObj);
           } else if (e.data().isOpen 
-                    && !e.data().unwantedProviders.includes(auth.currentUser!.uid)) {
+                    && !e.data().unwantedProviders.includes(auth.currentUser!.uid)
+                    && e.data().consumer_id !== auth.currentUser!.uid) {
             openEventPromises.push(eventObj);
           }
         });
@@ -148,7 +149,7 @@ export function ProviderRequestsView() {
         Open Requests
       </Text>
       {openEvents
-        .filter((e: DocumentData) => !unwantedEvents.includes(e.id) && e.doc.consumer_id !== auth.currentUser!.uid)
+        .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
         .map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
           <EventBlock event={event} showSpaces={true}/>

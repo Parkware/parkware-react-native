@@ -158,17 +158,16 @@ const ConsumerScreenStack = () => {
 }
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [isProvider, setIsProvider] = useState<boolean>(false);
-  const [loggedAs, setLoggedAs] = useState<boolean>(false)
+  const [loggedAs, setLoggedAs] = useState<boolean | null>(null)
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      setLoggedAs(null);
       if (user) {
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
         if (snapshot.exists()) {
-          setIsProvider(snapshot.data().isProvider);
           setLoggedAs(snapshot.data().loggedAsProvider);
         }
       }
@@ -189,12 +188,12 @@ export default function App() {
   }, [])
   
   const RenderContent = () => {
-    console.log(loggedAs);
-    
     if (isLoading)
       return <LoadingScreen />;
     if (user) {
-      if (loggedAs)
+      if (loggedAs == null)
+        return <LoadingScreen />;
+      else if (loggedAs)
         return <ProviderScreenStack /> 
       else
         return <ConsumerScreenStack />

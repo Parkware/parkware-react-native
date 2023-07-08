@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -126,10 +126,13 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
         </Text>
       }
       <View style={{ marginTop: 75 }}>
-        <Text style={{ marginBottom: 10 }}>
+        <Text style={{ marginBottom: 10, fontSize: 17 }}>
           Share the link below with other guests so that they can update their status to the providers
         </Text>
-        <A href={shareableLink}>{shareableLink.replace('https://', '')}</A>
+        <Text style={{ color: 'blue', fontSize: 17 }}
+              onPress={() => Linking.openURL(shareableLink)}>
+          {shareableLink.replace('https://', '')}
+        </Text>
       </View>
     </SafeAreaView>
   )

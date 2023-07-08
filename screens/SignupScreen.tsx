@@ -26,9 +26,9 @@ export function SignupScreen() {
     }
     
     const checkPassword = () => {
-      // if (password !== confirmPassword) {
-      //   setError("Passwords don't match");
-      // } else
+      if (password !== confirmPassword)
+        setError("Passwords don't match");
+      else
         navNextView();
     };
   

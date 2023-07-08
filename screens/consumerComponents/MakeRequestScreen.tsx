@@ -36,10 +36,6 @@ export function MakeRequestScreen() {
     }
   };
   
-  const clicked = async () => {
-    await updateDoc(doc(db, 'users/', auth.currentUser!.uid), {loggedAsProvider: true})
-  }
-  
   const switchView = () => 
     navigation.navigate('consumerRequestsView');
 
@@ -164,10 +160,6 @@ export function MakeRequestScreen() {
       <Button
         title="Skip"
         onPress={switchView}
-      />
-      <Button
-        title="click"
-        onPress={clicked}
       />
     </View>
   );

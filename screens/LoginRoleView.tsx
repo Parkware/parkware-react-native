@@ -1,18 +1,15 @@
-import { Button, Text, TextInput, View, StyleSheet } from 'react-native'
+import { Button, Text, View, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import { doc, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ProviderStackParams, SignupStackParams } from '../App';
-import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import NumericInput from 'react-native-numeric-input';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ProviderStackParams } from '../App';
+import { signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
 type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleView'>;
 
 export const LoginRoleView = () => {
-  const [showAddress, setShowAddress] = useState(false);
-  
   const navigation = useNavigation<roleScreenProp>();
 
   const logout = async () => {

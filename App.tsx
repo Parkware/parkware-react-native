@@ -169,6 +169,7 @@ export default function App() {
         const snapshot = await getDoc(doc(db, 'users', user.uid)) 
         if (snapshot.exists()) {
           setIsProvider(snapshot.data().isProvider);
+          setLoggedAs(snapshot.data().loggedAsProvider);
         }
       }
       setIsLoading(false);
@@ -183,12 +184,13 @@ export default function App() {
           setLoggedAs(snapshot.data().loggedAsProvider);
         }
       });
-
       return () => unsub()
     }
   }, [])
   
   const RenderContent = () => {
+    console.log(loggedAs);
+    
     if (isLoading)
       return <LoadingScreen />;
     if (user) {

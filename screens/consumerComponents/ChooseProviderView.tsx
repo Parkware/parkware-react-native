@@ -70,7 +70,7 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
         .map((proId: string) => eventSnap.data().interestedProviders
         .find((proObj: any) => proObj.id == proId))
       setProviderInfo(proInfo);
-      setShareableLink('https://localhost:5173/' + event.id); // need to change to real url. only for testing!
+      setShareableLink('https://parkware1.web.app/' + event.id);
     }
   }
 

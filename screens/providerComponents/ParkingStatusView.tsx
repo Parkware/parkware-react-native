@@ -23,12 +23,15 @@ const ParkingStatusView = ({ route }: Props) => {
   const endTime = event.doc.endTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
   const [guestStillParking, setGuestStillParking] = useState(false);
-
+  const [guestArrived, setGuestArrived] = useState(false);
+  
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
-        if (eventSnap.data().arrivedProviderSpaces.includes(auth.currentUser!.uid))
+        if (eventSnap.data().arrivedProviderSpaces.includes(auth.currentUser!.uid)) {
+          setGuestArrived(true);
           setGuestStillParking(true);
+        }
         else
           setGuestStillParking(false);
       }
@@ -68,15 +71,15 @@ const ParkingStatusView = ({ route }: Props) => {
   }, []);
 
   const ShowArrivalStatus = () => {
-    if (eventData.doc.arrivedProviderSpaces.includes(auth.currentUser!.uid)) {
+    if (guestArrived) {
       if (diff) {
         if (diff <= 0) 
           return (
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-              {guestStillParking ? "your guest has not left the spot yet" : "your guest has left the spot"}
+              {guestStillParking ? "Your guest has not left the spot yet" : "Your guest has left the spot"}
             </Text>
           )
-        else 
+        else
         // need to create push notifications if the guest leaves. this needs to alert the provider
           return (
             <View>
@@ -98,7 +101,7 @@ const ParkingStatusView = ({ route }: Props) => {
     )
   }
 
-  const RenderConsInfo = () => {
+  const RenderUserInfo = () => {
     if (consumerInfo)
       return (
         <View>
@@ -112,9 +115,9 @@ const ParkingStatusView = ({ route }: Props) => {
   }
   return (
     <SafeAreaView style={{ marginLeft: 30 }}>
-      <Text>Organizer Info:</Text>
-      <RenderConsInfo />
-      <Text style={{ paddingTop: 30 }}>Event Info:</Text>
+      <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
+      <RenderUserInfo />
+      <Text style={{ paddingTop: 30, fontSize: 20 }}>Event Info:</Text>
       <EventBlock event={eventData} showSpaces={true}/>
       <View style={{ paddingTop: 30}}>
         <ShowArrivalStatus />
@@ -124,5 +127,3 @@ const ParkingStatusView = ({ route }: Props) => {
 }
 
 export default ParkingStatusView
-
-const styles = StyleSheet.create({})

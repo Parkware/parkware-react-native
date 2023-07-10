@@ -142,7 +142,6 @@ export function ProviderRequestsView() {
       {pendingEvents.map((event) => (
         <View style={{ marginBottom: 10 }} key={event.id}>
           <EventBlock event={event} showSpaces={true}/>
-          <EventStatusText event={event} />
         </View>
       ))}
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>

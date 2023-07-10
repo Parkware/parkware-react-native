@@ -1,3 +1,5 @@
+// Curently not being used as headers are already showing state!
+
 import { View, Text } from "react-native";
 import { docDataPair } from "./ProviderRequestsView";
 import { auth, db } from '../../firebaseConfig';

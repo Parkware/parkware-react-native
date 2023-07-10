@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, Button } from 'react-native';
-import { DocumentData, collection, doc, getDoc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { View, Text, SafeAreaView } from 'react-native';
+import { DocumentData, collection, onSnapshot, query, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { Divider } from '@rneui/themed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

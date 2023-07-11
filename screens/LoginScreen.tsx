@@ -62,28 +62,16 @@ export function LoginScreen() {
           <TextInput
             value={password}
             onChangeText={setPassword}
-            // secureTextEntry
+            secureTextEntry
             placeholder="Enter password"
             autoCapitalize="none"
             placeholderTextColor="#aaa"
             style={styles.input}
           />
-  
           <TouchableOpacity onPress={() => navigation.navigate('resetPassword')}>
             <Text style={[styles.link, { color: '#333' }]}>I've forgotten my password</Text>
           </TouchableOpacity>
-  
           <Button title="Login" onPress={loginUser} disabled={!email || !password} />
-          <Button title="Login Consumer" onPress={() => { 
-            setEmail('naren@gmail.com');
-            setPassword('naren1234');
-            loginUser();
-          }} />
-          <Button title="Login Provider" onPress={() => { 
-            setEmail('dhanya@gmail.com');
-            setPassword('dhanya1234');
-            loginUser();
-          }} />
         </View>
       </View>
     );

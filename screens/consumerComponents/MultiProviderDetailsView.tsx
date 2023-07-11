@@ -8,6 +8,7 @@ import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
 import { EventBlock } from './EventBlock'
 import { docDataPair } from '../providerComponents/ProviderRequestsView'
+import { FlatList, ScrollView } from 'react-native-gesture-handler'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
 /*
@@ -79,6 +80,33 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       unwantedProviders: arrayUnion(id)
     });
   }
+
+  const ProviderBlock = ({providerInfo}: DocumentData) => {
+    return (
+      <View key={providerInfo.id}>
+        <Text key={providerInfo.name}>
+        {'Name: ' + providerInfo.name}
+        </Text>
+        <Text key={providerInfo.address}>
+        {'Address: ' + providerInfo.address}
+        </Text>
+        <Text>
+          Spaces able to provider: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
+        </Text>
+        <Button
+          title='Accept' 
+          onPress={() => disableButton(providerInfo.id)} 
+          disabled={disabledButtons[providerInfo.id]} 
+        />
+        <Button 
+          title='Decline' 
+          onPress={() => removeLocalData(providerInfo.id)} 
+          disabled={disabledButtons[providerInfo.id]} 
+        />
+        <Divider width={5} style={{ marginTop: 10 }}/>
+      </View >
+    )
+  }
   
   return (
     <SafeAreaView style={{ marginLeft: 20 }}>
@@ -88,35 +116,24 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       <EventBlock event={eventData} showSpaces={false}/>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
-      {eventData.doc.interestedProviders
-        .filter((pro: DocumentData) => (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
-        .map((providerInfo: DocumentData) => (
-          <View key={providerInfo.id}>
-            <Text key={providerInfo.name}>
-            {'Name: ' + providerInfo.name}
-            </Text>
-            <Text key={providerInfo.address}>
-            {'Address: ' + providerInfo.address}
-            </Text>
-            <Text>
-              Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
-            </Text>
-            <Button
-              title='Accept' 
-              onPress={() => disableButton(providerInfo.id)} 
-              disabled={disabledButtons[providerInfo.id]} 
-            />
-            <Button 
-              title='Decline' 
-              onPress={() => removeLocalData(providerInfo.id)} 
-              disabled={disabledButtons[providerInfo.id]} 
-            />
-            <Divider width={5} style={{ marginTop: 10 }}/>
-          </View >
-        ))
-      }
+      <ScrollView>
+        {eventData.doc.interestedProviders
+          .filter((pro: DocumentData) => 
+            (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
+          .map((providerInfo: DocumentData) => (
+            <ProviderBlock providerInfo={providerInfo}/>
+          ))
+        }
+      </ScrollView>
+      
+      {/* <FlatList 
+        data={interestedProviders}
+        renderItem={({providerInfo}: DocumentData) => <ProviderBlock providerInfo={providerInfo}/>}
+        keyExtractor={providerInfo => providerInfo.id}
+      /> */}
+
       <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
-      <Text style={{ fontSize: 20, marginTop: 170 }}>Accepted Providers:</Text>
+      <Text style={{ fontSize: 20, marginTop: 50 }}>Accepted Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       {eventData.doc.acceptedProviderIds
         .map((proId: string) => eventData.doc.interestedProviders

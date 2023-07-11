@@ -39,7 +39,7 @@ export function ResetPassword() {
   
           {error && <Text style={styles.error}>{error}</Text>}
   
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login', { screen: 'LoginScreen' })}>
             <Text style={styles.link}>Back to login</Text>
           </TouchableOpacity>
   

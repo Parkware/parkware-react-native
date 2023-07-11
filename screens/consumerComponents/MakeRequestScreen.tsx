@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import {
   signOut,
 } from 'firebase/auth';
@@ -8,7 +8,7 @@ import { addDoc, arrayUnion, collection, doc, getDoc, updateDoc } from 'firebase
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import NumericInput from 'react-native-numeric-input'
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
@@ -105,6 +105,80 @@ export function MakeRequestScreen() {
       setSendable(true);
     }
   }
+
+  const DatePickeriOS = () => {
+    return (
+      <View>
+        <DateTimePicker
+        testID="dateTimePicker"
+        value={startTime}
+        mode='date'
+        is24Hour={true}
+        onChange={dateFun}
+        />
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={startTime}
+          mode='time'
+          is24Hour={true}
+          onChange={startTimeFun}
+        />
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={endTime}
+          mode='time'
+          is24Hour={true}
+          onChange={endTimeFun}
+        />
+      </View>
+    )
+  }
+  const showModeAndroid = (currentMode: any, type: string) => {
+    if (type === 'start') {
+      DateTimePickerAndroid.open({
+        value: startTime,
+        onChange: startTimeFun,
+        mode: currentMode,
+        is24Hour: true,
+      });
+    } else if (type === 'end') {
+      DateTimePickerAndroid.open({
+      value: endTime,
+      onChange: endTimeFun,
+      mode: currentMode,
+      is24Hour: true,
+    });
+    } else {
+      DateTimePickerAndroid.open({
+      value: startTime,
+      onChange: endTimeFun,
+      mode: currentMode,
+      is24Hour: true,
+    });
+    }
+  };
+
+  const showDatepicker = () => {
+    showModeAndroid('date', '');
+  };
+
+  const showStartPicker = () => {
+    showModeAndroid('time', 'start');
+  };
+
+  const showEndPicker = () => {
+    showModeAndroid('time', 'end');
+  };
+
+  const DatePickerAndroid = () => {
+    return (
+      <View>
+        <Button onPress={showDatepicker} title="Open date picker!" />
+        <Button onPress={showStartPicker} title="Open Start time picker!" />
+        <Button onPress={showEndPicker} title="Open End time picker!" />
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
@@ -119,27 +193,9 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
-      <DateTimePicker
-        testID="dateTimePicker"
-        value={startTime}
-        mode='date'
-        is24Hour={true}
-        onChange={dateFun}
-      />
-      <DateTimePicker
-        testID="dateTimePicker"
-        value={startTime}
-        mode='time'
-        is24Hour={true}
-        onChange={startTimeFun}
-      />
-      <DateTimePicker
-        testID="dateTimePicker"
-        value={endTime}
-        mode='time'
-        is24Hour={true}
-        onChange={endTimeFun}
-      />
+      {Platform.OS === 'ios' 
+        ? <DatePickeriOS /> 
+        : <DatePickerAndroid />}
       <TextInput
         value={address}
         onChangeText={setAddress}

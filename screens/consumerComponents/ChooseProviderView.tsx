@@ -3,10 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayRemove, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
-import { A } from '@expo/html-elements'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
 
@@ -108,7 +107,7 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   }
 
   return (
-    <SafeAreaView style={{ marginLeft: 30 }}>
+    <SafeAreaView style={{ marginLeft: 25 }}>
       <View style={styles.countContainer}>
         <Text>Mark status as "here" by clicking on the button below. The provider will be notified.</Text>
       </View>

@@ -21,6 +21,7 @@ const ParkingStatusView = ({ route }: Props) => {
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
   const [diff, setDiff] = useState<number>();
   const endTime = event.doc.endTime.toDate();
+  const startTime = event.doc.startTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
   const [guestStillParking, setGuestStillParking] = useState(false);
   const [guestArrived, setGuestArrived] = useState(false);
@@ -53,7 +54,7 @@ const ParkingStatusView = ({ route }: Props) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      const difference = endTime.getTime() - now.getTime();
+      const difference = startTime.getTime() - now.getTime();
       setDiff(difference);
       if (difference <= 0) {
         clearInterval(interval);
@@ -83,11 +84,8 @@ const ParkingStatusView = ({ route }: Props) => {
         // need to create push notifications if the guest leaves. this needs to alert the provider
           return (
             <View>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
-                {consumerInfo && consumerInfo.name} has arrived at your space!
-              </Text>
-              <Text>
-                {timeRemaining} till time's up for that lil' boi
+              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+                {timeRemaining} till the parking event starts. 
               </Text>
             </View>
           )

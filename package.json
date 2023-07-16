@@ -7,10 +7,16 @@
     "ios": "expo run:ios",
     "web": "expo start --web"
   },
+  "resolutions": {
+    "@expo/config-plugins": "^5.0.4",
+    "@expo/prebuild-config": "~5.0.7"
+  },
   "dependencies": {
     "@expo/html-elements": "^0.4.2",
+    "@expo/prebuild-config": "~6.0.0",
     "@js-temporal/polyfill": "^0.4.4",
     "@react-native-community/datetimepicker": "6.7.3",
+    "@react-native-firebase/app": "^18.2.0",
     "@react-native-firebase/messaging": "^18.1.0",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",

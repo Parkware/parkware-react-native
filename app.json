@@ -15,11 +15,13 @@
       "**/*"
     ],
     "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.narenm07.parkware",
       "buildNumber": "1.0.0"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -35,7 +37,9 @@
       "eas": {
         "projectId": "8172329d-b463-454b-ac51-bd6e8e7b2347"
       }
-    }
-  },
-  "name": "parkware"
+    },
+    "plugins": [
+      "@react-native-firebase/app"
+    ]
+  }
 }

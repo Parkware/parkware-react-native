@@ -21,6 +21,12 @@
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "madurai_mani@yahoo.co.in",
+        "ascAppId": "6451414106",
+        "appleTeamId": "A2BXMW8C3W"
+      }
+    }
   }
 }

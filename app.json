@@ -17,7 +17,7 @@
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
-      "bundleIdentifier": "com.narenm07.parkware",
+      "bundleIdentifier": "com.example.parkware",
       "buildNumber": "1.0.0"
     },
     "android": {
@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.narenm07.parkware",
+      "package": "com.example.parkware",
       "versionCode": 1
     },
     "web": {

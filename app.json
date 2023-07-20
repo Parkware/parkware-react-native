@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "parkware",
+    "name": "Parkware",
     "slug": "parkware",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
@@ -17,8 +17,8 @@
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.parkware",
-      "buildNumber": "1.0.0"
+      "bundleIdentifier": "com.narenm07.parkware",
+      "buildNumber": "2"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.example.parkware",
+      "package": "com.narenm07.parkware",
       "versionCode": 1
     },
     "web": {

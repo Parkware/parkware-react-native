@@ -80,7 +80,6 @@ export function ProviderRequestsView() {
             openEventPromises.push(eventObj);
           }
         });
-      
         const penEvents = await Promise.all(penEventPromises);
         const accEvents = await Promise.all(accEventPromises);
         const openEvents = await Promise.all(openEventPromises);

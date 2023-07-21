@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, SafeAreaView, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button, TextInput, StyleSheet, Platform } from 'react-native';
 import {
   signOut,
 } from 'firebase/auth';
 import { auth, db } from '../../firebaseConfig';
-import { addDoc, arrayUnion, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
@@ -142,19 +142,19 @@ export function MakeRequestScreen() {
         is24Hour: true,
       });
     } else if (type === 'end') {
-      DateTimePickerAndroid.open({
-      value: endTime,
-      onChange: endTimeFun,
-      mode: currentMode,
-      is24Hour: true,
-    });
+        DateTimePickerAndroid.open({
+        value: endTime,
+        onChange: endTimeFun,
+        mode: currentMode,
+        is24Hour: true,
+      });
     } else {
       DateTimePickerAndroid.open({
-      value: startTime,
-      onChange: endTimeFun,
-      mode: currentMode,
-      is24Hour: true,
-    });
+        value: startTime,
+        onChange: endTimeFun,
+        mode: currentMode,
+        is24Hour: true,
+      });
     }
   };
 

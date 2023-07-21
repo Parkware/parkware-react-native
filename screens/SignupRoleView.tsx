@@ -1,10 +1,10 @@
 import { Button, Text, TextInput, View, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import { doc, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SignupStackParams } from '../App';
-import { User, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'signupRoleView'>;
@@ -46,22 +46,9 @@ export const SignupRoleView = ({ route }: Props) => {
       console.log('Something went wrong with sign up: ', e);
     }
   };
-
-  const ProviderInput = () => {
-    return (
-      <View>
-        <TextInput
-          value={address}
-          onChangeText={setAddress}
-          placeholder="Enter address"
-          placeholderTextColor="#aaa"
-          style={styles.input}
-        />
-        <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setProviderSpaces(value)} />
-        <Button title="Add details" onPress={() => createAccount(true)} />
-      </View>
-    )
-  }
+  
+  const updateProviderSpaces = (value: number) =>
+    setProviderSpaces(value);
 
   return (
     <View>
@@ -74,7 +61,18 @@ export const SignupRoleView = ({ route }: Props) => {
           <Button title="Consumer" onPress={() => createAccount(false)}/>
         </View>
       </View>
-      {showAddress && <ProviderInput />}
+      {showAddress && (
+        <View>
+          <TextInput
+            value={address}
+            onChangeText={setAddress}
+            placeholder="Enter address"
+            placeholderTextColor="#aaa"
+            style={styles.input}
+          />
+          <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => updateProviderSpaces(value)} />
+          <Button title="Add details" onPress={() => createAccount(true)} />
+        </View>)}
       <Button title="Log out" onPress={logout} />
     </View>
   )

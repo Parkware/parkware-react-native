@@ -167,8 +167,10 @@ export default function App() {
       setUser(user);
       setLoggedAs(null);
       if (user) {
-        const snapshot = await getDoc(doc(db, 'users', user.uid)) 
-        snapshot.exists() && setLoggedAs(snapshot.data().loggedAsProvider);
+        const snapshot = await getDoc(doc(db, 'users', user.uid))
+        if (snapshot.exists()) {
+          setLoggedAs(snapshot.data().loggedAsProvider);
+        }
       }
     });
     return unsubscribe;
@@ -177,13 +179,21 @@ export default function App() {
   useEffect(() => {
     if (user) {
       const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {            
-        snapshot.exists() && setLoggedAs(snapshot.data().loggedAsProvider);
+        console.log('oh snap!');
+        
+        if (snapshot.exists()) {
+          console.log('loggedAs set to ' + snapshot.data().loggedAsProvider);
+
+        setLoggedAs(snapshot.data().loggedAsProvider);
+        }
       });
       return () => unsub()
     }
   }, [])
   
   const RenderContent = () => {
+    console.log('rendered content to ' + loggedAs);
+    
     if (user) {
       if (loggedAs == null)
         return <LoadingScreen />;
@@ -197,5 +207,4 @@ export default function App() {
   };
 
   return <NavigationContainer><RenderContent /></NavigationContainer>;
-  // return <DateScreen />
 }

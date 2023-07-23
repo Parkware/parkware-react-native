@@ -159,7 +159,6 @@ const ConsumerScreenStack = () => {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loggedAs, setLoggedAs] = useState<boolean | null>(null);
-  const [userUid, setUserUid] = useState('placeholder');
 
   // setting loading to null before the user role is found. then, this state gets populated with some value.
   // the value is used when rendering. 
@@ -168,7 +167,6 @@ export default function App() {
       setUser(user);
       setLoggedAs(null);
       if (user) {
-        setUserUid(user.uid);
         const snapshot = await getDoc(doc(db, 'users', user.uid))
         if (snapshot.exists())
           setLoggedAs(snapshot.data().loggedAsProvider);
@@ -176,15 +174,17 @@ export default function App() {
     });
     return unsubscribe;
   }, [])
-
-  useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'users', userUid), async (snapshot) => {            
-      if (snapshot.exists())
-        setLoggedAs(snapshot.data().loggedAsProvider);
-    });
-    return () => unsub()
-  }, [userUid])
   
+  useEffect(() => {
+    if (user) {
+      const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {            
+        if (snapshot.exists())
+          setLoggedAs(snapshot.data().loggedAsProvider);
+      });
+      return () => unsub()
+    }
+  }, [user])
+
   const RenderContent = () => {
     if (user) {
       if (loggedAs == null)

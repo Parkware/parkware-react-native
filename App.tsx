@@ -103,7 +103,7 @@ const AuthScreenStack = () => {
   )
 }
 
-const ProviderScreenStack = (user: any) => {
+const ProviderScreenStack = () => {
   return (
     <ProviderStack.Navigator initialRouteName='loginRoleView'>
       <ProviderStack.Screen
@@ -168,32 +168,23 @@ export default function App() {
       setLoggedAs(null);
       if (user) {
         const snapshot = await getDoc(doc(db, 'users', user.uid))
-        if (snapshot.exists()) {
+        if (snapshot.exists())
           setLoggedAs(snapshot.data().loggedAsProvider);
-        }
       }
     });
     return unsubscribe;
   }, [])
-
+  
   useEffect(() => {
-    if (user) {
-      const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {            
-        console.log('oh snap!');
-        
-        if (snapshot.exists()) {
-          console.log('loggedAs set to ' + snapshot.data().loggedAsProvider);
-
+    let id = user ? user.uid : 'placeholder';
+    const unsub = onSnapshot(doc(db, 'users', id), async (snapshot) => {            
+      if (snapshot.exists())
         setLoggedAs(snapshot.data().loggedAsProvider);
-        }
-      });
-      return () => unsub()
-    }
+    });
+    return () => unsub()
   }, [])
   
   const RenderContent = () => {
-    console.log('rendered content to ' + loggedAs);
-    
     if (user) {
       if (loggedAs == null)
         return <LoadingScreen />;

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, Platform } from 'react-native';
 import {
+  deleteUser,
   signOut,
 } from 'firebase/auth';
 import { auth, db } from '../../firebaseConfig';
-import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
@@ -36,6 +37,10 @@ export function MakeRequestScreen() {
     }
   };
   
+  const delAccount = async () => {
+    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
+    await deleteUser(auth.currentUser!)
+  }
   const switchView = () => 
     navigation.navigate('consumerRequestsView');
 
@@ -183,6 +188,7 @@ export function MakeRequestScreen() {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
       <Button title="Log out" onPress={logout} />
+      <Button title="Delete account" onPress={delAccount} />
       <TextInput
         value={eventName}
         onChangeText={setEventName}

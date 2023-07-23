@@ -1,5 +1,5 @@
 import { Button, Text, View, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -26,7 +26,7 @@ export const LoginRoleView = () => {
   }
 
   const chooseConsumer = async () => {
-    await updateDoc(doc(db, 'users/', auth.currentUser!.uid), { loggedAsProvider: false })
+    await updateDoc(doc(db, 'users', auth.currentUser!.uid), { loggedAsProvider: false })
   }
 
   const chooseProvider = async () => {

@@ -168,8 +168,6 @@ export default function App() {
       setUser(user);
       setLoggedAs(null);
       if (user) {
-        console.log('setting uid to ' + user.uid);
-        
         setUserUid(user.uid);
         const snapshot = await getDoc(doc(db, 'users', user.uid))
         if (snapshot.exists())
@@ -178,21 +176,9 @@ export default function App() {
     });
     return unsubscribe;
   }, [])
-  
-  const getUID = () => {
-    return user ? user.uid : 'placeholder';
-  }
 
   useEffect(() => {
-    let id = user ? user.uid : 'placeholder';
-    let temp = 'UZ4Mhz9eFDgpBP8VxYF4Dx4d3Ni1'
-    // console.log('id is ' + id);
-    // console.log('and the id is ' + id);
-    
     const unsub = onSnapshot(doc(db, 'users', userUid), async (snapshot) => {            
-      console.log('oh snap');
-      console.log('id is ' + userUid);
-      
       if (snapshot.exists())
         setLoggedAs(snapshot.data().loggedAsProvider);
     });

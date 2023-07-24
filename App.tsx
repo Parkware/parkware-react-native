@@ -176,8 +176,8 @@ export default function App() {
   }, [])
   
   useEffect(() => {
-    if (user) {
-      const unsub = onSnapshot(doc(db, 'users', user.uid), async (snapshot) => {            
+    if (user?.uid) {
+      const unsub = onSnapshot(doc(db, 'users', user.uid), (snapshot) => {            
         if (snapshot.exists())
           setLoggedAs(snapshot.data().loggedAsProvider);
       });

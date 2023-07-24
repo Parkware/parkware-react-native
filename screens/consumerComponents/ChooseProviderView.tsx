@@ -25,15 +25,6 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [chosenProviderId, setChosenProviderId] = useState('');
   const [shareableLink, setShareableLink] = useState('');
-
-  const disableButton = (providerId: string) => {
-    setDisabledButtons((prevState) => ({
-      ...prevState,
-      [providerId]: true,
-    }));
-
-    updateArrivedStatus(providerId)
-  };
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -55,13 +46,6 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
     return () => clearInterval(interval);
   }, []);
 
-  const updateArrivedStatus = async (proId: string) => {
-    await updateDoc(doc(db, 'events', event.id), { 
-      arrivedProviderSpaces: arrayUnion(proId),
-    });
-    setChosenProviderId(proId);
-  }
-
   const getProviderInfo = async () => {
     const eventSnap = await getDoc(doc(db, 'events/', event.id))
     if (eventSnap.exists()) {
@@ -77,26 +61,6 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
     getProviderInfo();
   }, [])
 
-  const RenderStatus = (proId: any) => {
-    const proIdString: string = Object.values(proId).toString();
-    if (diff) {
-      if (diff <= 0) {
-        return (
-          <View style={styles.container}>
-            <TouchableOpacity 
-              style={styles.button} 
-              onPress={() => disableButton(proIdString)}
-              disabled={disabledButtons[proIdString]} 
-            >
-              <Text>I'm Here!</Text>
-            </TouchableOpacity>        
-          </View>
-        )
-      } else
-        return <></>
-    }
-    return <Text>Loading...</Text>
-  }
 
   if (providerInfo && chosenProviderId.length != 0) {
     const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
@@ -115,7 +79,6 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
         <View key={proObj.id}>
           <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
           <Text key={proObj.address}>Provider Address: {proObj.address}</Text>
-          <RenderStatus proId={proObj.id}/>
           <Divider width={5} style={{ marginTop: 10 }}/>
         </View>
       )) : <Text>Loading...</Text>}

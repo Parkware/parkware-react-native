@@ -23,26 +23,25 @@ const ParkingStatusView = ({ route }: Props) => {
   const endTime = event.doc.endTime.toDate();
   const startTime = event.doc.startTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
-  const [guestStillParking, setGuestStillParking] = useState(false);
-  const [guestArrived, setGuestArrived] = useState(false);
+  const [guestArrived, setGuestArrived] = useState<boolean | null>(null);
   
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
-        if (eventSnap.data().arrivedProviderSpaces.includes(auth.currentUser!.uid)) {
+        // Order matters!
+        if (eventSnap.data().departedProviderSpaces.includes(auth.currentUser!.uid)) 
+          setGuestArrived(false);
+        else if (eventSnap.data().arrivedProviderSpaces.includes(auth.currentUser!.uid)) 
           setGuestArrived(true);
-          setGuestStillParking(true);
-        }
-        else
-          setGuestStillParking(false);
+        else 
+          setGuestArrived(null); 
       }
     })
-  
     return () => unsub()
   }, [])
   
   const getConsumerInfo = async () => {
-    const userSnap = await getDoc(doc(db, 'users/', eventData.doc.consumer_id))
+    const userSnap = await getDoc(doc(db, 'users', eventData.doc.consumer_id))
     if (userSnap.exists())   
       setConsumerInfo(userSnap.data());
   }
@@ -71,32 +70,48 @@ const ParkingStatusView = ({ route }: Props) => {
     return () => clearInterval(interval);
   }, []);
 
-  const ShowArrivalStatus = () => {
-    if (guestArrived) {
-      if (diff) {
-        if (diff <= 0) 
-          return (
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-              {guestStillParking ? "Your guest has not left the spot yet" : "Your guest has left the spot"}
-            </Text>
-          )
-        else
-        // need to create push notifications if the guest leaves. this needs to alert the provider
-          return (
-            <View>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-                {timeRemaining} till the parking event starts. 
-              </Text>
-            </View>
-          )
-      }
-      return <Text>Loading...</Text>
+  const ArrivalText = () => {
+    let text: string = '';
+    if (guestArrived == null) {
+      text = "The guest isn't there yet!";
+    } else if (guestArrived) {
+      text = "Your guest is currently at the spot.";
+    } else {
+      text = "Your guest has left the spot.";
     }
+    
     return (
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
-        The guest isn't there yet!
-      </Text>
+      <View>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+          {text}
+        </Text>
+        {guestArrived == false 
+        ? <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+            Thank you for providing your space!
+          </Text>
+        : <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+            {endTime.toLocaleString()}
+          </Text>
+        }
+      </View>
     )
+  }
+
+  const ShowArrivalStatus = () => {
+    if (diff) {
+      if (diff <= 0) 
+        return <ArrivalText />
+      else
+      // need to create push notifications if the guest leaves. this needs to alert the provider
+        return (
+          <View>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+              {timeRemaining} till the parking event starts. 
+            </Text>
+          </View>
+        )
+    }
+    return <Text>Loading...</Text>
   }
 
   const RenderUserInfo = () => {

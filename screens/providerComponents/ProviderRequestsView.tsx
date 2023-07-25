@@ -9,6 +9,7 @@ import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export interface docDataPair {
   id: string,
@@ -127,34 +128,41 @@ export function ProviderRequestsView() {
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
         Accepted Requests
       </Text>
-      {accEvents.map(event => (
-        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
-          <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
-          <View style={{ marginBottom: 10 }} key={event.id}>
-            <EventBlock event={event} showSpaces={true}/>
-          </View>
-        </TouchableOpacity>
-      ))}
+      <ScrollView>
+        {accEvents.map(event => (
+          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
+            <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
+            <View style={{ marginBottom: 10 }} key={event.id}>
+              <EventBlock event={event} showSpaces={true}/>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
         Pending Requests
       </Text>
-      {pendingEvents.map((event) => (
-        <View style={{ marginBottom: 10 }} key={event.id}>
-          <EventBlock event={event} showSpaces={true}/>
-        </View>
-      ))}
+      <ScrollView>
+        {pendingEvents.map((event) => (
+          <View style={{ marginBottom: 10 }} key={event.id}>
+            <EventBlock event={event} showSpaces={true}/>
+          </View>
+        ))}
+      </ScrollView>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
         Open Requests
       </Text>
-      {openEvents
-        .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
-        .map((event) => (
-        <View style={{ marginBottom: 10 }} key={event.id}>
-          <EventBlock event={event} showSpaces={true}/>
-          <Button title='Accept' onPress={() => updateDB(event)}/>
-          <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
-        </View>
-      ))}
+      <ScrollView>
+        {openEvents
+          .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
+          .map((event) => (
+          <View style={{ marginBottom: 10 }} key={event.id}>
+            <EventBlock event={event} showSpaces={true}/>
+            <Button title='Accept' onPress={() => updateDB(event)}/>
+            <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
+          </View>
+        ))}
+      </ScrollView>
+
       <Text style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 10 }}>
         Denied Events
       </Text>

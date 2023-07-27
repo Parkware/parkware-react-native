@@ -29,7 +29,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     let spaceCount = 0;
     eventData.doc.acceptedProviderIds
       .map((id: string) => eventData.doc.interestedProviders
-      .filter((proObj: any) => proObj.id == id)
+      .filter((proObj: DocumentData) => proObj.id == id)
       .map((pro: DocumentData) => spaceCount += pro.providerSpaces));
 
     setCurrAvailPros(spaceCount);

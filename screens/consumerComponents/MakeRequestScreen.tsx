@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, TextInput, StyleSheet, Platform, Alert } from 'react-native';
 import {
   deleteUser,
   signOut,
@@ -23,25 +23,47 @@ export function MakeRequestScreen() {
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
   const [requestedSpaces, setParkingSpaces] = useState<number>();
+  const [isProvider, setIsProvider] = useState(false);
   const navigation = useNavigation<homeScreenProp>();
+  const userRef = doc(db, 'users', auth.currentUser!.uid);
 
+  const getIfProvider = async () => {
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists() && docSnap.data().isProvider) 
+      setIsProvider(true);
+  }
+
+  useEffect(() => {
+    getIfProvider();
+  }, [])
+  
   const logout = async () => {
     try {
       // Setting the loggedInAsProvider boolean to true in case the user is a provider. 
-      const userRef = doc(db, 'users', auth.currentUser!.uid);
-      const userSnap = await getDoc(userRef)
-      if (userSnap.exists() && userSnap.data().isProvider)
-        await updateDoc(userRef, { loggedAsProvider: true })
+      switchToProvider();
       await signOut(auth);
     } catch (e) {
       console.error(e);
     }
   };
+
+  const showConfirmDel = () =>
+    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Delete', onPress: () => delAccount()},
+    ]);
   
   const delAccount = async () => {
     await deleteDoc(doc(db, "users", auth.currentUser!.uid));
     await deleteUser(auth.currentUser!)
   }
+
+  const switchToProvider = async () => {
+    const userSnap = await getDoc(userRef)
+    if (userSnap.exists() && userSnap.data().isProvider)
+      await updateDoc(userRef, { loggedAsProvider: true })
+  }
+
   const switchView = () => 
     navigation.navigate('consumerRequestsView');
 
@@ -117,11 +139,11 @@ export function MakeRequestScreen() {
     return (
       <View>
         <DateTimePicker
-        testID="dateTimePicker"
-        value={startTime}
-        mode='date'
-        is24Hour={true}
-        onChange={dateFun}
+          testID="dateTimePicker"
+          value={startTime}
+          mode='date'
+          is24Hour={true}
+          onChange={dateFun}
         />
         <DateTimePicker
           testID="dateTimePicker"
@@ -190,7 +212,8 @@ export function MakeRequestScreen() {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
       <Button title="Log out" onPress={logout} />
-      <Button title="Delete account" onPress={delAccount} />
+      {isProvider && <Button title="Switch to Provider" onPress={switchToProvider} />}
+      <Button title="Delete account" onPress={showConfirmDel} />
       <TextInput
         value={eventName}
         onChangeText={setEventName}

@@ -6,7 +6,7 @@ import { Divider } from '@rneui/themed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
 
@@ -78,36 +78,40 @@ export function ConsumerRequestsView() {
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         Pending Requests
       </Text>
-      {pendingEvents.map(event => (
-        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
-          <EventBlock event={event} showSpaces={false}/>
-          <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-          {event.doc.interestedProviders
-            .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
-            .map((providerInfo: DocumentData) => (
-            <View key={providerInfo.id}>
-              <Text key={providerInfo.name}>
-              {'Name: ' + providerInfo.name}
-              </Text>
-              <Text key={providerInfo.address}>
-              {'Address: ' + providerInfo.address}
-              </Text>
-            </View>
-          ))}
-          <Divider width={5} style={{ marginTop: 10 }}/>
-        </TouchableOpacity>
-      ))}
+      <ScrollView>
+        {pendingEvents.map(event => (
+          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
+            <EventBlock event={event} showSpaces={false}/>
+            <Text style={{ fontSize: 20 }}>Available Providers:</Text>
+            {event.doc.interestedProviders
+              .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
+              .map((providerInfo: DocumentData) => (
+              <View key={providerInfo.id}>
+                <Text key={providerInfo.name}>
+                {'Name: ' + providerInfo.name}
+                </Text>
+                <Text key={providerInfo.address}>
+                {'Address: ' + providerInfo.address}
+                </Text>
+              </View>
+            ))}
+            <Divider width={5} style={{ marginTop: 10 }}/>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
 
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
         Accepted Requests
       </Text>
-      {completedEvents.map((event) => (
-        <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
-          <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
-          <EventBlock event={event} showSpaces={true}/>
-          <Divider width={5} style={{ marginTop: 10 }}/>
-        </TouchableOpacity>
-      ))}
+      <ScrollView>
+        {completedEvents.map((event) => (
+          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
+            <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
+            <EventBlock event={event} showSpaces={true}/>
+            <Divider width={5} style={{ marginTop: 10 }}/>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 }

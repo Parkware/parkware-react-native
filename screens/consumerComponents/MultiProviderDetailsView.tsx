@@ -37,9 +37,11 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   }, [])
 
   const updateSpaceCount = async (accSpaceCount: number) => {
-    await setDoc(doc(db, 'events', eventData.id), {
-      accSpaceCount
-    }, { merge: true });
+    // await setDoc(doc(db, 'events', eventData.id), {
+    //   accSpaceCount
+    // }, { merge: true });
+    console.log('updated spaces!');
+    
   }
   
   const disableButton = (providerId: string) => {
@@ -114,6 +116,14 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         Event: {eventData.doc.eventName}
       </Text>
       <EventBlock event={eventData} showSpaces={false}/>
+      <View>
+        <Text>
+          {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
+        </Text>
+        <Text>
+          {'Requested Spaces: ' + eventData.doc.requestedSpaces}
+        </Text>
+      </View>
       <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       <ScrollView>

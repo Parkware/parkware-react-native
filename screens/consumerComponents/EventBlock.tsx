@@ -3,6 +3,8 @@ import { docDataPair } from "../providerComponents/ProviderRequestsView";
 
 interface StatusTextProps {
   event: docDataPair;
+  // sometimes, we need to render the space count with a state variable 
+  // in the component as it's actively being updated (i.e. MultiProvidrDetailsView.tsx)
   showSpaces: boolean;
 }
     
@@ -24,16 +26,16 @@ export const EventBlock = ({ event, showSpaces }: StatusTextProps) => {
       <Text key={event.doc.startTime}>
         {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
       </Text>
-      {!showSpaces && 
+      {showSpaces && 
         <View>
           <Text>
             {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
           </Text>
+          <Text key={event.doc.requestedSpaces + 1}>
+            {'Requested Spaces: ' + event.doc.requestedSpaces}
+          </Text>
         </View>
       }
-      <Text key={event.doc.requestedSpaces + 1}>
-        {'Requested Spaces: ' + event.doc.requestedSpaces}
-      </Text>
     </View>
   );
 }

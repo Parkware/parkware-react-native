@@ -44,14 +44,9 @@ export function ConsumerRequestsView() {
           } as docDataPair;
           
           // Will need to ensure that accepted providers are never greater than the requested number
-          if (e.data().accSpaceCount >= e.data().requestedSpaces) {
+          if (!e.data().isOpen)
             compEventPromises.push(eventObj);
-            
-            // this should not be updated in the client-side. needs to be a separate cloud function
-            // await updateDoc(doc(db, 'events', e.id), {
-            //   isOpen: false,
-            // });
-          } else 
+          else 
             penEventPromises.push(eventObj);
         });
         

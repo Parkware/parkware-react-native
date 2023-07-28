@@ -138,27 +138,36 @@ export function MakeRequestScreen() {
   const DatePickeriOS = () => {
     return (
       <View>
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={startTime}
-          mode='date'
-          is24Hour={true}
-          onChange={dateFun}
-        />
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={startTime}
-          mode='time'
-          is24Hour={true}
-          onChange={startTimeFun}
-        />
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={endTime}
-          mode='time'
-          is24Hour={true}
-          onChange={endTimeFun}
-        />
+        <View style={{flexDirection:"row"}}>
+          <Text style={{ fontSize: 18 }}>Event Date:</Text>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={startTime}
+            mode='date'
+            is24Hour={true}
+            onChange={dateFun}
+          />
+        </View>
+        <View style={{flexDirection:"row"}}>
+          <Text style={{ fontSize: 18 }}>Start Time:</Text>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={startTime}
+            mode='time'
+            is24Hour={true}
+            onChange={startTimeFun}
+          />
+        </View>
+        <View style={{flexDirection:"row"}}>
+          <Text style={{ fontSize: 18 }}>End Time:</Text>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={endTime}
+            mode='time'
+            is24Hour={true}
+            onChange={endTimeFun}
+          />
+        </View>
       </View>
     )
   }
@@ -237,7 +246,10 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
-      <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+      <View style={{flexDirection:"row"}}>
+        <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces to Request:</Text>
+        <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+      </View>
       {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"

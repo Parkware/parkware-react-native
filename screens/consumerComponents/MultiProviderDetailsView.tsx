@@ -23,6 +23,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [unwantedProviders, setUnwantedProviders] = useState<string[]>([]);
   const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
+  const [showBackInfo, setShowBackInfo] = useState(false);
 
   // Getting the number of already available parking spaces
   useEffect(() => {
@@ -33,22 +34,14 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       .map((pro: DocumentData) => spaceCount += pro.providerSpaces));
 
     setCurrAvailPros(spaceCount);
-    updateSpaceCount(spaceCount);
   }, [])
-
-  const updateSpaceCount = async (accSpaceCount: number) => {
-    // await setDoc(doc(db, 'events', eventData.id), {
-    //   accSpaceCount
-    // }, { merge: true });
-    console.log('updated spaces!');
-    
-  }
   
   const disableButton = (providerId: string) => {
     setDisabledButtons((prevState) => ({
       ...prevState,
       [providerId]: true, // Set the specific provider's button as disabled
     }));
+    setShowBackInfo(true);
     setAcceptStatus(providerId);
   };
   
@@ -63,7 +56,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const removeLocalData = (id: string) => {
     setUnwantedProviders(current => [...current, id]);
     const updatedProviders = eventData.doc.interestedProviders
-    .filter((pro: DocumentData) => pro.id !== id);
+      .filter((pro: DocumentData) => pro.id !== id);
 
     setEventData(prevEventData => {
       return {
@@ -87,13 +80,13 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     return (
       <View key={providerInfo.id}>
         <Text key={providerInfo.name}>
-        {'Name: ' + providerInfo.name}
+          {'Name: ' + providerInfo.name}
         </Text>
         <Text key={providerInfo.address}>
-        {'Address: ' + providerInfo.address}
+          {'Address: ' + providerInfo.address}
         </Text>
-        <Text>
-          Spaces able to provider: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
+        <Text key={providerInfo.providerSpaces}>
+          Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
         <Button
           title='Accept' 
@@ -135,7 +128,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
           ))
         }
       </ScrollView>
-      
+      {showBackInfo && <Text>Go back and re-enter screen to see changes!</Text>}
       {/* <FlatList 
         data={interestedProviders}
         renderItem={({providerInfo}: DocumentData) => <ProviderBlock providerInfo={providerInfo}/>}
@@ -156,7 +149,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
             <Text key={accProInfo.address}>
             {'Address: ' + accProInfo.address}
             </Text>
-            <Text>
+            <Text key={accProInfo.providerSpaces}>
               {currAvailPros 
                 ? `Spaces able to provide: ${accProInfo.providerSpaces} / ${eventData.doc.requestedSpaces}`
                 : "Loading..."}

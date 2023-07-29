@@ -90,7 +90,7 @@ const ParkingStatusView = ({ route }: Props) => {
             Thank you for providing your space!
           </Text>
         : <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-            {endTime.toLocaleString()}
+            Event ends: {endTime.toLocaleString()}
           </Text>
         }
       </View>
@@ -107,7 +107,12 @@ const ParkingStatusView = ({ route }: Props) => {
           <View>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
               {timeRemaining} till the parking event starts. 
+              {'\n'}Please add notes for the following info to be shown to the guest:
             </Text>
+            <Text style={{ fontSize: 20 }}>
+            {'\n'}- which side(s) of the driveway (while facing the house)
+            </Text>
+            
           </View>
         )
     }

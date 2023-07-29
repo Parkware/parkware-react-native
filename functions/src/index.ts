@@ -18,17 +18,15 @@ export const incrementSpaceCount = functions.firestore
     if (afterArr.length > beforeArr.length) {
       const addedProviderId: string = afterArr
         .filter((id: string) => !beforeArr.includes(id)).toString();
-
-      const newProviderSpaces: number = change.after.data().interestedProviders
-        .filter((proObj: DocumentData) => {
-          proObj.id == addedProviderId;
-        }).providerSpaces;
-
-      return db.collection("/events/")
-        .doc(eventId).update({
-          accSpaceCount: FieldValue.increment(newProviderSpaces),
-          isOpen: false,
-        });
+      const newProviderSpaces: number =
+        change.after.data().interestedProviders
+          .find((proObj: DocumentData) =>
+            proObj.id == addedProviderId
+          ).providerSpaces;
+      return db.collection("/events/").doc(eventId).update({
+        accSpaceCount: FieldValue.increment(newProviderSpaces),
+        isOpen: false,
+      });
     }
     return null;
   });

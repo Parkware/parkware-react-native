@@ -133,7 +133,7 @@ export function ProviderRequestsView() {
           <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
             <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
             <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={true}/>
+              <EventBlock event={event} showSpaces={false}/>
             </View>
           </TouchableOpacity>
         ))}

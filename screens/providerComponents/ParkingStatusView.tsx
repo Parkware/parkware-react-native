@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -24,7 +24,8 @@ const ParkingStatusView = ({ route }: Props) => {
   const startTime = event.doc.startTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
   const [guestArrived, setGuestArrived] = useState<boolean | null>(null);
-  
+  const [providerNotes, setProviderNotes] = useState('');
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
@@ -109,8 +110,8 @@ const ParkingStatusView = ({ route }: Props) => {
               {timeRemaining} till the parking event starts. 
               {'\n'}Please add notes for the following info to be shown to the guest:
             </Text>
-            <Text style={{ fontSize: 20 }}>
-            {'\n'}- which side(s) of the driveway (while facing the house)
+            <Text style={{ fontSize: 18 }}>
+              {'\n'}- Which side(s) of the driveway should be used (while facing the house)
             </Text>
             
           </View>
@@ -140,8 +141,50 @@ const ParkingStatusView = ({ route }: Props) => {
       <View style={{ paddingTop: 30}}>
         <ShowArrivalStatus />
       </View>
+      <TextInput
+        value={providerNotes}
+        onChangeText={setProviderNotes}
+        placeholder="Enter notes here"
+        placeholderTextColor="#aaa"
+        multiline={true}
+        style={styles.input}
+      />
     </SafeAreaView>
   )
 }
 
 export default ParkingStatusView
+
+
+const styles = StyleSheet.create({
+  outer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inner: {
+    width: 240,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    marginTop: 10,
+  },
+  error: {
+    marginBottom: 20,
+    color: 'red',
+  },
+  link: {
+    color: 'blue',
+    marginBottom: 20,
+  },
+});

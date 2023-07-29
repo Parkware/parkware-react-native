@@ -1,9 +1,9 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Alert, Button, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayRemove, arrayUnion, doc, setDoc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayRemove, arrayUnion, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
 import { EventBlock } from './EventBlock'
@@ -74,6 +74,16 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       interestedProviders: updatedProviders,
       unwantedProviders: arrayUnion(id)
     });
+  }
+
+  const showConfirmDel = () =>
+    Alert.alert('Are you sure you want to delete this event?', 'All providers will be notified. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Delete', onPress: () => delEventReq()},
+    ]);
+    
+  const delEventReq = async () => {
+    await deleteDoc(doc(db, "events", eventData.id));
   }
 
   const ProviderBlock = ({providerInfo}: DocumentData) => {
@@ -158,6 +168,10 @@ const MultiProviderDetailsView = ({ route }: Props) => {
           </View >
         ))
       }
+      <Button
+        title="Delete Event Request"
+        onPress={showConfirmDel}
+      />
     </SafeAreaView>
   )
 }

@@ -18,3 +18,15 @@ in `MultiProviderDetailsView.tsx`, i'm getting the interested provider informati
   <View key={providerInfo.provider_id}>
 ```
 i'm appending unwanted providers onto an array and checking for each map object if it's id is contained in this array. we tried using a state variable. however, there is a very mysterious error there. 
+___________________________________________________________________________________________________________________________________________________________________________________________________________
+#### How stuff works
+#### notifying if "here" or not. 
+there are two different fields: `arrivedProviderSpaces` and `departedProviderSpaces`.
+
+initially, both are empty. then the `arrivedProviderSpaces` field gets "unioned" w/ a provider id. then, once a guest clicks i left, that provider's id gets appended to `departedProviderSpaces` and the provider is notified. 
+
+the provider's name and phone number is added to the `interestedProviders` map so that the provider can view their details. 
+
+
+#### the main
+an event is created and isOpen is set to true. sufficient provider spaces are reached when the `accSpaceCount` is >= than `requestedSpaces`, the event is then closed (`isOpen` is false). 

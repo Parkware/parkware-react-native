@@ -1,30 +1,26 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../App'
-import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore'
+import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../../firebaseConfig'
 import { EventBlock } from '../consumerComponents/EventBlock'
 import { docDataPair } from './ProviderRequestsView'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
-/*
-    Is there some way that I can have one onSnapshot function listen and update both these pages?
-    It isn't necessary since a user may only need updates from one screen, but it could be a good addition
-    I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
-    since many events could be looked at. 
-*/
+
 const ParkingStatusView = ({ route }: Props) => {
   const { event } = route.params;
+  const endTime = event.doc.endTime.toDate();
+  const startTime = event.doc.startTime.toDate();
   const [eventData, setEventData] = useState<docDataPair>(event);
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
   const [diff, setDiff] = useState<number>();
-  const endTime = event.doc.endTime.toDate();
-  const startTime = event.doc.startTime.toDate();
   const [timeRemaining, setTimeRemaining] = useState('');
   const [guestArrived, setGuestArrived] = useState<boolean | null>(null);
   const [providerNotes, setProviderNotes] = useState('');
+  const [guestInfo, setGuestInfo] = useState<DocumentData>();
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
@@ -41,6 +37,22 @@ const ParkingStatusView = ({ route }: Props) => {
     return () => unsub()
   }, [])
   
+  const getGuestInfo = async () => {
+    const eventSnap = await getDoc(doc(db, 'events', event.id))
+    if (eventSnap.exists())
+      updateGuestInfo(eventSnap.data().interestedProviders);
+  }
+
+  useEffect(() => {
+    getGuestInfo();
+  }, [])
+  
+  const updateGuestInfo = (interestedProviders: DocumentData) => {
+    const currProviderObj = interestedProviders.find((proObj: any) => proObj.id == auth.currentUser!.uid)
+    // TODO: This assumes that there is only guest for every provider. This needs to be changed!
+    setGuestInfo(currProviderObj.guestInfo);
+  }
+
   const getConsumerInfo = async () => {
     const userSnap = await getDoc(doc(db, 'users', eventData.doc.consumer_id))
     if (userSnap.exists())   
@@ -71,16 +83,34 @@ const ParkingStatusView = ({ route }: Props) => {
     return () => clearInterval(interval);
   }, []);
 
+  const sendNotes = async () => {
+    const myProviderObj = eventData.doc.interestedProviders
+      .find((proObj: DocumentData) => proObj.id == auth.currentUser!.uid);
+      
+    const existingList = eventData.doc.interestedProviders
+      .filter((proObj: DocumentData) => proObj.id !== auth.currentUser!.uid);
+
+    existingList.push({
+      ...myProviderObj,
+      notes: providerNotes
+    })
+    
+    await updateDoc(doc(db, 'events', eventData.id), {
+      interestedProviders: existingList
+    });
+  }
+
   const ArrivalText = () => {
     let text: string = '';
-    if (guestArrived == null) {
-      text = "The guest isn't there yet!";
-    } else if (guestArrived) {
-      text = "Your guest is currently at the spot.";
-    } else {
-      text = "Your guest has left the spot.";
+    if (guestInfo) {
+      if (guestArrived == null) {
+        text = "The guest isn't there yet!";
+      } else if (guestArrived) {
+        text = `${guestInfo.name} is currently at the spot. this is their number: ${guestInfo.phoneNumber}`;
+      } else {
+        text = `${guestInfo.name} has left the spot. this is their number: ${guestInfo.phoneNumber}`;
+      }
     }
-    
     return (
       <View>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
@@ -113,7 +143,6 @@ const ParkingStatusView = ({ route }: Props) => {
             <Text style={{ fontSize: 18 }}>
               {'\n'}- Which side(s) of the driveway should be used (while facing the house)
             </Text>
-            
           </View>
         )
     }
@@ -140,15 +169,24 @@ const ParkingStatusView = ({ route }: Props) => {
       <EventBlock event={eventData} showSpaces={true}/>
       <View style={{ paddingTop: 30}}>
         <ShowArrivalStatus />
+        {diff && diff > 0 && (
+          <View>
+            <TextInput
+              value={providerNotes}
+              onChangeText={setProviderNotes}
+              placeholder="Enter notes here"
+              placeholderTextColor="#aaa"
+              multiline={true}
+              style={styles.input}
+            />
+            <Button 
+              title="Upload notes"
+              disabled={providerNotes.length == 0}
+              onPress={sendNotes}
+            />
+          </View>
+        )}
       </View>
-      <TextInput
-        value={providerNotes}
-        onChangeText={setProviderNotes}
-        placeholder="Enter notes here"
-        placeholderTextColor="#aaa"
-        multiline={true}
-        style={styles.input}
-      />
     </SafeAreaView>
   )
 }

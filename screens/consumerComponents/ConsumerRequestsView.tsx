@@ -70,42 +70,44 @@ export function ConsumerRequestsView() {
 
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
-        Pending Requests
-      </Text>
       <ScrollView>
-        {pendingEvents.map(event => (
-          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
-            <EventBlock event={event} showSpaces={true}/>
-            <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-            {event.doc.interestedProviders
-              .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
-              .map((providerInfo: DocumentData) => (
-              <View key={providerInfo.id}>
-                <Text key={providerInfo.name}>
-                {'Name: ' + providerInfo.name}
-                </Text>
-                <Text key={providerInfo.address}>
-                {'Address: ' + providerInfo.address}
-                </Text>
-              </View>
-            ))}
-            <Divider width={5} style={{ marginTop: 10 }}/>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
+          Pending Requests
+        </Text>
+        <ScrollView>
+          {pendingEvents.map(event => (
+            <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
+              <EventBlock event={event} showSpaces={true}/>
+              <Text style={{ fontSize: 20 }}>Available Providers:</Text>
+              {event.doc.interestedProviders
+                .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
+                .map((providerInfo: DocumentData) => (
+                <View key={providerInfo.id}>
+                  <Text key={providerInfo.name}>
+                  {'Name: ' + providerInfo.name}
+                  </Text>
+                  <Text key={providerInfo.address}>
+                  {'Address: ' + providerInfo.address}
+                  </Text>
+                </View>
+              ))}
+              <Divider width={5} style={{ marginTop: 10 }}/>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
-        Accepted Requests
-      </Text>
-      <ScrollView>
-        {completedEvents.map((event) => (
-          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
-            <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
-            <EventBlock event={event} showSpaces={false}/>
-            <Divider width={5} style={{ marginTop: 10 }}/>
-          </TouchableOpacity>
-        ))}
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
+          Accepted Requests
+        </Text>
+        <ScrollView>
+          {completedEvents.map((event) => (
+            <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
+              <Text style={{ fontSize: 15 }}>Click here to get more info about your event</Text>
+              <EventBlock event={event} showSpaces={false}/>
+              <Divider width={5} style={{ marginTop: 10 }}/>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </ScrollView>
     </SafeAreaView>
   );

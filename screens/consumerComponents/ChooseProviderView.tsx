@@ -79,6 +79,10 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
         <View key={proObj.id}>
           <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
           <Text key={proObj.address}>Provider Address: {proObj.address}</Text>
+          {proObj.notes === undefined 
+           ? <Text>The provider has not updated any notes yet</Text>
+           : <Text key={proObj.notes}>Notes: {proObj.notes}</Text>
+          }
           <Divider width={5} style={{ marginTop: 10 }}/>
         </View>
       )) : <Text>Loading...</Text>}

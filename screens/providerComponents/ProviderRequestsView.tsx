@@ -14,17 +14,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 export interface docDataPair {
   id: string,
   doc: DocumentData
-  /*
-  Fields:
-    consumer_id
-    name
-    address
-    startTime
-    endTime
-    accepted
-    acceptedProviderIds
-    isOpen
-  */
 }
 
 export type providerScreenProp = NativeStackNavigationProp<ProviderStackParams, 'providerRequestsView'>;
@@ -123,57 +112,56 @@ export function ProviderRequestsView() {
   }
 
   return (
-    <View style={{ marginTop: 30, padding: 16 }}>
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-        Accepted Requests
-      </Text>
       <ScrollView>
-        {accEvents.map(event => (
-          <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
-            <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+          Accepted Requests
+        </Text>
+        <ScrollView>
+          {accEvents.map(event => (
+            <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
+              <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
+              <View style={{ marginBottom: 10 }} key={event.id}>
+                <EventBlock event={event} showSpaces={false}/>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+          Pending Requests
+        </Text>
+        <ScrollView>
+          {pendingEvents.map((event) => (
             <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={false}/>
+              <EventBlock event={event} showSpaces={true}/>
             </View>
-          </TouchableOpacity>
-        ))}
+          ))}
+        </ScrollView>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+          Open Requests
+        </Text>
+        <ScrollView>
+          {openEvents
+            .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
+            .map((event) => (
+            <View style={{ marginBottom: 10 }} key={event.id}>
+              <EventBlock event={event} showSpaces={true}/>
+              <Button title='Accept' onPress={() => updateDB(event)}/>
+              <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
+            </View>
+          ))}
+        </ScrollView>
+        <Text style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 10 }}>
+          Denied Events
+        </Text>
+        {deniedEventArr
+          .map((name: string) => (
+            <View style={{ marginBottom: 10 }} key={name}>
+              <Text>{name}</Text>
+            </View>
+          ))}
+        <Button title="Log out" onPress={logout} />
       </ScrollView>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-        Pending Requests
-      </Text>
-      <ScrollView>
-        {pendingEvents.map((event) => (
-          <View style={{ marginBottom: 10 }} key={event.id}>
-            <EventBlock event={event} showSpaces={true}/>
-          </View>
-        ))}
-      </ScrollView>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-        Open Requests
-      </Text>
-      <ScrollView>
-        {openEvents
-          .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
-          .map((event) => (
-          <View style={{ marginBottom: 10 }} key={event.id}>
-            <EventBlock event={event} showSpaces={true}/>
-            <Button title='Accept' onPress={() => updateDB(event)}/>
-            <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
-          </View>
-        ))}
-      </ScrollView>
-
-      <Text style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 10 }}>
-        Denied Events
-      </Text>
-      {deniedEventArr
-        .map((name: string) => (
-          <View style={{ marginBottom: 10 }} key={name}>
-            <Text>{name}</Text>
-          </View>
-        ))}
-      <Button title="Log out" onPress={logout} />
     </SafeAreaView>
-    </View>
   );
 }

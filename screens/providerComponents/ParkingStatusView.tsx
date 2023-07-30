@@ -47,7 +47,6 @@ const ParkingStatusView = ({ route }: Props) => {
     getGuestInfo();
   }, [])
   
-  
   const updateGuestInfo = (interestedProviders: DocumentData) => {
     const currProviderObj = interestedProviders.find((proObj: any) => proObj.id == auth.currentUser!.uid)
     // TODO: This assumes that there is only guest for every provider. This needs to be changed!

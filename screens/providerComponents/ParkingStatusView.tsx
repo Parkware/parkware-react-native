@@ -16,83 +16,71 @@ const ParkingStatusView = ({ route }: Props) => {
   const startTime = event.doc.startTime.toDate();
   const [eventData, setEventData] = useState<docDataPair>(event);
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
-  
-  // Time stuff
   const [diff, setDiff] = useState<number>();
   const [timeRemaining, setTimeRemaining] = useState('');
-
-  const [guestArrived, setGuestArrived] = useState<boolean | null>(null);
   const [providerNotes, setProviderNotes] = useState('');
   const [guestInfo1, setGuestInfo1] = useState<DocumentData>();
   const [guestInfo2, setGuestInfo2] = useState<DocumentData>();
   const [modProviderId1, setModProviderId1] = useState<DocumentData>();
   const [modProviderId2, setModProviderId2] = useState<DocumentData>();
+  const [guestOneLeft, setGuestOneLeft] = useState(false)
+  const [guestTwoLeft, setGuestTwoLeft] = useState(false)
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
         // Order matters!
-        if (checkAppendVal(eventSnap.data().departedProviderSpaces)) 
-          setGuestArrived(false);
-        else if (checkAppendVal(eventSnap.data().arrivedProviderSpaces)) 
-          setGuestArrived(true);
-        else 
-          setGuestArrived(null); 
+        checkDepartStatus(eventSnap.data().departedProviderSpaces)
+        checkArrivalStatus(eventSnap.data().arrivedProviderSpaces)
       }
     })
     return () => unsub()
   }, [])
   
-  const checkAppendVal = (arr: DocumentData[]) => {
-    const fullVal1 = arr
-      .find((el: DocumentData) => el.replace('.1', '') == auth.currentUser!.uid);
-    const fullVal2 = arr
-      .find((el: DocumentData) => el.replace('.2', '') == auth.currentUser!.uid);
-    if (fullVal1) {
-      if (fullVal1.includes('.1'))
-        setModProviderId1(fullVal1);
-      return true
-    }
-    if (fullVal2) {
-      if (fullVal2.includes('.2'))
-        setModProviderId2(fullVal2);
-      return true
-    }
-    return false
-  }
-
-  const updateFirstGuestInfo = async (modProviderId: any) => {
-    const eventSnap = await getDoc(doc(db, 'events', event.id))
-    if (eventSnap.exists()) {
-      // modProviderId has to be true since we assume guestArrived is not null and thus resulted in the positive
-      // if case of the clause in checkAppendVal
-      const guestObj: any = eventSnap.data().interestedProviders
-        .find((proObj: DocumentData) => proObj.id == modProviderId!.replace('.1', '').replace('.2', ''))
-        .guestInfo.find((info: DocumentData) => info.order == 1);
-      setGuestInfo1(guestObj);
+  const checkArrivalStatus = (arr: DocumentData) => {
+    const fullVal = getFullVal(arr);
+    if (fullVal) {
+      fullVal.map((val: any) => {
+        if (val.includes('.1'))
+          setModProviderId1(val);
+        else if (val.includes('.2'))
+          setModProviderId2(val);
+      })
     }
   }
 
-  const updateSecondGuestInfo = async (modProviderId: any) => {
+  const checkDepartStatus = (arr: DocumentData) => {
+    const fullVal = getFullVal(arr);
+    if (fullVal) {
+      fullVal.map((val: any) => {
+        if (val.includes('.1'))
+          setGuestOneLeft(true);
+        else if (val.includes('.2'))
+          setGuestTwoLeft(true);
+      });
+    }
+  }
+
+  const getFullVal = (arr: DocumentData) => arr.filter((el: DocumentData) => el.replace('.1', '').replace('.2', '') == auth.currentUser!.uid);
+
+  const updateGuestInfo = async (modProviderId: any, setGuestInfo: any, num: number) => {
     const eventSnap = await getDoc(doc(db, 'events', event.id))
     if (eventSnap.exists()) {
-      // modProviderId has to be true since we assume guestArrived is not null and thus resulted in the positive
-      // if case of the clause in checkAppendVal
       const guestObj: any = eventSnap.data().interestedProviders
         .find((proObj: DocumentData) => proObj.id == modProviderId!.replace('.1', '').replace('.2', ''))
-        .guestInfo.find((info: DocumentData) => info.order == 2);
-      setGuestInfo2(guestObj);
+        .guestInfo.find((info: DocumentData) => info.order == num);
+      setGuestInfo(guestObj);
     }
   }
   
   useEffect(() => {
     if (modProviderId1)
-      updateFirstGuestInfo(modProviderId1);
+      updateGuestInfo(modProviderId1, setGuestInfo1, 1);
   }, [modProviderId1])
 
   useEffect(() => {
     if (modProviderId2)
-      updateSecondGuestInfo(modProviderId2);
+      updateGuestInfo(modProviderId2, setGuestInfo2, 2);
   }, [modProviderId2])
   
   const getConsumerInfo = async () => {
@@ -145,38 +133,37 @@ const ParkingStatusView = ({ route }: Props) => {
   const ArrivalText = () => {
     let text: string = '';
     let second: string = '';
-    if (guestArrived == null) {
+    if (!guestInfo1 && !guestInfo2) {
       text = "The guest isn't there yet!";
-    } else {
-        if (guestInfo1) {
-          if (guestArrived) {
-            text = `${guestInfo1.name} is currently at the spot. this is their number: ${guestInfo1.phoneNumber}`;
-          } else {
-            text = `${guestInfo1.name} has left the spot. this is their number: ${guestInfo1.phoneNumber}`;
-          }
-        }
-        if (guestInfo2) {
-          if (guestArrived) {
-            second = `${guestInfo2.name} is currently at the spot. this is their number: ${guestInfo2.phoneNumber}`;
-          } else {
-            second = `${guestInfo2.name} has left the spot. this is their number: ${guestInfo2.phoneNumber}`;
-          }
-        }
+    }
+    if (guestInfo1) {
+      if (!guestOneLeft) {
+        text = `${guestInfo1.name} is currently at the spot. their number is ${guestInfo1.phoneNumber}`;
+      } else {
+        text = `${guestInfo1.name} has left the spot. their number is ${guestInfo1.phoneNumber}`;
+      }
+    }
+    if (guestInfo2) {
+      if (!guestTwoLeft) {
+        second = `${guestInfo2.name} is currently at the spot. their number is ${guestInfo2.phoneNumber}`;
+      } else {
+        second = `${guestInfo2.name} has left the spot. their number is ${guestInfo2.phoneNumber}`;
+      }
     }
     return (
       <View>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+        <Text style={{ fontSize: 20, marginBottom: 10, marginTop: 40 }}>
           {text}
         </Text>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+        <Text style={{ fontSize: 20, marginBottom: 40, marginTop: 40 }}>
           {second}
         </Text>
-        {guestArrived == false 
+        {!(guestOneLeft && guestTwoLeft)
         ? <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-            Thank you for providing your space!
+            Event ends: {endTime.toLocaleString()}
           </Text>
         : <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-            Event ends: {endTime.toLocaleString()}
+            Thank you for providing your space!
           </Text>
         }
       </View>

@@ -99,7 +99,8 @@ export function ProviderRequestsView() {
           id,
           name: currUserSnap.data().name,
           address: currUserSnap.data().address,
-          providerSpaces: currUserSnap.data().providerSpaces
+          providerSpaces: currUserSnap.data().providerSpaces,
+          guestInfo: []
         }),
         interestedProviderIds: arrayUnion(id),
       }, { merge: true });

@@ -25,6 +25,19 @@ export const incrementSpaceCount = functions.firestore
           ).providerSpaces;
       return db.collection("/events/").doc(eventId).update({
         accSpaceCount: FieldValue.increment(newProviderSpaces),
+      });
+    }
+    return null;
+  });
+
+export const checkIfOpen = functions.firestore
+  .document("/events/{eventId}")
+  .onUpdate(async (change: any, context: any) => {
+    const after = change.after.data();
+    const eventId = context.params.eventId;
+
+    if (after.accSpaceCount == after.requestedSpaces) {
+      return db.collection("/events/").doc(eventId).update({
         isOpen: false,
       });
     }

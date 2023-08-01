@@ -48,7 +48,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const setAcceptStatus = async (currProviderId: string) => {
     await updateDoc(doc(db, 'events', event.id), { 
       acceptedProviderIds: arrayUnion(currProviderId),
-      consumerParkingStatus: false,
     });
   }
   
@@ -121,7 +120,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       <EventBlock event={eventData} showSpaces={false}/>
       <View>
         <Text>
-          {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
+          {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
         </Text>
         <Text>
           {'Requested Spaces: ' + eventData.doc.requestedSpaces}

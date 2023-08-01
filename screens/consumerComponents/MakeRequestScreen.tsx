@@ -86,6 +86,7 @@ export function MakeRequestScreen() {
           departedProviderSpaces: [],
           unwantedProviders: [],
           requestedSpaces,
+          accSpaceCount: 0,
           isOpen: true
         });
                 
@@ -221,8 +222,8 @@ export function MakeRequestScreen() {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Request a Space</Text>
       <Button title="Log out" onPress={logout} />
-      {isProvider && <Button title="Switch to Provider" onPress={switchToProvider} />}
       <Button title="Delete account" onPress={showConfirmDel} />
+      {isProvider && <Button title="Switch to Provider" onPress={switchToProvider} />}
       <TextInput
         value={eventName}
         onChangeText={setEventName}

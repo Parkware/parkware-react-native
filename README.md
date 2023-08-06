@@ -18,6 +18,8 @@ in `MultiProviderDetailsView.tsx`, i'm getting the interested provider informati
   <View key={providerInfo.provider_id}>
 ```
 i'm appending unwanted providers onto an array and checking for each map object if it's id is contained in this array. we tried using a state variable. however, there is a very mysterious error there. 
+
+the addition of guests is extremely hardcoded and a provider can only support 2 guests right now. this will eventually be changed. 
 ___________________________________________________________________________________________________________________________________________________________________________________________________________
 #### How stuff works
 #### notifying if "here" or not. 

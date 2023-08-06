@@ -134,7 +134,7 @@ export function ProviderRequestsView() {
         <ScrollView>
           {pendingEvents.map((event) => (
             <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={true}/>
+              <EventBlock event={event} showSpaces={false}/>
             </View>
           ))}
         </ScrollView>

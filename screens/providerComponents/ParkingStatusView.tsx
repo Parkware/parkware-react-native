@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Button, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -178,8 +178,8 @@ const ParkingStatusView = ({ route }: Props) => {
       // need to create push notifications if the guest leaves. this needs to alert the provider
         return (
           <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-              {timeRemaining} till the parking event starts. 
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 13, marginTop: 30 }}>
+              {timeRemaining} till the event starts. 
               {'\n'}Please add notes for the following info to be shown to the guest:
             </Text>
             <Text style={{ fontSize: 18 }}>
@@ -207,12 +207,11 @@ const ParkingStatusView = ({ route }: Props) => {
     <SafeAreaView style={{ marginLeft: 30 }}>
       <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
       <RenderUserInfo />
-      <Text style={{ paddingTop: 30, fontSize: 20 }}>Event Info:</Text>
+      <Text style={{ paddingTop: 20, fontSize: 20 }}>Event Info:</Text>
       <EventBlock event={eventData} showSpaces={true}/>
-      <View style={{ paddingTop: 30}}>
         <ShowArrivalStatus />
         {diff && diff > 0 && (
-          <View>
+          <View style={{ paddingRight: 10 }}>
             <TextInput
               value={providerNotes}
               onChangeText={setProviderNotes}
@@ -228,7 +227,6 @@ const ParkingStatusView = ({ route }: Props) => {
             />
           </View>
         )}
-      </View>
     </SafeAreaView>
   )
 }
@@ -237,13 +235,17 @@ export default ParkingStatusView
 
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   outer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   inner: {
-    width: 240,
+    padding: 24,
+    justifyContent: 'space-around',
   },
   header: {
     fontSize: 24,

@@ -1,4 +1,4 @@
-import { Button, Text, View, StyleSheet } from 'react-native'
+import { Button, Text, View, StyleSheet, Alert } from 'react-native'
 import React from 'react'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
@@ -20,6 +20,12 @@ export const LoginRoleView = () => {
     }
   };
 
+  const showConfirmDel = () =>
+    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Delete', onPress: () => delAccount()},
+    ]);
+    
   const delAccount = async () => {
     await deleteDoc(doc(db, "users", auth.currentUser!.uid));
     await deleteUser(auth.currentUser!)
@@ -45,7 +51,7 @@ export const LoginRoleView = () => {
         </View>
       </View>
       <Button title="Log out" onPress={logout} />
-      <Button title="Delete account" onPress={delAccount} />
+      <Button title="Delete account" onPress={showConfirmDel} />
     </View>
   )
 }

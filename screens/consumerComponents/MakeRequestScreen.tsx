@@ -22,7 +22,7 @@ export function MakeRequestScreen() {
   const [eventName, setEventName] = useState<string>();
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
-  const [requestedSpaces, setParkingSpaces] = useState<number>();
+  const [requestedSpaces, setRequestedSpaces] = useState<number>(1);
   const [isProvider, setIsProvider] = useState(false);
   const navigation = useNavigation<homeScreenProp>();
   const userRef = doc(db, 'users', auth.currentUser!.uid);
@@ -89,11 +89,11 @@ export function MakeRequestScreen() {
           accSpaceCount: 0,
           isOpen: true
         });
-                
+        
+        setEventName('');
         setStartTime(new Date());
         setEndTime(new Date());
         setAddress('');
-        setSentMessage(true);
         switchView();
       }
     }
@@ -131,7 +131,7 @@ export function MakeRequestScreen() {
       setSendable(false);
       setError('At least one parking spot needs to be requested!')
     } else {
-      setParkingSpaces(count)
+      setRequestedSpaces(count)
       setSendable(true);
     }
   }
@@ -220,7 +220,7 @@ export function MakeRequestScreen() {
   }
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={styles.header}>Request a Space</Text>
+      <Text style={styles.header}>Make a Request</Text>
       <Button title="Log out" onPress={logout} />
       <Button title="Delete account" onPress={showConfirmDel} />
       {isProvider && <Button title="Switch to Provider" onPress={switchToProvider} />}
@@ -248,10 +248,9 @@ export function MakeRequestScreen() {
         style={styles.input}
       />
       <View style={{flexDirection:"row"}}>
-        <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces to Request:</Text>
-        <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+        <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
+        <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
       </View>
-      {sentMessage && <Text>Sent Request!</Text>}
       <Button
         title="Send Request"
         onPress={createEventRequest}
@@ -286,6 +285,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     marginBottom: 16,
+    marginTop: 16,
   },
   error: {
     marginBottom: 20,

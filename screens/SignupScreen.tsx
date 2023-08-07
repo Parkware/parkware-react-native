@@ -28,6 +28,8 @@ export function SignupScreen() {
     const checkPassword = () => {
       if (password !== confirmPassword)
         setError("Passwords don't match");
+      else if (password.length < 6)
+        setError("Password must be at least 6 characters")
       else
         navNextView();
     };

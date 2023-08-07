@@ -168,7 +168,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         ))
       }
       <Button
-        title="Delete Event Request"
+        title="Cancel Event Request"
         onPress={showConfirmDel}
       />
     </SafeAreaView>

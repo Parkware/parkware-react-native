@@ -208,7 +208,7 @@ const ParkingStatusView = ({ route }: Props) => {
       <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
       <RenderUserInfo />
       <Text style={{ paddingTop: 20, fontSize: 20 }}>Event Info:</Text>
-      <EventBlock event={eventData} showSpaces={true}/>
+      <EventBlock event={eventData} showSpaces={true} showEditSpaces={false}/>
         <ShowArrivalStatus />
         {diff && diff > 0 && (
           <View style={{ paddingRight: 10 }}>

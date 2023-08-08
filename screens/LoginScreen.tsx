@@ -19,7 +19,7 @@ export function LoginScreen() {
 
     const loginUser = async () => {
       try {
-        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, email, password);
       } catch (error) {
         if ((error as FirebaseError).code === 'auth/invalid-email' || (error as FirebaseError).code === 'auth/wrong-password') {
           setError('Your email or password was incorrect');

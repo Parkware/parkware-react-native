@@ -18,11 +18,15 @@ export const incrementSpaceCount = functions.firestore
     if (afterArr.length > beforeArr.length) {
       const addedProviderId: string = afterArr
         .filter((id: string) => !beforeArr.includes(id)).toString();
-      const newProviderSpaces: number =
+      let newProviderSpaces: number =
         change.after.data().interestedProviders
           .find((proObj: DocumentData) =>
             proObj.id == addedProviderId
           ).providerSpaces;
+      
+      if (change.after.requestedSpaces - change.after.accSpaceCount < newProviderSpaces)
+        newProviderSpaces = change.after.requestedSpaces - change.after.accSpaceCount;
+        
       return db.collection("/events/").doc(eventId).update({
         accSpaceCount: FieldValue.increment(newProviderSpaces),
       });
@@ -36,7 +40,7 @@ export const checkIfOpen = functions.firestore
     const after = change.after.data();
     const eventId = context.params.eventId;
 
-    if (after.accSpaceCount == after.requestedSpaces) {
+    if (after.accSpaceCount >= after.requestedSpaces) {
       return db.collection("/events/").doc(eventId).update({
         isOpen: false,
       });

@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, View } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -24,6 +24,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const [unwantedProviders, setUnwantedProviders] = useState<string[]>([]);
   const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
   const [showBackInfo, setShowBackInfo] = useState(false);
+  const [editSpaces, setEditSpaces] = useState('');
 
   // Getting the number of already available parking spaces
   useEffect(() => {
@@ -32,7 +33,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       .map((id: string) => eventData.doc.interestedProviders
       .filter((proObj: DocumentData) => proObj.id == id)
       .map((pro: DocumentData) => spaceCount += pro.providerSpaces));
-
     setCurrAvailPros(spaceCount);
   }, [])
   
@@ -42,12 +42,28 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       [providerId]: true, // Set the specific provider's button as disabled
     }));
     setShowBackInfo(true);
-    setAcceptStatus(providerId);
+    updateAcceptStatus(providerId);
   };
   
-  const setAcceptStatus = async (currProviderId: string) => {
+  const updateAcceptStatus = async (currProviderId: string) => {
+    const accProObj = eventData.doc.interestedProviders
+      .find((proObj: DocumentData) => currProviderId == proObj.id)
+    let otherInfo = eventData.doc.interestedProviders
+      .filter((proObj: DocumentData) => currProviderId !== proObj.id)
+    
+    if (eventData.doc.requestedSpaces - eventData.doc.accSpaceCount < accProObj.providerSpaces) {
+      const addSpacesCount = eventData.doc.requestedSpaces - eventData.doc.accSpaceCount;
+      otherInfo.push({
+        ...accProObj,
+        providerSpaces: addSpacesCount
+      });
+      showSpaceChange(addSpacesCount, accProObj.name);
+    } else
+      otherInfo.push(accProObj);
+
     await updateDoc(doc(db, 'events', event.id), { 
       acceptedProviderIds: arrayUnion(currProviderId),
+      interestedProviders: otherInfo
     });
   }
   
@@ -56,7 +72,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     setUnwantedProviders(current => [...current, id]);
     const updatedProviders = eventData.doc.interestedProviders
       .filter((pro: DocumentData) => pro.id !== id);
-
     setEventData(prevEventData => {
       return {
         ...prevEventData,
@@ -80,9 +95,17 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       {text: 'Cancel', style: 'cancel'},
       {text: 'Delete', onPress: () => delEventReq()},
     ]);
+
+  const showSpaceChange = (addSpacesCount: number, providerName: string) => 
+    Alert.alert(`You have booked ${addSpacesCount} space(s) at ${providerName}'s location.`, 
+                'Spaces able to be provided was greater what the event needed.');
     
   const delEventReq = async () => {
     await deleteDoc(doc(db, "events", eventData.id));
+  }
+
+  const updateSpaces = async () => {
+    await updateDoc(doc(db, "events", eventData.id), { requestedSpaces: Number(editSpaces) });
   }
 
   const ProviderBlock = ({providerInfo}: DocumentData) => {
@@ -113,19 +136,32 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   }
   
   return (
+    // align value horizontal and add 'edit' button next to it being disabled when not filled. 
     <SafeAreaView style={{ marginLeft: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
         Event: {eventData.doc.eventName}
       </Text>
-      <EventBlock event={eventData} showSpaces={false}/>
-      <View>
-        <Text>
-          {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
-        </Text>
-        <Text>
-          {'Requested Spaces: ' + eventData.doc.requestedSpaces}
-        </Text>
+      <EventBlock event={eventData} showSpaces={false} showEditSpaces={true}/>
+      <Text>
+        {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
+      </Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text>Requested Spaces:</Text>
+        <TextInput 
+          value={editSpaces}
+          onChangeText={setEditSpaces}
+          placeholder={event.doc.requestedSpaces.toString()}
+          keyboardType='numeric'
+          placeholderTextColor="#000"
+        />
+        <Text>  &lt;-- Can edit!</Text>
       </View>
+      {editSpaces.length !== 0 &&
+        <Button
+          title="Update Changes"
+          onPress={updateSpaces}
+        />
+      }
       <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
       <Divider width={5} style={{ marginTop: 10 }}/>
       <ScrollView>

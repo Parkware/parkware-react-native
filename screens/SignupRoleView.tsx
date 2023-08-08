@@ -13,6 +13,7 @@ export const SignupRoleView = ({ route }: Props) => {
   const [showAddress, setShowAddress] = useState(false);
   const [address, setAddress] = useState('');
   const [providerSpaces, setProviderSpaces] = useState<number>();
+  const [error, setError] = useState('');
   const { name, email, password }  = route.params;
   
   const logout = async () => {
@@ -43,6 +44,7 @@ export const SignupRoleView = ({ route }: Props) => {
 
       await setDoc(doc(db, "users", user.uid), userObj);
     } catch (e) {
+      setError('Something went wrong with sign up. Please exit and try again.');
       console.log('Something went wrong with sign up: ', e);
     }
   };
@@ -53,6 +55,7 @@ export const SignupRoleView = ({ route }: Props) => {
   return (
     <View>
       <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
+        <Text style={{ color: "red" }}>{error}</Text>
         <Text>Sign up as a </Text>
         <View>
           <Button title="Provider" onPress={() => setShowAddress(true)}/>

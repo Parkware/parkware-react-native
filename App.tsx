@@ -159,9 +159,8 @@ const ConsumerScreenStack = () => {
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loggedAs, setLoggedAs] = useState<boolean | null>(null);
+  const [noUser, setNoUser] = useState(false);
 
-  // setting loading to null before the user role is found. then, this state gets populated with some value.
-  // the value is used when rendering. 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
@@ -170,6 +169,8 @@ export default function App() {
         const snapshot = await getDoc(doc(db, 'users', user.uid))
         if (snapshot.exists())
           setLoggedAs(snapshot.data().loggedAsProvider);
+        else
+          setNoUser(true);
       }
     });
     return unsubscribe;
@@ -189,6 +190,8 @@ export default function App() {
     if (user) {
       if (loggedAs == null)
         return <LoadingScreen />;
+      else if (noUser)
+        return <AuthScreenStack />;
       else if (loggedAs)
         return <ProviderScreenStack /> 
       else

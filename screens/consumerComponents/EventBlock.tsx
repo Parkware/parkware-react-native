@@ -1,6 +1,5 @@
-import { View, Text } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import { docDataPair } from "../providerComponents/ProviderRequestsView";
-import { TextInput } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
 
 interface StatusTextProps {

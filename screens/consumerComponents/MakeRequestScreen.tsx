@@ -18,13 +18,13 @@ export function MakeRequestScreen() {
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date());
   const [address, setAddress] = useState<string>('');
-  const [sentMessage, setSentMessage] = useState(false);
   const [eventName, setEventName] = useState<string>();
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
   const [requestedSpaces, setRequestedSpaces] = useState<number>(1);
   const [isProvider, setIsProvider] = useState(false);
   const navigation = useNavigation<homeScreenProp>();
+  const [date, setDate] = useState(new Date())
   const userRef = doc(db, 'users', auth.currentUser!.uid);
 
   const getIfProvider = async () => {
@@ -111,6 +111,14 @@ export function MakeRequestScreen() {
       const diff = selectedDate.getTime()-startTime.getTime();
       findDiff(diff);
       checkIfBefore(selectedDate);
+      setDate(selectedDate);
+    }
+  };
+
+  const dateFun = (event: any, selectedDate: any) => {
+    if (event.type === 'set' && selectedDate) {
+      setStartTime(selectedDate);
+      setEndTime(selectedDate);
     }
   };
 
@@ -121,12 +129,6 @@ export function MakeRequestScreen() {
     }
   }
   
-  const dateFun = (event: any, selectedDate: any) => {
-    if (event.type === 'set' && selectedDate) {
-      setStartTime(selectedDate);
-      setEndTime(selectedDate);
-    }
-  };
   const findDiff = (diff: number) => {
     const min = Math.ceil(diff / (1000 * 60));
     if (min < 10) {
@@ -135,6 +137,7 @@ export function MakeRequestScreen() {
     } else
       setSendable(true);
   }
+
   const spaceCountFun = (count: number) => {
     if (count < 1) {
       setSendable(false);
@@ -187,21 +190,21 @@ export function MakeRequestScreen() {
         value: startTime,
         onChange: startTimeFun,
         mode: currentMode,
-        is24Hour: true,
+        is24Hour: false,
       });
     } else if (type === 'end') {
         DateTimePickerAndroid.open({
         value: endTime,
         onChange: endTimeFun,
         mode: currentMode,
-        is24Hour: true,
+        is24Hour: false,
       });
     } else {
       DateTimePickerAndroid.open({
         value: startTime,
         onChange: endTimeFun,
         mode: currentMode,
-        is24Hour: true,
+        is24Hour: false,
       });
     }
   };
@@ -221,9 +224,9 @@ export function MakeRequestScreen() {
   const DatePickerAndroid = () => {
     return (
       <View>
-        <Button onPress={showDatepicker} title="Open date picker!" />
-        <Button onPress={showStartPicker} title="Open Start time picker!" />
-        <Button onPress={showEndPicker} title="Open End time picker!" />
+        <Button onPress={showDatepicker} title="Show date picker" />
+        <Button onPress={showStartPicker} title="Show Start time picker" />
+        <Button onPress={showEndPicker} title="Show End time picker" />
       </View>
     );
   }
@@ -246,6 +249,8 @@ export function MakeRequestScreen() {
       {Platform.OS === 'ios' 
         ? <DatePickeriOS /> 
         : <DatePickerAndroid />}
+
+      <Text style={{ paddingTop: 10, fontSize: 16}}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
       <TextInput
         value={address}
         onChangeText={setAddress}
@@ -256,7 +261,7 @@ export function MakeRequestScreen() {
         autoCorrect={false}
         style={styles.input}
       />
-      <View style={{flexDirection:"row"}}>
+      <View style={{ flexDirection:"row", paddingBottom: 15 }}>
         <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
         <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
       </View>

@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -8,7 +8,6 @@ import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
 import { EventBlock } from './EventBlock'
 import { docDataPair } from '../providerComponents/ProviderRequestsView'
-import { FlatList, ScrollView } from 'react-native-gesture-handler'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
 /*
@@ -137,7 +136,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   
   return (
     // align value horizontal and add 'edit' button next to it being disabled when not filled. 
-    <SafeAreaView style={{ marginLeft: 20 }}>
+    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
         Event: {eventData.doc.eventName}
       </Text>

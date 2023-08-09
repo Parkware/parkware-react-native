@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, Button, TouchableOpacity } from 'react-native';
+import { View, Text, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
@@ -9,7 +10,6 @@ import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export interface docDataPair {
   id: string,
@@ -123,7 +123,7 @@ export function ProviderRequestsView() {
             <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
               <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
               <View style={{ marginBottom: 10 }} key={event.id}>
-                <EventBlock event={event} showSpaces={false}/>
+                <EventBlock event={event} showSpaces={false} showEditSpaces={false}/>
               </View>
             </TouchableOpacity>
           ))}
@@ -134,7 +134,7 @@ export function ProviderRequestsView() {
         <ScrollView>
           {pendingEvents.map((event) => (
             <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={false}/>
+              <EventBlock event={event} showSpaces={false} showEditSpaces={false}/>
             </View>
           ))}
         </ScrollView>
@@ -146,7 +146,7 @@ export function ProviderRequestsView() {
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
             .map((event) => (
             <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={true}/>
+              <EventBlock event={event} showSpaces={true} showEditSpaces={false}/>
               <Button title='Accept' onPress={() => updateDB(event)}/>
               <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
             </View>

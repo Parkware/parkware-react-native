@@ -12,7 +12,6 @@ import { ProviderRequestsView, docDataPair } from './screens/providerComponents/
 import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import 'react-native-gesture-handler';
 import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';

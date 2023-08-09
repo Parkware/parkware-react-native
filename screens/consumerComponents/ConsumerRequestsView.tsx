@@ -6,7 +6,7 @@ import { Divider } from '@rneui/themed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native';
 import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
 

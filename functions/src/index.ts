@@ -23,10 +23,11 @@ export const incrementSpaceCount = functions.firestore
           .find((proObj: DocumentData) =>
             proObj.id == addedProviderId
           ).providerSpaces;
-      
-      if (change.after.requestedSpaces - change.after.accSpaceCount < newProviderSpaces)
-        newProviderSpaces = change.after.requestedSpaces - change.after.accSpaceCount;
-        
+      const diff = change.after.requestedSpaces - change.after.accSpaceCount;
+      if (diff < newProviderSpaces) {
+        newProviderSpaces = diff;
+      }
+
       return db.collection("/events/").doc(eventId).update({
         accSpaceCount: FieldValue.increment(newProviderSpaces),
       });

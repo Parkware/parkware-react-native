@@ -110,8 +110,17 @@ export function MakeRequestScreen() {
       setEndTime(selectedDate);
       const diff = selectedDate.getTime()-startTime.getTime();
       findDiff(diff);
+      checkIfBefore(selectedDate);
     }
   };
+
+  const checkIfBefore = (endTime: any) => {
+    if (endTime < startTime) {
+      setSendable(false);
+      setError('The end time must be after the start time!')
+    }
+  }
+  
   const dateFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setStartTime(selectedDate);

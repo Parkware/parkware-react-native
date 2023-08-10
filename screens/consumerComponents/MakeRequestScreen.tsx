@@ -11,6 +11,7 @@ import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import NumericInput from 'react-native-numeric-input'
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
@@ -25,6 +26,9 @@ export function MakeRequestScreen() {
   const [isProvider, setIsProvider] = useState(false);
   const navigation = useNavigation<homeScreenProp>();
   const [date, setDate] = useState(new Date())
+  const [isStartTimeVisible, setStartTimeVisible] = useState(false);
+  const [isEndTimeVisible, setEndTimeVisible] = useState(false);
+  const [isDateVisible, setDateVisible] = useState(false);
   const userRef = doc(db, 'users', auth.currentUser!.uid);
 
   const getIfProvider = async () => {
@@ -64,8 +68,7 @@ export function MakeRequestScreen() {
       await updateDoc(userRef, { loggedAsProvider: true })
   }
 
-  const switchView = () => 
-    navigation.navigate('consumerRequestsView');
+  const switchView = () => navigation.navigate('consumerRequestsView');
 
   const createEventRequest = async () => {
     if (auth.currentUser) {
@@ -98,7 +101,7 @@ export function MakeRequestScreen() {
       }
     }
   }
-  const startTimeFun = (event: any, selectedDate: any) => {
+  const startTimeFunAnd = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setStartTime(selectedDate);
       const diff = endTime.getTime()-selectedDate.getTime();
@@ -148,37 +151,78 @@ export function MakeRequestScreen() {
     }
   }
 
+  const handleStartConfirm = (time: any) => {
+    setStartTime(time);
+    const diff = endTime.getTime()-time.getTime();
+    findDiff(diff);
+    setStartTimeVisible(false)
+  };
+  const handleEndConfirm = (time: any) => {
+    setStartTime(time);
+    const diff = time.getTime()-startTime.getTime();
+    findDiff(diff);
+    setEndTimeVisible(false);
+  };
+  const handleDateConfirm = (date: any) => {
+    startTime.setDate(date);
+    setStartTime(startTime);
+    endTime.setDate(date);
+    setEndTime(endTime);
+    setDateVisible(false);
+  };
+
   const DatePickeriOS = () => {
     return (
       <View>
         <View style={{flexDirection:"row"}}>
           <Text style={{ fontSize: 18 }}>Event Date:</Text>
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={startTime}
+          <DateTimePickerModal
+            isVisible={isDateVisible}
             mode='date'
-            is24Hour={true}
-            onChange={dateFun}
+            onConfirm={handleDateConfirm}
+            onCancel={() => setDateVisible(false)}
+          />
+          <TextInput
+            value={startTime.toLocaleDateString()}
+            placeholder="Date"
+            style={[styles.input, styles.datetimeAlgn]}
+            onPressIn={() => setDateVisible(true)}
           />
         </View>
         <View style={{flexDirection:"row"}}>
           <Text style={{ fontSize: 18 }}>Start Time:</Text>
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={startTime}
+          <DateTimePickerModal
+            isVisible={isStartTimeVisible}
             mode='time'
-            is24Hour={true}
-            onChange={startTimeFun}
+            onConfirm={handleStartConfirm}
+            onCancel={() => setStartTimeVisible(false)}
+          />
+          <TextInput
+            value={startTime.toLocaleTimeString(navigator.language, {
+              hour: '2-digit',
+              minute:'2-digit'
+            })}
+            placeholder="Start Time"
+            style={[styles.input, styles.datetimeAlgn]}
+            onPressIn={() => setStartTimeVisible(true)}
           />
         </View>
-        <View style={{flexDirection:"row"}}>
+        <View style={{ flexDirection:"row" }}>
           <Text style={{ fontSize: 18 }}>End Time:</Text>
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={endTime}
+          <DateTimePickerModal
+            isVisible={isEndTimeVisible}
             mode='time'
-            is24Hour={true}
-            onChange={endTimeFun}
+            onConfirm={handleEndConfirm}
+            onCancel={() => setEndTimeVisible(false)}
+          />
+          <TextInput
+            value={endTime.toLocaleTimeString(navigator.language, {
+              hour: '2-digit',
+              minute:'2-digit'
+            })}
+            placeholder="End Time"
+            style={[styles.input, styles.datetimeAlgn]}
+            onPressIn={() => setEndTimeVisible(true)}
           />
         </View>
       </View>
@@ -188,7 +232,7 @@ export function MakeRequestScreen() {
     if (type === 'start') {
       DateTimePickerAndroid.open({
         value: startTime,
-        onChange: startTimeFun,
+        onChange: startTimeFunAnd,
         mode: currentMode,
         is24Hour: false,
       });
@@ -262,7 +306,7 @@ export function MakeRequestScreen() {
         autoCapitalize="none"
         placeholderTextColor="#aaa"
         autoCorrect={false}
-        style={styles.input}
+        style={[styles.input, { marginTop: 3}]}
       />
       <View style={{ flexDirection:"row", paddingBottom: 15 }}>
         <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
@@ -312,4 +356,8 @@ const styles = StyleSheet.create({
     color: 'blue',
     marginBottom: 20,
   },
+  datetimeAlgn: {
+    marginLeft: 15,
+    marginTop: -4
+  }
 });

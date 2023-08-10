@@ -8,9 +8,10 @@ interface StatusTextProps {
   // in the component as it's actively being updated (i.e. MultiProvidrDetailsView.tsx)
   showSpaces: boolean;
   showEditSpaces: boolean;
+  showName: boolean;
 }
     
-export const EventBlock = ({ event, showSpaces, showEditSpaces=false }: StatusTextProps) => {
+export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=true }: StatusTextProps) => {
   const [editSpaces, setEditSpaces] = useState('');
 
   const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
@@ -18,9 +19,12 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false }: StatusTe
   
   return (
     <View>
-      <Text key={event.doc.eventName}>
-        {'Event name: ' + event.doc.eventName}
-      </Text>
+      { showName && (
+        <Text key={event.doc.eventName} style={{ fontSize: 17 }}>
+          {'Event name: ' + event.doc.eventName}
+        </Text>
+        )
+      }
       <Text key={event.doc.address}>
         {'Address: ' + event.doc.address}
       </Text>

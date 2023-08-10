@@ -248,9 +248,12 @@ export function MakeRequestScreen() {
       />
       {Platform.OS === 'ios' 
         ? <DatePickeriOS /> 
-        : <DatePickerAndroid />}
+        : <View>
+            <DatePickerAndroid />
+            <Text style={{ paddingTop: 10, fontSize: 16}}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
+          </View>
+      }
 
-      <Text style={{ paddingTop: 10, fontSize: 16}}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
       <TextInput
         value={address}
         onChangeText={setAddress}

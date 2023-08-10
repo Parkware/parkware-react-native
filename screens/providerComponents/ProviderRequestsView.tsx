@@ -123,7 +123,7 @@ export function ProviderRequestsView() {
             <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
               <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
               <View style={{ marginBottom: 10 }} key={event.id}>
-                <EventBlock event={event} showSpaces={false} showEditSpaces={false}/>
+                <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true}/>
               </View>
             </TouchableOpacity>
           ))}
@@ -134,7 +134,7 @@ export function ProviderRequestsView() {
         <ScrollView>
           {pendingEvents.map((event) => (
             <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={false} showEditSpaces={false}/>
+              <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true}/>
             </View>
           ))}
         </ScrollView>
@@ -146,7 +146,7 @@ export function ProviderRequestsView() {
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
             .map((event) => (
             <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={true} showEditSpaces={false}/>
+              <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true}/>
               <Button title='Accept' onPress={() => updateDB(event)}/>
               <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
             </View>

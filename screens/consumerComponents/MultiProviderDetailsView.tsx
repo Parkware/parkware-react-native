@@ -1,5 +1,5 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
@@ -24,6 +24,8 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
   const [showBackInfo, setShowBackInfo] = useState(false);
   const [editSpaces, setEditSpaces] = useState('');
+  const [focus, setFocus] = useState(false);
+  const refInput = useRef<TextInput | null>(null);
 
   // Getting the number of already available parking spaces
   useEffect(() => {
@@ -134,26 +136,48 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     )
   }
   
+  const changeSpaceCount = () => {
+    if (refInput.current != null)
+      if (focus) {
+        refInput.current.blur();
+        setFocus(false);
+      } else {
+        refInput.current.focus()
+        setFocus(true);
+      }
+  }
   return (
     // align value horizontal and add 'edit' button next to it being disabled when not filled. 
     <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-        Event: {eventData.doc.eventName}
-      </Text>
-      <EventBlock event={eventData} showSpaces={false} showEditSpaces={true}/>
+      <View style={{ flexDirection: "row"}}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+          Event: {eventData.doc.eventName}
+        </Text>
+        <View style={{ marginTop: 35, marginLeft: 80 }}>
+          <Button
+            title="Cancel Request"
+            onPress={showConfirmDel}
+          />
+        </View>
+      </View>
+      <EventBlock event={eventData} showSpaces={false} showEditSpaces={true} showName={false}/>
       <Text>
         {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
       </Text>
       <View style={{flexDirection: 'row'}}>
         <Text>Requested Spaces:</Text>
         <TextInput 
+          ref={refInput}
           value={editSpaces}
           onChangeText={setEditSpaces}
           placeholder={event.doc.requestedSpaces.toString()}
           keyboardType='numeric'
           placeholderTextColor="#000"
+          style={{ marginLeft: 3, marginBottom: 20}}
         />
-        <Text>  &lt;-- Can edit!</Text>
+        <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20 }}>
+          <Text style={{ color: '#007AFF', fontSize: 15 }}>{focus ? "Cancel" : "Edit"}</Text>
+        </TouchableOpacity>
       </View>
       {editSpaces.length !== 0 &&
         <Button
@@ -202,10 +226,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
           </View >
         ))
       }
-      <Button
-        title="Cancel Event Request"
-        onPress={showConfirmDel}
-      />
     </SafeAreaView>
   )
 }

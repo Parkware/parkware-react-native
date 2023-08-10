@@ -16,14 +16,12 @@ type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
     since many events could be looked at. 
 */
 
-const ChooseProviderView = ({ navigation, route }: Props) => {
+const ChooseProviderView = ({ route }: Props) => {
   const { event } = route.params;
   const [timeRemaining, setTimeRemaining] = useState('');
   const startTime = event.doc.startTime.toDate();
   const [diff, setDiff] = useState<number>();
   const [providerInfo, setProviderInfo] = useState<DocumentData>();
-  const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
-  const [chosenProviderId, setChosenProviderId] = useState('');
   const [shareableLink, setShareableLink] = useState('');
   
   useEffect(() => {
@@ -62,18 +60,21 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
   }, [])
 
 
-  if (providerInfo && chosenProviderId.length != 0) {
-    const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
-    navigation.replace('departureGuestView', {
-      providerInfo: chosenProInfo, 
-      eventId: event.id 
-    })
-  }
+  // if (providerInfo && chosenProviderId.length != 0) {
+  //   const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
+  //   navigation.replace('departureGuestView', {
+  //     providerInfo: chosenProInfo, 
+  //     eventId: event.id 
+  //   })
+  // }
 
   return (
-    <SafeAreaView style={{ marginLeft: 25 }}>
+    <SafeAreaView style={{ marginLeft: 25, marginTop: 30 }}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 20 }}>
+          Event: {event.doc.eventName}
+        </Text>
       {providerInfo ? providerInfo.map((proObj: DocumentData) => (
-        <View key={proObj.id}>
+        <View key={proObj.id} style={{ marginBottom: 10}}>
           <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
           <Text key={proObj.address}>Address: {proObj.address}</Text>
           {proObj.notes === undefined 
@@ -81,7 +82,6 @@ const ChooseProviderView = ({ navigation, route }: Props) => {
            : <Text key={proObj.notes}>Notes: {proObj.notes}</Text>
           }
           <Text key={proObj.providerSpaces}>Parking Spaces: {proObj.providerSpaces}</Text>
-          <Divider width={5} style={{ marginTop: 10 }}/>
         </View>
       )) : <Text>Loading...</Text>}
       {diff && diff > 0 && 

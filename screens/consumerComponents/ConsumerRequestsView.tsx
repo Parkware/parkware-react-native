@@ -76,22 +76,30 @@ export function ConsumerRequestsView() {
         </Text>
         <ScrollView>
           {pendingEvents.map(event => (
-            <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
-              <EventBlock event={event} showSpaces={true} showEditSpaces={false}/>
-              <Text style={{ fontSize: 20 }}>Available Providers:</Text>
-              {event.doc.interestedProviders
-                .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
-                .map((providerInfo: DocumentData) => (
-                <View key={providerInfo.id}>
-                  <Text key={providerInfo.name}>
-                  {'Name: ' + providerInfo.name}
-                  </Text>
-                  <Text key={providerInfo.address}>
-                  {'Address: ' + providerInfo.address}
-                  </Text>
-                </View>
-              ))}
-              <Divider width={5} style={{ marginTop: 10 }}/>
+            <TouchableOpacity style={{ marginBottom: 10, borderColor: "black", borderWidth: 0 }} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
+              <View style={{ paddingBottom: 10}}>
+                <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true}/>
+                {event.doc.interestedProviders.length !== 0
+                  ? ( 
+                  <View>
+                    <Text style={{ fontSize: 20 }}>Available Providers:</Text>
+                    {event.doc.interestedProviders
+                      .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
+                      .map((providerInfo: DocumentData) => (
+                      <View key={providerInfo.id}>
+                        <Text key={providerInfo.name}>
+                        {'Name: ' + providerInfo.name}
+                        </Text>
+                        <Text key={providerInfo.address}>
+                        {'Address: ' + providerInfo.address}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                  )
+                  : <Text>No providers are interested yet.</Text>
+                }
+              </View>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -99,12 +107,13 @@ export function ConsumerRequestsView() {
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40}}>
           Accepted Requests
         </Text>
+        <Text style={{ fontSize: 17, fontWeight: "400", marginBottom: 10 }}>Click an event to share its link with others</Text>
         <ScrollView>
           {completedEvents.map((event) => (
-            <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
-              <Text style={{ fontSize: 15 }}>Click here to share the event link with others</Text>
-              <EventBlock event={event} showSpaces={false} showEditSpaces={false}/>
-              <Divider width={5} style={{ marginTop: 10 }}/>
+            <TouchableOpacity style={{ marginBottom: 10, borderColor: "black", borderWidth: 0 }} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
+              <View style={{ paddingBottom: 10}}>
+                <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true}/>
+              </View>
             </TouchableOpacity>
           ))}
         </ScrollView>

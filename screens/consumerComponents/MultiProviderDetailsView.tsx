@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -146,6 +146,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         setFocus(true);
       }
   }
+
   return (
     // align value horizontal and add 'edit' button next to it being disabled when not filled. 
     <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
@@ -173,7 +174,10 @@ const MultiProviderDetailsView = ({ route }: Props) => {
           placeholder={event.doc.requestedSpaces.toString()}
           keyboardType='numeric'
           placeholderTextColor="#000"
-          style={{ marginLeft: 3, marginBottom: 20}}
+          style={
+            Platform.OS == 'ios' 
+            ? { marginLeft: 3, marginBottom: 20}
+            : { marginTop: -3, marginLeft: 3}}
         />
         <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20 }}>
           <Text style={{ color: '#007AFF', fontSize: 15 }}>{focus ? "Cancel" : "Edit"}</Text>

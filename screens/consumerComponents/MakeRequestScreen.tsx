@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, Platform, Alert } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, Platform, Alert, TouchableOpacity } from 'react-native';
 import {
   deleteUser,
   signOut,
@@ -14,6 +14,22 @@ import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
+
+export const AppButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
+  Platform.OS == 'android'
+  ? (
+  <TouchableOpacity 
+    onPress={onPress} 
+    style={
+      disabled 
+      ? [styles.appButtonContainer, { backgroundColor: '#24b3a770', elevation: 0 }]
+      : [styles.appButtonContainer, extraStyles]}
+    disabled={disabled}
+  >
+    <Text style={styles.appButtonText}>{title}</Text>
+  </TouchableOpacity>)
+  : <Button onPress={onPress} title={title} />
+);
 
 export function MakeRequestScreen() {
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -101,7 +117,7 @@ export function MakeRequestScreen() {
       }
     }
   }
-  const startTimeFunAnd = (event: any, selectedDate: any) => {
+  const startTimeFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setStartTime(selectedDate);
       const diff = endTime.getTime()-selectedDate.getTime();
@@ -120,8 +136,10 @@ export function MakeRequestScreen() {
 
   const dateFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
-      setStartTime(selectedDate);
-      setEndTime(selectedDate);
+      startTime.setDate(selectedDate.getDate());
+      setStartTime(startTime);
+      endTime.setDate(selectedDate.getDate());
+      setEndTime(endTime);
     }
   };
 
@@ -157,17 +175,20 @@ export function MakeRequestScreen() {
     findDiff(diff);
     setStartTimeVisible(false)
   };
+
   const handleEndConfirm = (time: any) => {
-    setStartTime(time);
+    setEndTime(time);
     const diff = time.getTime()-startTime.getTime();
     findDiff(diff);
     setEndTimeVisible(false);
   };
+  
   const handleDateConfirm = (date: any) => {
-    startTime.setDate(date);
+    startTime.setDate(date.getDate());
     setStartTime(startTime);
-    endTime.setDate(date);
+    endTime.setDate(date.getDate());
     setEndTime(endTime);
+    setDate(date);
     setDateVisible(false);
   };
 
@@ -179,11 +200,12 @@ export function MakeRequestScreen() {
           <DateTimePickerModal
             isVisible={isDateVisible}
             mode='date'
+            display="inline"
             onConfirm={handleDateConfirm}
             onCancel={() => setDateVisible(false)}
           />
           <TextInput
-            value={startTime.toLocaleDateString()}
+            value={date.toLocaleDateString()}
             placeholder="Date"
             style={[styles.input, styles.datetimeAlgn]}
             onPressIn={() => setDateVisible(true)}
@@ -232,7 +254,7 @@ export function MakeRequestScreen() {
     if (type === 'start') {
       DateTimePickerAndroid.open({
         value: startTime,
-        onChange: startTimeFunAnd,
+        onChange: startTimeFun,
         mode: currentMode,
         is24Hour: false,
       });
@@ -246,7 +268,7 @@ export function MakeRequestScreen() {
     } else {
       DateTimePickerAndroid.open({
         value: startTime,
-        onChange: endTimeFun,
+        onChange: dateFun,
         mode: currentMode,
         is24Hour: false,
       });
@@ -268,18 +290,21 @@ export function MakeRequestScreen() {
   const DatePickerAndroid = () => {
     return (
       <View>
-        <Button onPress={showDatepicker} title="Show date picker" />
-        <Button onPress={showStartPicker} title="Show Start time picker" />
-        <Button onPress={showEndPicker} title="Show End time picker" />
+        <AppButton onPress={showDatepicker} title="Show date picker" extraStyles={styles.showPickerButton}/>
+        <AppButton onPress={showStartPicker} title="Show Start time picker" />
+        <AppButton onPress={showEndPicker} title="Show End time picker" />
       </View>
     );
   }
+
+  
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Make a Request</Text>
-      <Button title="Log out" onPress={logout} />
-      <Button title="Delete account" onPress={showConfirmDel} />
-      {isProvider && <Button title="Switch to Provider" onPress={switchToProvider} />}
+      <AppButton title="Log out" onPress={logout} />
+      <AppButton title="Delete account" onPress={showConfirmDel} />
+      {isProvider && <AppButton title="Switch to Provider" onPress={switchToProvider} />}
       <TextInput
         value={eventName}
         onChangeText={setEventName}
@@ -294,7 +319,7 @@ export function MakeRequestScreen() {
         ? <DatePickeriOS /> 
         : <View>
             <DatePickerAndroid />
-            <Text style={{ paddingTop: 10, fontSize: 16}}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
+            <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
           </View>
       }
 
@@ -312,18 +337,19 @@ export function MakeRequestScreen() {
         <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
         <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
       </View>
-      <Button
+      <AppButton
         title="Send Request"
         onPress={createEventRequest}
         disabled={!sendable || address.length == 0 }
       />
-      <Button
+      <AppButton
         title="Skip"
         onPress={switchView}
       />
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   outer: {
@@ -359,5 +385,24 @@ const styles = StyleSheet.create({
   datetimeAlgn: {
     marginLeft: 15,
     marginTop: -4
+  },
+  selectedDate: {
+    padding: 13, 
+    fontSize: 16
+  },
+  showPickerButton: {},
+  appButtonContainer: {
+    elevation: 8,
+    backgroundColor: "#24b3a7",
+    borderRadius: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    margin: 2
+  },
+  appButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
   }
 });

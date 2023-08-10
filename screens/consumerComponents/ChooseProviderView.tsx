@@ -60,14 +60,6 @@ const ChooseProviderView = ({ route }: Props) => {
   }, [])
 
 
-  // if (providerInfo && chosenProviderId.length != 0) {
-  //   const chosenProInfo = providerInfo.find((info: any) => info.id == chosenProviderId);
-  //   navigation.replace('departureGuestView', {
-  //     providerInfo: chosenProInfo, 
-  //     eventId: event.id 
-  //   })
-  // }
-
   return (
     <SafeAreaView style={{ marginLeft: 25, marginTop: 30 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 20 }}>

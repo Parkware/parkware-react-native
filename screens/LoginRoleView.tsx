@@ -6,6 +6,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../App';
 import { deleteUser, signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import { AppButton } from './consumerComponents/MakeRequestScreen';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleView'>;
 
@@ -40,19 +42,21 @@ export const LoginRoleView = () => {
   }
 
   return (
-    <View>
-      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 250, flexDirection: "row"}}>
-        <Text>Continue as a </Text>
+    <SafeAreaView>
+      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 240, flexDirection: "row"}}>
+        <Text style={{ fontSize: 35, fontWeight: "300" }}>Continue as a </Text>
+      </View>
+      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 50, flexDirection: "row"}}>
         <View>
-          <Button title="Provider" onPress={chooseProvider}/>
+          <AppButton title="Space Provider" onPress={chooseProvider}/>
         </View>
         <View>
-          <Button title="Consumer" onPress={chooseConsumer}/>
+          <AppButton title="Event Organizer" onPress={chooseConsumer}/>
         </View>
       </View>
-      <Button title="Log out" onPress={logout} />
-      <Button title="Delete account" onPress={showConfirmDel} />
-    </View>
+      <AppButton title="Log out" onPress={logout} extraStyles={{ marginTop: 20 }}/>
+      <AppButton title="Delete account" onPress={showConfirmDel} />
+    </SafeAreaView>
   )
 }
 

@@ -114,7 +114,7 @@ export function ProviderRequestsView() {
 
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false} >
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
           Accepted Requests
         </Text>

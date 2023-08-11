@@ -287,6 +287,12 @@ export function MakeRequestScreen() {
     showModeAndroid('time', 'end');
   };
 
+  const showConfirmLogout = () =>
+    Alert.alert('Are you sure you want to logout?', 'Click cancel to stay on. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Logout', onPress: () => logout()},
+    ]);
+
   const DatePickerAndroid = () => {
     return (
       <View>
@@ -297,12 +303,10 @@ export function MakeRequestScreen() {
     );
   }
 
-  
-
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Make a Request</Text>
-      <AppButton title="Log out" onPress={logout} />
+      <AppButton title="Log out" onPress={showConfirmLogout} />
       <AppButton title="Delete account" onPress={showConfirmDel} />
       {isProvider && <AppButton title="Switch to Provider" onPress={switchToProvider} />}
       <TextInput

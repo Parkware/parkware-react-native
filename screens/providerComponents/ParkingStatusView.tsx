@@ -25,7 +25,7 @@ const ParkingStatusView = ({ route }: Props) => {
   const [modProviderId2, setModProviderId2] = useState<DocumentData>();
   const [guestOneLeft, setGuestOneLeft] = useState(false)
   const [guestTwoLeft, setGuestTwoLeft] = useState(false)
-
+  const [leftMargin, setLeftMargin] = useState(20)
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
@@ -90,6 +90,8 @@ const ParkingStatusView = ({ route }: Props) => {
   }
   
   useEffect(() => {
+    if (Platform.OS == "android")
+      setLeftMargin(50);
     getConsumerInfo();
   }, [])
   
@@ -134,7 +136,7 @@ const ParkingStatusView = ({ route }: Props) => {
     let text: string = '';
     let second: string = '';
     if (!guestInfo1 && !guestInfo2) {
-      text = "The guest isn't there yet!";
+      text = "Your guest isn't there yet!";
     }
     if (guestInfo1) {
       if (!guestOneLeft) {
@@ -195,8 +197,8 @@ const ParkingStatusView = ({ route }: Props) => {
     if (consumerInfo)
       return (
         <View>
-          <Text>{consumerInfo.name}</Text>
-          <Text>{consumerInfo.email}</Text>
+          <Text>Name: {consumerInfo.name}</Text>
+          <Text>Email: {consumerInfo.email}</Text>
         </View>
       )
     return (
@@ -204,11 +206,11 @@ const ParkingStatusView = ({ route }: Props) => {
     )
   }
   return (
-    <SafeAreaView style={{ marginLeft: 30 }}>
+    <SafeAreaView style={{ marginLeft: leftMargin }}>
       <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
       <RenderUserInfo />
       <Text style={{ paddingTop: 20, fontSize: 20 }}>Event Info:</Text>
-      <EventBlock event={eventData} showSpaces={true} showEditSpaces={false}/>
+      <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true}/>
         <ShowArrivalStatus />
         {diff && diff > 0 && (
           <View style={{ paddingRight: 10 }}>

@@ -148,8 +148,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   }
 
   return (
-    // align value horizontal and add 'edit' button next to it being disabled when not filled. 
-    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20 }}>
+    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20, marginTop: 10 }}>
       <View style={{ flexDirection: "row"}}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
           Event: {eventData.doc.eventName}
@@ -177,7 +176,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
           style={
             Platform.OS == 'ios' 
             ? { marginLeft: 3, marginBottom: 20}
-            : { marginTop: -3, marginLeft: 3}}
+            : { marginTop: -3.5, marginLeft: 3}}
         />
         <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20 }}>
           <Text style={{ color: '#007AFF', fontSize: 15 }}>{focus ? "Cancel" : "Edit"}</Text>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Button, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
@@ -10,6 +10,7 @@ import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
+import { AppButton } from '../consumerComponents/MakeRequestScreen';
 
 export interface docDataPair {
   id: string,
@@ -34,6 +35,12 @@ export function ProviderRequestsView() {
       console.error(e);
     }
   };
+  
+  const showConfirmLogout = () =>
+    Alert.alert('Are you sure you want to logout?', 'Click cancel to stay on. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Logout', onPress: () => logout()},
+    ]);
   
   const updateDeniedEvents = async () => {
     const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', auth.currentUser!.uid))
@@ -111,7 +118,7 @@ export function ProviderRequestsView() {
     }
     */
   }
-
+  
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <ScrollView showsVerticalScrollIndicator={false} >
@@ -119,9 +126,9 @@ export function ProviderRequestsView() {
           Accepted Requests
         </Text>
         <ScrollView>
+          <Text style={{ fontSize: 17, fontWeight: "400", marginBottom: 10 }}>Click an event to see more info</Text>
           {accEvents.map(event => (
             <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
-              <Text style={{ fontSize: 15 }}>Click here to see more info about your event</Text>
               <View style={{ marginBottom: 10 }} key={event.id}>
                 <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true}/>
               </View>
@@ -147,21 +154,30 @@ export function ProviderRequestsView() {
             .map((event) => (
             <View style={{ marginBottom: 10 }} key={event.id}>
               <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true}/>
-              <Button title='Accept' onPress={() => updateDB(event)}/>
-              <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
+              <View style={{ padding: 10, justifyContent: 'space-between'  }}>
+                <Button title='Accept' onPress={() => updateDB(event)}/>
+                <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
+              </View>
             </View>
           ))}
         </ScrollView>
-        <Text style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 10 }}>
-          Denied Events
-        </Text>
-        {deniedEventArr
-          .map((name: string) => (
-            <View style={{ marginBottom: 10 }} key={name}>
-              <Text>{name}</Text>
+        {deniedEventArr.length !== 0 &&
+          (
+            <View>
+              <Text style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 10 }}>
+                Denied Events
+              </Text>
+              {deniedEventArr
+                .map((name: string) => (
+                  <View style={{ marginBottom: 10 }} key={name}>
+                    <Text>{name}</Text>
+                  </View>
+                ))}
             </View>
-          ))}
-        <Button title="Log out" onPress={logout} />
+          )
+        }
+        <AppButton title="Log out" onPress={showConfirmLogout} />
+        <View style={{ padding: 14 }}/>
       </ScrollView>
     </SafeAreaView>
   );

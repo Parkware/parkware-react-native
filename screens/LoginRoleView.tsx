@@ -27,6 +27,12 @@ export const LoginRoleView = () => {
       {text: 'Cancel', style: 'cancel'},
       {text: 'Delete', onPress: () => delAccount()},
     ]);
+
+  const showConfirmLogout = () =>
+    Alert.alert('Are you sure you want to logout?', 'Click cancel to stay on. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Logout', onPress: () => logout()},
+    ]);
     
   const delAccount = async () => {
     await deleteDoc(doc(db, "users", auth.currentUser!.uid));
@@ -43,10 +49,10 @@ export const LoginRoleView = () => {
 
   return (
     <SafeAreaView>
-      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 240, flexDirection: "row"}}>
+      <View style={[styles.viewBlock, { marginTop: 300 }]}>
         <Text style={{ fontSize: 35, fontWeight: "300" }}>Continue as a </Text>
       </View>
-      <View style={{ justifyContent: "center", alignContent: "center", marginTop: 50, flexDirection: "row"}}>
+      <View style={styles.viewBlock}>
         <View>
           <AppButton title="Space Provider" onPress={chooseProvider}/>
         </View>
@@ -54,19 +60,20 @@ export const LoginRoleView = () => {
           <AppButton title="Event Organizer" onPress={chooseConsumer}/>
         </View>
       </View>
-      <AppButton title="Log out" onPress={logout} extraStyles={{ marginTop: 20 }}/>
-      <AppButton title="Delete account" onPress={showConfirmDel} />
+      <AppButton title="Log out" onPress={showConfirmLogout} extraStyles={[{ marginTop: 20 } , styles.authButtons ]}/>
+      <AppButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginHorizontal: 100 }} />
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
+  authButtons: {
+    marginHorizontal: 140,
+    marginBottom: 10
+  },
+  viewBlock: {
+    justifyContent: "center", 
+    marginTop: 50, 
+    flexDirection: "row"
   }
 })

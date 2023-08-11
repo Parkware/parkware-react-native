@@ -1,4 +1,4 @@
-import { Button, Keyboard, SafeAreaView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Button, Keyboard, SafeAreaView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../App'
@@ -25,6 +25,7 @@ const ParkingStatusView = ({ route }: Props) => {
   const [guestOneLeft, setGuestOneLeft] = useState(false)
   const [guestTwoLeft, setGuestTwoLeft] = useState(false)
   const [leftMargin, setLeftMargin] = useState(20)
+  const [sentNotes, setSentNotes] = useState(false);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
@@ -130,6 +131,8 @@ const ParkingStatusView = ({ route }: Props) => {
     await updateDoc(doc(db, 'events', eventData.id), {
       interestedProviders: existingList
     });
+
+    setSentNotes(true);
   }
 
   const ArrivalText = () => {
@@ -180,7 +183,7 @@ const ParkingStatusView = ({ route }: Props) => {
       // need to create push notifications if the guest leaves. this needs to alert the provider
         return (
           <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 13, marginTop: 30 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 0, marginTop: 10 }}>
               {timeRemaining} till the event starts. 
               {'\n'}Please add notes for the following info to be shown to the guest:
             </Text>
@@ -206,14 +209,15 @@ const ParkingStatusView = ({ route }: Props) => {
     )
   }
   return (
-    <SafeAreaView style={{ marginLeft: leftMargin, marginTop: 100 }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <SafeAreaView style={[styles.inner, { marginLeft: leftMargin, marginTop: 75 }]}>
       <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
       <RenderUserInfo />
-      <Text style={{ paddingTop: 20, fontSize: 20 }}>Event Info:</Text>
+      <Text style={{ paddingTop: 15, fontSize: 20 }}>Event Info:</Text>
       <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true}/>
         <ShowArrivalStatus />
         {diff && diff > 0 && (
-          <View style={{ paddingRight: 10 }}>
+          <View style={[styles.inner, { paddingRight: 10 }]}>
             <TextInput
               value={providerNotes}
               onChangeText={setProviderNotes}
@@ -222,14 +226,17 @@ const ParkingStatusView = ({ route }: Props) => {
               multiline={true}
               style={styles.input}
             />
-            <Button 
-              title="Upload notes"
-              disabled={providerNotes.length == 0}
-              onPress={sendNotes}
-            />
+            <View style={styles.btnContainer}>
+              <Button 
+                title="Upload notes"
+                disabled={providerNotes.length == 0 || sentNotes}
+                onPress={sendNotes}
+              />
+            </View>
           </View>
         )}
     </SafeAreaView>
+        </TouchableWithoutFeedback>
   )
 }
 
@@ -246,8 +253,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inner: {
-    padding: 24,
+    padding: 10,
     justifyContent: 'space-around',
+    borderColor: '#000000',
   },
   header: {
     fontSize: 24,
@@ -258,10 +266,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
-    marginTop: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 2,
+    marginBottom: 5
+
   },
   error: {
     marginBottom: 20,
@@ -270,5 +278,8 @@ const styles = StyleSheet.create({
   link: {
     color: 'blue',
     marginBottom: 20,
+  },
+  btnContainer: {
+    marginTop: 2,
   },
 });

@@ -209,34 +209,34 @@ const ParkingStatusView = ({ route }: Props) => {
     )
   }
   return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <SafeAreaView style={[styles.inner, { marginLeft: leftMargin, marginTop: 75 }]}>
-      <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
-      <RenderUserInfo />
-      <Text style={{ paddingTop: 15, fontSize: 20 }}>Event Info:</Text>
-      <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true}/>
-        <ShowArrivalStatus />
-        {diff && diff > 0 && (
-          <View style={[styles.inner, { paddingRight: 10 }]}>
-            <TextInput
-              value={providerNotes}
-              onChangeText={setProviderNotes}
-              placeholder="Enter notes here"
-              placeholderTextColor="#aaa"
-              multiline={true}
-              style={styles.input}
-            />
-            <View style={styles.btnContainer}>
-              <Button 
-                title="Upload notes"
-                disabled={providerNotes.length == 0 || sentNotes}
-                onPress={sendNotes}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={[styles.inner, { marginLeft: leftMargin, marginTop: 75 }]}>
+        <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
+        <RenderUserInfo />
+        <Text style={{ paddingTop: 15, fontSize: 20 }}>Event Info:</Text>
+        <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true}/>
+          <ShowArrivalStatus />
+          {diff && diff > 0 && (
+            <View style={[styles.inner, { paddingRight: 10 }]}>
+              <TextInput
+                value={providerNotes}
+                onChangeText={setProviderNotes}
+                placeholder="Enter notes here"
+                placeholderTextColor="#aaa"
+                multiline={true}
+                style={styles.input}
               />
+              <View style={styles.btnContainer}>
+                <Button 
+                  title="Upload notes"
+                  disabled={providerNotes.length == 0 || sentNotes}
+                  onPress={sendNotes}
+                />
+              </View>
             </View>
-          </View>
-        )}
-    </SafeAreaView>
-        </TouchableWithoutFeedback>
+          )}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   )
 }
 

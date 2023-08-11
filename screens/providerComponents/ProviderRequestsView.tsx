@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
@@ -120,7 +119,7 @@ export function ProviderRequestsView() {
   }
   
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
+    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
       <ScrollView showsVerticalScrollIndicator={false} >
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
           Accepted Requests

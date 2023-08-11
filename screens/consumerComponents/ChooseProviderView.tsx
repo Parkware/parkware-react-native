@@ -1,6 +1,5 @@
-import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Linking, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
@@ -61,7 +60,7 @@ const ChooseProviderView = ({ route }: Props) => {
 
 
   return (
-    <SafeAreaView style={{ marginLeft: 25, marginTop: 30 }}>
+    <SafeAreaView style={{ marginLeft: 22, marginTop: 70 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 20 }}>
           Event: {event.doc.eventName}
         </Text>

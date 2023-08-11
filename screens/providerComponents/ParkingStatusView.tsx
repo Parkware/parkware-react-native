@@ -1,6 +1,5 @@
-import { Button, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Button, Keyboard, SafeAreaView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../App'
 import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
@@ -26,6 +25,7 @@ const ParkingStatusView = ({ route }: Props) => {
   const [guestOneLeft, setGuestOneLeft] = useState(false)
   const [guestTwoLeft, setGuestTwoLeft] = useState(false)
   const [leftMargin, setLeftMargin] = useState(20)
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
@@ -91,7 +91,7 @@ const ParkingStatusView = ({ route }: Props) => {
   
   useEffect(() => {
     if (Platform.OS == "android")
-      setLeftMargin(50);
+      setLeftMargin(20);
     getConsumerInfo();
   }, [])
   
@@ -140,16 +140,16 @@ const ParkingStatusView = ({ route }: Props) => {
     }
     if (guestInfo1) {
       if (!guestOneLeft) {
-        text = `${guestInfo1.name} is currently at the spot. their number is ${guestInfo1.phoneNumber}`;
+        text = `${guestInfo1.name} is currently at the spot. Their phone number is ${guestInfo1.phoneNumber}`;
       } else {
-        text = `${guestInfo1.name} has left the spot. their number is ${guestInfo1.phoneNumber}`;
+        text = `${guestInfo1.name} has left the spot. Their phone number is ${guestInfo1.phoneNumber}`;
       }
     }
     if (guestInfo2) {
       if (!guestTwoLeft) {
-        second = `${guestInfo2.name} is currently at the spot. their number is ${guestInfo2.phoneNumber}`;
+        second = `${guestInfo2.name} is currently at the spot. Their phone number is ${guestInfo2.phoneNumber}`;
       } else {
-        second = `${guestInfo2.name} has left the spot. their number is ${guestInfo2.phoneNumber}`;
+        second = `${guestInfo2.name} has left the spot. Their phone number is ${guestInfo2.phoneNumber}`;
       }
     }
     return (
@@ -206,7 +206,7 @@ const ParkingStatusView = ({ route }: Props) => {
     )
   }
   return (
-    <SafeAreaView style={{ marginLeft: leftMargin }}>
+    <SafeAreaView style={{ marginLeft: leftMargin, marginTop: 100 }}>
       <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
       <RenderUserInfo />
       <Text style={{ paddingTop: 20, fontSize: 20 }}>Event Info:</Text>

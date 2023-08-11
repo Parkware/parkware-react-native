@@ -1,4 +1,4 @@
-import { Button, Text, View, StyleSheet, Alert } from 'react-native'
+import { Button, Text, View, StyleSheet, Alert, SafeAreaView } from 'react-native'
 import React from 'react'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
@@ -7,7 +7,6 @@ import { ProviderStackParams } from '../App';
 import { deleteUser, signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { AppButton } from './consumerComponents/MakeRequestScreen';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleView'>;
 
@@ -49,7 +48,7 @@ export const LoginRoleView = () => {
 
   return (
     <SafeAreaView>
-      <View style={[styles.viewBlock, { marginTop: 300 }]}>
+      <View style={[styles.viewBlock, { marginTop: 200 }]}>
         <Text style={{ fontSize: 35, fontWeight: "300" }}>Continue as a </Text>
       </View>
       <View style={styles.viewBlock}>

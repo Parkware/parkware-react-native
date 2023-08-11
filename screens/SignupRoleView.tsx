@@ -65,7 +65,8 @@ export const SignupRoleView = ({ route }: Props) => {
           placeholderTextColor="#aaa"
           style={styles.input}
         />
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
+          <Text style={{ fontSize: 20 }}>Spaces able to provide: </Text>
           <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => updateProviderSpaces(value)} />
         </View>
         <View style={{ margin: 10 }} />

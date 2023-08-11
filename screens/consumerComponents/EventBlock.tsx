@@ -20,7 +20,7 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
   return (
     <View>
       { showName && (
-        <Text key={event.doc.eventName} style={{ fontSize: 17 }}>
+        <Text key={event.doc.eventName} >
           {'Event name: ' + event.doc.eventName}
         </Text>
         )

@@ -1,6 +1,5 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform, SafeAreaView } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayRemove, arrayUnion, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore'
@@ -118,18 +117,20 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         <Text key={providerInfo.address}>
           {'Address: ' + providerInfo.address}
         </Text>
-        <Text key={providerInfo.providerSpaces}>
+        <Text key={providerInfo.providerSpaces} style={{ marginBottom: 10 }}>
           Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
         <Button
           title='Accept' 
           onPress={() => disableButton(providerInfo.id)} 
           disabled={disabledButtons[providerInfo.id]} 
+          key={providerInfo.providerSpaces[0]}
         />
         <Button 
           title='Decline' 
           onPress={() => removeLocalData(providerInfo.id)} 
           disabled={disabledButtons[providerInfo.id]} 
+          key={providerInfo.providerSpaces[1]}
         />
         <Divider width={5} style={{ marginTop: 10 }}/>
       </View >
@@ -148,12 +149,12 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   }
 
   return (
-    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20, marginTop: 10 }}>
+    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20, marginTop: 50 }}>
       <View style={{ flexDirection: "row"}}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
           Event: {eventData.doc.eventName}
         </Text>
-        <View style={{ marginTop: 35, marginLeft: 80 }}>
+        <View style={{ marginTop: 30, marginLeft: 50 }}>
           <Button
             title="Cancel Request"
             onPress={showConfirmDel}

@@ -2,7 +2,7 @@ import { Linking, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayUnion, collection, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
 
@@ -22,6 +22,16 @@ const ChooseProviderView = ({ route }: Props) => {
   const [diff, setDiff] = useState<number>();
   const [providerInfo, setProviderInfo] = useState<DocumentData>();
   const [shareableLink, setShareableLink] = useState('');
+  const [eventEnded, setEventEnded] = useState(false);
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, 'events', event.id), async (snapshot) => {
+      if (snapshot.exists() && snapshot.data().eventEnded) {
+        setEventEnded(snapshot.data().eventEnded);
+      }
+    });           
+    return () => unsub();
+  }, [])
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -75,20 +85,32 @@ const ChooseProviderView = ({ route }: Props) => {
           <Text key={proObj.providerSpaces}>Parking Spaces: {proObj.providerSpaces}</Text>
         </View>
       )) : <Text>Loading...</Text>}
-      {diff && diff > 0 && 
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-          {timeRemaining} till your parking event.
-        </Text>
-      }
-      <View style={{ marginTop: 75 }}>
-        <Text style={{ marginBottom: 10, fontSize: 17 }}>
-          Share the link below with other guests so that they can update their status to the providers
-        </Text>
-        <Text style={{ color: 'blue', fontSize: 17 }}
-              onPress={() => Linking.openURL(shareableLink)}>
-          {shareableLink.replace('https://', '')}
-        </Text>
+      {eventEnded
+      ? <View>{diff && diff > 0 && 
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+            {timeRemaining} till your parking event.
+          </Text>
+        }
+        <View style={{ marginTop: 75 }}>
+          <Text style={{ marginBottom: 10, fontSize: 17 }}>
+            Share the link below with other guests so that they can update their status to the providers
+          </Text>
+          <Text style={{ color: 'blue', fontSize: 17 }}
+                onPress={() => Linking.openURL(shareableLink)}>
+            {shareableLink.replace('https://', '')}
+          </Text>
+        </View>
       </View>
+      : <View>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 14 }}>
+            Please fill out the survey form below. Thank you for using Parkware!
+          </Text>
+          <Text style={{ color: 'blue', fontSize: 19 }}
+                onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
+                  https://forms.gle/DqPH34zYAfxdgzzt6
+          </Text>
+        </View>
+    }
     </SafeAreaView>
   )
 }

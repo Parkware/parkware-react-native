@@ -48,3 +48,17 @@ export const checkIfOpen = functions.firestore
     }
     return null;
   });
+
+export const checkIfEnd = functions.firestore
+  .document("/events/{eventId}")
+  .onUpdate(async (change: any, context: any) => {
+    const after = change.after.data();
+    const eventId = context.params.eventId;
+    const dateNow = Date.now();
+    if (after.departedProviderSpaces.length == 0 && dateNow > after.endTime) {
+      return db.collection("/events/").doc(eventId).set({
+        eventEnded: true,
+      }, {merge: true});
+    }
+    return null;
+  });

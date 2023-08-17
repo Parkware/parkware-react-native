@@ -1,4 +1,4 @@
-import { Button, Keyboard, SafeAreaView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView } from 'react-native'
+import { Button, Keyboard, SafeAreaView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../App'
@@ -26,7 +26,8 @@ const ParkingStatusView = ({ route }: Props) => {
   const [guestTwoLeft, setGuestTwoLeft] = useState(false)
   const [leftMargin, setLeftMargin] = useState(20)
   const [sentNotes, setSentNotes] = useState(false);
-
+  const [eventEnded, setEventEnded] = useState(false);
+  
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
@@ -53,12 +54,19 @@ const ParkingStatusView = ({ route }: Props) => {
   const checkDepartStatus = (arr: DocumentData) => {
     const fullVal = getFullVal(arr);
     if (fullVal) {
+      let count = 0;
       fullVal.map((val: any) => {
-        if (val.includes('.1'))
+        if (val.includes('.1')) {
           setGuestOneLeft(true);
-        else if (val.includes('.2'))
+          count++;
+        }
+        else if (val.includes('.2')) {
           setGuestTwoLeft(true);
+          count++;
+        }
       });
+      if (count == event.doc.requestedSpaces)
+        setEventEnded(true);
     }
   }
 
@@ -163,13 +171,19 @@ const ParkingStatusView = ({ route }: Props) => {
         <Text style={{ fontSize: 20, marginBottom: 40, marginTop: 40 }}>
           {second}
         </Text>
-        {!(guestOneLeft && guestTwoLeft)
+        {!eventEnded
         ? <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
             Event ends: {endTime.toLocaleString()}
           </Text>
-        : <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-            Thank you for providing your space!
-          </Text>
+        : <View>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+              Please fill out the survey form below. Thank you for providing your space!
+            </Text>
+            <Text style={{ color: 'blue', fontSize: 19 }}
+                  onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
+                    https://forms.gle/DqPH34zYAfxdgzzt6
+            </Text>
+          </View>
         }
       </View>
     )

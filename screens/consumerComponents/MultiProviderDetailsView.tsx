@@ -117,7 +117,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         <Text key={providerInfo.address}>
           {'Address: ' + providerInfo.address}
         </Text>
-        <Text key={providerInfo.providerSpaces} style={{ marginBottom: 10 }}>
+        <Text key={providerInfo.address.slice(0, 3)} style={{ marginBottom: 10 }}>
           Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
         <Button
@@ -150,86 +150,88 @@ const MultiProviderDetailsView = ({ route }: Props) => {
 
   return (
     <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20, marginTop: 50 }}>
-      <View style={{ flexDirection: "row"}}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-          Event: {eventData.doc.eventName}
-        </Text>
-        <View style={{ marginTop: 30, marginLeft: 50 }}>
-          <Button
-            title="Cancel Request"
-            onPress={showConfirmDel}
-          />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ flexDirection: "row"}}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+            Event: {eventData.doc.eventName}
+          </Text>
+          <View style={{ marginTop: 30, marginLeft: 50 }}>
+            <Button
+              title="Cancel Request"
+              onPress={showConfirmDel}
+            />
+          </View>
         </View>
-      </View>
-      <EventBlock event={eventData} showSpaces={false} showEditSpaces={true} showName={false}/>
-      <Text>
-        {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
-      </Text>
-      <View style={{flexDirection: 'row'}}>
-        <Text>Requested Spaces:</Text>
-        <TextInput 
-          ref={refInput}
-          value={editSpaces}
-          onChangeText={setEditSpaces}
-          placeholder={event.doc.requestedSpaces.toString()}
-          keyboardType='numeric'
-          placeholderTextColor="#000"
-          style={
-            Platform.OS == 'ios' 
-            ? { marginLeft: 3, marginBottom: 20}
-            : { marginTop: -3.5, marginLeft: 3}}
-        />
-        <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20 }}>
-          <Text style={{ color: '#007AFF', fontSize: 15 }}>{focus ? "Cancel" : "Edit"}</Text>
-        </TouchableOpacity>
-      </View>
-      {editSpaces.length !== 0 &&
-        <Button
-          title="Update Changes"
-          onPress={updateSpaces}
-        />
-      }
-      <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
-      <Divider width={5} style={{ marginTop: 10 }}/>
-      <ScrollView>
-        {eventData.doc.interestedProviders
-          .filter((pro: DocumentData) => 
-            (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
-          .map((providerInfo: DocumentData) => (
-            <ProviderBlock providerInfo={providerInfo}/>
+        <EventBlock event={eventData} showSpaces={false} showEditSpaces={true} showName={false}/>
+        <Text>
+          {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
+        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text>Requested Spaces:</Text>
+          <TextInput 
+            ref={refInput}
+            value={editSpaces}
+            onChangeText={setEditSpaces}
+            placeholder={event.doc.requestedSpaces.toString()}
+            keyboardType='numeric'
+            placeholderTextColor="#000"
+            style={
+              Platform.OS == 'ios' 
+              ? { marginLeft: 3, marginBottom: 20}
+              : { marginTop: -3.5, marginLeft: 3}}
+          />
+          <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20 }}>
+            <Text style={{ color: '#007AFF', fontSize: 15 }}>{focus ? "Cancel" : "Edit"}</Text>
+          </TouchableOpacity>
+        </View>
+        {editSpaces.length !== 0 &&
+          <Button
+            title="Update Changes"
+            onPress={updateSpaces}
+          />
+        }
+        <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
+        <Divider width={5} style={{ marginTop: 10 }}/>
+        <ScrollView>
+          {eventData.doc.interestedProviders
+            .filter((pro: DocumentData) => 
+              (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
+            .map((providerInfo: DocumentData) => (
+              <ProviderBlock providerInfo={providerInfo}/>
+            ))
+          }
+        </ScrollView>
+        {showBackInfo && <Text>Go back and re-enter screen to see changes!</Text>}
+        {/* <FlatList 
+          data={interestedProviders}
+          renderItem={({providerInfo}: DocumentData) => <ProviderBlock providerInfo={providerInfo}/>}
+          keyExtractor={providerInfo => providerInfo.id}
+        /> */}
+
+        <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
+        <Text style={{ fontSize: 20, marginTop: 50 }}>Accepted Providers:</Text>
+        <Divider width={5} style={{ marginTop: 10 }}/>
+        {eventData.doc.acceptedProviderIds
+          .map((proId: string) => eventData.doc.interestedProviders
+          .find((proObj: any) => proObj.id == proId))
+          .map((accProInfo: DocumentData) => (
+            <View key={accProInfo.id}>
+              <Text key={accProInfo.name}>
+              {'Name: ' + accProInfo.name}
+              </Text>
+              <Text key={accProInfo.address}>
+              {'Address: ' + accProInfo.address}
+              </Text>
+              <Text key={accProInfo.providerSpaces}>
+                {currAvailPros 
+                  ? `Spaces able to provide: ${accProInfo.providerSpaces} / ${eventData.doc.requestedSpaces}`
+                  : "Loading..."}
+              </Text>
+              <Divider width={5} style={{ marginTop: 10 }}/>
+            </View >
           ))
         }
       </ScrollView>
-      {showBackInfo && <Text>Go back and re-enter screen to see changes!</Text>}
-      {/* <FlatList 
-        data={interestedProviders}
-        renderItem={({providerInfo}: DocumentData) => <ProviderBlock providerInfo={providerInfo}/>}
-        keyExtractor={providerInfo => providerInfo.id}
-      /> */}
-
-      <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
-      <Text style={{ fontSize: 20, marginTop: 50 }}>Accepted Providers:</Text>
-      <Divider width={5} style={{ marginTop: 10 }}/>
-      {eventData.doc.acceptedProviderIds
-        .map((proId: string) => eventData.doc.interestedProviders
-        .find((proObj: any) => proObj.id == proId))
-        .map((accProInfo: DocumentData) => (
-          <View key={accProInfo.id}>
-            <Text key={accProInfo.name}>
-            {'Name: ' + accProInfo.name}
-            </Text>
-            <Text key={accProInfo.address}>
-            {'Address: ' + accProInfo.address}
-            </Text>
-            <Text key={accProInfo.providerSpaces}>
-              {currAvailPros 
-                ? `Spaces able to provide: ${accProInfo.providerSpaces} / ${eventData.doc.requestedSpaces}`
-                : "Loading..."}
-            </Text>
-            <Divider width={5} style={{ marginTop: 10 }}/>
-          </View >
-        ))
-      }
     </SafeAreaView>
   )
 }

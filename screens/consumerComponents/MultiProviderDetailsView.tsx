@@ -149,13 +149,13 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   }
 
   return (
-    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20, marginTop: 50 }}>
+    <SafeAreaView style={{ paddingLeft: 20, paddingRight: 20, marginTop: 30, marginLeft: 10 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: "row"}}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
             Event: {eventData.doc.eventName}
           </Text>
-          <View style={{ marginTop: 30, marginLeft: 50 }}>
+          <View style={{ marginTop: 30, marginLeft: 35 }}>
             <Button
               title="Cancel Request"
               onPress={showConfirmDel}

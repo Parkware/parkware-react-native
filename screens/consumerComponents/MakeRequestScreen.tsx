@@ -16,7 +16,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
-export const AppButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
+export const AppButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
   <TouchableOpacity 
     onPress={onPress} 
     style={
@@ -24,8 +24,20 @@ export const AppButton = ({ onPress, title, extraStyles=null, disabled }: any) =
       ? [styles.appButtonContainer, { backgroundColor: '#c7c3c3', elevation: 0 }]
       : [styles.appButtonContainer, extraStyles]}
     disabled={disabled}
+    key={key}
   >
     <Text style={styles.appButtonText}>{title}</Text>
+  </TouchableOpacity>
+);
+
+export const AuthButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
+  <TouchableOpacity 
+    onPress={onPress} 
+    style={[styles.authButtonContainer, extraStyles]}
+    disabled={disabled}
+    key={key}
+  >
+    <Text style={styles.authButtonText}>{title}</Text>
   </TouchableOpacity>
 );
 
@@ -44,6 +56,17 @@ export function MakeRequestScreen() {
   const [isEndTimeVisible, setEndTimeVisible] = useState(false);
   const [isDateVisible, setDateVisible] = useState(false);
   const userRef = doc(db, 'users', auth.currentUser!.uid);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: "row", marginTop: 0, height: 45 }}>
+          <AuthButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginRight: 110}}/>
+          <AuthButton title="Log out" onPress={showConfirmLogout}/>
+        </View>
+      ),
+    });
+  }, [navigation]);
 
   const getIfProvider = async () => {
     const docSnap = await getDoc(userRef);
@@ -111,10 +134,14 @@ export function MakeRequestScreen() {
         setStartTime(new Date());
         setEndTime(new Date());
         setAddress('');
-        switchView();
+        showReqSuccess();
       }
     }
   }
+  const showReqSuccess = () =>
+    Alert.alert('Your event request has been successful!', '', [
+      {text: 'Continue', onPress: () => switchView()},
+    ]);
   const startTimeFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setStartTime(selectedDate);
@@ -301,11 +328,10 @@ export function MakeRequestScreen() {
     );
   }
 
+  
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Make a Request</Text>
-      <AppButton title="Log out" onPress={showConfirmLogout} />
-      <AppButton title="Delete account" onPress={showConfirmDel} />
       {isProvider && <AppButton title="Switch to Provider" onPress={switchToProvider} />}
       <TextInput
         value={eventName}
@@ -404,6 +430,21 @@ const styles = StyleSheet.create({
   appButtonText: {
     fontSize: 18,
     color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
+  authButtonContainer: {
+    elevation: 8,
+    borderRadius: 8,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    margin: 2,
+    borderWidth: 2,
+    borderColor: "#4f9ee3"
+  },
+  authButtonText: {
+    fontSize: 18,
+    color: "#3a74a6",
     fontWeight: "bold",
     alignSelf: "center",
   }

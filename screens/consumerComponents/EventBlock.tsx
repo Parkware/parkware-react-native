@@ -8,10 +8,10 @@ interface StatusTextProps {
   // in the component as it's actively being updated (i.e. MultiProvidrDetailsView.tsx)
   showSpaces: boolean;
   showEditSpaces: boolean;
-  showName: boolean;
+  showName: boolean;eventText: any;
 }
     
-export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=true }: StatusTextProps) => {
+export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=true, eventText }: StatusTextProps) => {
   const [editSpaces, setEditSpaces] = useState('');
 
   const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
@@ -21,23 +21,23 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
     <View>
       { 
         showName && (
-          <Text key={event.doc.eventName} style={styles.eventText} >
+          <Text key={event.doc.eventName+event.id} style={eventText} >
             {'Event name: ' + event.doc.eventName}
           </Text>
         )
       }
-      <Text key={event.doc.address} style={styles.eventText}>
+      <Text key={event.doc.address} style={eventText}>
         {'Address: ' + event.doc.address}
       </Text>
-      <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+      <Text key={event.doc.accepted_provider_id} style={eventText}>
         {'Date: ' + formatDate(event.doc.startTime)}
       </Text>
-      <Text key={event.doc.startTime} style={styles.eventText}>
+      <Text key={event.doc.startTime} style={eventText}>
         {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
       </Text>
       {showSpaces && 
         <View>
-          <Text style={styles.eventText}>
+          <Text style={eventText}>
             {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
           </Text>
           {showEditSpaces
@@ -48,7 +48,7 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
                 keyboardType='numeric'
                 placeholderTextColor="#aaa"
               />
-            : <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
+            : <Text key={event.doc.requestedSpaces + 1} style={eventText}>
                 {'Requested Spaces: ' + event.doc.requestedSpaces}
               </Text>
           }
@@ -58,8 +58,7 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
   );
 }
 
-const styles = StyleSheet.create({
-  eventText: {
+const styles = StyleSheet.create({eventText: {
     fontSize: 15,
     paddingVertical: 1
   }

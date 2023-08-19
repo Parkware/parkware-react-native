@@ -122,8 +122,8 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         <Text key={providerInfo.address.slice(0, 3)} style={[styles.providerText, { marginBottom: 10 }]}>
           Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
-        <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => disableButton(providerInfo.id)}/>
-        <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalData(providerInfo.id)}/>
+        <AppButton title="Accept" extraStyles={styles.eventButton} key={providerInfo.address.slice(1, 3)} onPress={() => disableButton(providerInfo.id)}/>
+        <AppButton title="Decline" extraStyles={styles.eventButton} key={providerInfo.address.slice(2, 4)} onPress={() => removeLocalData(providerInfo.id)}/>
       </View>
     )
   }
@@ -143,7 +143,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
 
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
-      <View>
+      <View style={{ margin: 9 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{ flexDirection: "row", marginTop: 7}}>
             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
@@ -157,12 +157,12 @@ const MultiProviderDetailsView = ({ route }: Props) => {
               />
             </View>
           </View>
-          <EventBlock event={eventData} showSpaces={false} showEditSpaces={true} showName={false}/>
-          <Text style={{ fontSize: 15 }}>
+          <EventBlock event={eventData} showSpaces={false} showEditSpaces={true} showName={false} eventText={styles.eventText}/>
+          <Text style={styles.eventText}>
             {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
           </Text>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{ fontSize: 15 }}>Requested Spaces:</Text>
+            <Text style={styles.eventText}>Requested Spaces:</Text>
             <TextInput 
               ref={refInput}
               value={editSpaces}
@@ -170,12 +170,14 @@ const MultiProviderDetailsView = ({ route }: Props) => {
               placeholder={event.doc.requestedSpaces.toString()}
               keyboardType='numeric'
               placeholderTextColor="#000"
-              style={
+              style={[
                 Platform.OS == 'ios' 
-                ? { marginLeft: 3, marginBottom: 20}
-                : { marginTop: -3.5, marginLeft: 3}}
+                ? { marginLeft: 3, marginBottom: 18}
+                : { marginTop: -3.5, marginLeft: 3},
+              {marginTop: 4}
+              ]}
             />
-            <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20 }}>
+            <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20, marginTop: 4 }}>
               <Text style={{ color: '#007AFF', fontSize: 15 }}>{focus ? "Cancel" : "Edit"}</Text>
             </TouchableOpacity>
           </View>
@@ -185,34 +187,34 @@ const MultiProviderDetailsView = ({ route }: Props) => {
               onPress={updateSpaces}
             />
           }
-          <Text style={{ fontSize: 20, marginTop: 10 }}>Interested Providers:</Text>
-          <Divider width={5} style={{ marginTop: 10 }}/>
-          <View style={styles.providerBlock}>
+          <Text style={styles.providerHeader}>Interested Providers:</Text>
+          <Divider width={5} style={{ margin: 10 }}/>
             {eventData.doc.interestedProviders
               .filter((pro: DocumentData) => 
                 (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
               .map((providerInfo: DocumentData) => (
-                <ProviderBlock providerInfo={providerInfo}/>
+                <View style={styles.providerBlock}>
+                  <ProviderBlock providerInfo={providerInfo}/>
+                </View>
               ))
             }
-          </View>
           {showBackInfo && <Text>Go back and re-enter screen to see changes!</Text>}
 
           <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
-          <Text style={{ fontSize: 20, marginTop: 80 }}>Accepted Providers:</Text>
-          <Divider width={5} style={{ marginTop: 10 }}/>
+          <Text style={[{ marginTop: 80 }, styles.providerHeader]}>Accepted Providers:</Text>
+          <Divider width={5} style={{ margin: 10 }}/>
           {eventData.doc.acceptedProviderIds
             .map((proId: string) => eventData.doc.interestedProviders
             .find((proObj: any) => proObj.id == proId))
             .map((accProInfo: DocumentData) => (
-              <View key={accProInfo.id}>
-                <Text key={accProInfo.name}>
+              <View key={accProInfo.id} style={styles.accProviderBlock}>
+                <Text key={accProInfo.name} style={styles.providerText}>
                 {'Name: ' + accProInfo.name}
                 </Text>
-                <Text key={accProInfo.address}>
+                <Text key={accProInfo.address} style={styles.providerText}>
                 {'Address: ' + accProInfo.address}
                 </Text>
-                <Text key={accProInfo.providerSpaces}>
+                <Text key={accProInfo.providerSpaces} style={styles.providerText}>
                   {currAvailPros 
                     ? `Spaces able to provide: ${accProInfo.providerSpaces} / ${eventData.doc.requestedSpaces}`
                     : "Loading..."}
@@ -244,5 +246,23 @@ const styles = StyleSheet.create({
   eventButton: {
     width: 175, 
     alignSelf: "center" 
+  },
+  accProviderBlock: { 
+    borderWidth: 0.5,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginVertical: 5,
+    borderColor: "#9e9e9e", 
+    padding: 9
+  },
+  providerHeader: { 
+    fontSize: 23, 
+    marginBottom: 10, 
+    marginTop: 40, 
+    alignSelf: "center"
+  },
+  eventText: {
+    fontSize: 16,
+    paddingVertical: 2
   }
 })

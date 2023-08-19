@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
-import { MakeRequestScreen } from './screens/consumerComponents/MakeRequestScreen';
+import { AppButton, MakeRequestScreen } from './screens/consumerComponents/MakeRequestScreen';
 import { SignupScreen } from './screens/SignupScreen';
 import { ResetPassword } from './screens/ResetPassword';
 import { LoginScreen } from './screens/LoginScreen';
@@ -128,7 +128,7 @@ const ConsumerScreenStack = () => {
   return (
     <ConsumerStack.Navigator initialRouteName='makeRequestScreen'>
       <ConsumerStack.Screen 
-        options={{ headerShown: false }} 
+        options={{ title: "", headerTransparent: true }}
         name="makeRequestScreen" 
         component={MakeRequestScreen} 
       />

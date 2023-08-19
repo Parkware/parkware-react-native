@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView } from 'react-native';
+import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, StyleSheet } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
@@ -26,20 +26,6 @@ export function ProviderRequestsView() {
   const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
 
   const navigation = useNavigation<providerScreenProp>();
-
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  
-  const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to logout?', 'Click cancel to stay on. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Logout', onPress: () => logout()},
-    ]);
   
   const updateDeniedEvents = async () => {
     const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', auth.currentUser!.uid))
@@ -121,45 +107,44 @@ export function ProviderRequestsView() {
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
       <ScrollView showsVerticalScrollIndicator={false} >
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
           Accepted Requests
         </Text>
-        <ScrollView>
-          <Text style={{ fontSize: 17, fontWeight: "400", marginBottom: 10 }}>Click an event to see more info</Text>
+        <View>
           {accEvents.map(event => (
-            <TouchableOpacity style={{ marginBottom: 10 }} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
-              <View style={{ marginBottom: 10 }} key={event.id}>
-                <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true}/>
+            <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
+              <View style={{ padding: 10 }} key={event.id}>
+                <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
               </View>
             </TouchableOpacity>
           ))}
-        </ScrollView>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+        </View>
+        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
           Pending Requests
         </Text>
-        <ScrollView>
+        <View>
           {pendingEvents.map((event) => (
-            <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true}/>
+            <View style={styles.unclickableRequests} key={event.id.slice(0, 5)}>
+              <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
             </View>
           ))}
-        </ScrollView>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+        </View>
+        <Text style={[styles.requestHeader, { marginTop: 30 }]}>
           Open Requests
         </Text>
-        <ScrollView>
+        <View>
           {openEvents
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
             .map((event) => (
-            <View style={{ marginBottom: 10 }} key={event.id}>
-              <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true}/>
-              <View style={{ padding: 10, justifyContent: 'space-between'  }}>
-                <Button title='Accept' onPress={() => updateDB(event)}/>
-                <Button title='Decline' onPress={() => removeLocalEventData(event.id)}/>
+            <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
+              <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+              <View style={{ padding: 10, justifyContent: 'space-between' }}>
+                <AppButton title="Accept" extraStyles={styles.eventButton} key={event.doc.address.slice(1, 3)} onPress={() => updateDB(event)}/>
+                <AppButton title="Decline" extraStyles={styles.eventButton} key={event.doc.address.slice(2, 4)} onPress={() => removeLocalEventData(event.id)}/>
               </View>
             </View>
           ))}
-        </ScrollView>
+        </View>
         {deniedEventArr.length !== 0 &&
           (
             <View>
@@ -175,9 +160,40 @@ export function ProviderRequestsView() {
             </View>
           )
         }
-        <AppButton title="Log out" onPress={showConfirmLogout} />
         <View style={{ padding: 14 }}/>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  eventBlock: { 
+    borderWidth: 1,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginVertical: 10,
+    borderColor: "#9e9e9e", 
+    backgroundColor: "#c2c2c2",
+  },
+  requestHeader: { 
+    fontSize: 23, 
+    fontWeight: 'bold', 
+    marginBottom: 10, 
+    alignSelf: "center"
+  },
+  eventText: {
+    fontSize: 16
+  },
+  unclickableRequests: { 
+    borderWidth: 0.5,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginVertical: 5,
+    borderColor: "#9e9e9e", 
+    padding: 9
+  },
+  eventButton: {
+    width: 155, 
+    alignSelf: "center" 
+  },
+});

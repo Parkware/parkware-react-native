@@ -73,22 +73,23 @@ const ChooseProviderView = ({ route }: Props) => {
     <SafeAreaView>
       <View style={{ padding: 16 }}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-          Event: {event.doc.eventName}
+          Name: {event.doc.eventName}
         </Text>
         {providerInfo ? providerInfo.map((proObj: DocumentData) => (
           <View key={proObj.id} style={styles.providerBlock}>
-            <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
-            <Text key={proObj.address}>Address: {proObj.address}</Text>
+            <Text style={styles.text} key={proObj.name}>Provider Name: {proObj.name}</Text>
+            <Text style={styles.text} key={proObj.address}>Address: {proObj.address}</Text>
             {proObj.notes === undefined 
-            ? <Text>The provider has not updated any notes yet</Text>
-            : <Text key={proObj.notes}>Notes: {proObj.notes}</Text>
+            ? <Text style={styles.text}>The provider has not updated any notes yet</Text>
+            : <Text style={styles.text} key={proObj.notes}>Notes: {proObj.notes}</Text>
             }
-            <Text key={proObj.providerSpaces}>Parking Spaces: {proObj.providerSpaces}</Text>
+            <Text style={styles.text} key={proObj.providerSpaces}>Parking Spaces: {proObj.providerSpaces}</Text>
           </View>
-        )) : <Text>Loading...</Text>}
+        )) : <Text style={styles.text}>Loading...</Text>}
+        <Divider width={3} style={{ marginVertical: 15}}/>
         {eventEnded
         ? <View>{diff && diff > 0 && 
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 10 }}>
               {timeRemaining} till your parking event.
             </Text>
           }
@@ -103,12 +104,15 @@ const ChooseProviderView = ({ route }: Props) => {
           </View>
         </View>
         : <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 14 }}>
-              Please fill out the survey form below. Thank you for using Parkware!
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 10 }}>
+              Please fill out the survey form below.
             </Text>
             <Text style={{ color: 'blue', fontSize: 19 }}
                   onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                     https://forms.gle/DqPH34zYAfxdgzzt6
+            </Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 14 }}>
+              Thank you for using Parkware!
             </Text>
           </View>
       }
@@ -135,12 +139,16 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   providerBlock: { 
-    borderWidth: 1,
+    borderWidth: 0.5,
     overflow: 'hidden',
     borderRadius: 10,
     marginVertical: 5,
     borderColor: "#9e9e9e", 
-    backgroundColor: "#c2c2c2",
+    backgroundColor: "#e8e8e8",
     padding: 9
   },
+  text: {
+    fontSize: 15,
+    paddingVertical: 2
+  }
 })

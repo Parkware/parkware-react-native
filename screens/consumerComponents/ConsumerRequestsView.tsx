@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
-import { DocumentData, collection, onSnapshot, query, where } from 'firebase/firestore';
+import { DocumentData, collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { Divider } from '@rneui/themed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -15,8 +15,28 @@ export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 
 export function ConsumerRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
   const [completedEvents, setCompletedEvents] = useState<docDataPair[]>([]);
+  const [userName, setUserName] = useState('');
 
   const navigation = useNavigation<consumerScreenProp>();
+  
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ marginTop: 10, height: 45 }}>
+          <Text style={{ fontSize: 16, fontFamily: 'Al Nile' }}>Logged in as {userName}</Text>
+        </View>
+      ),
+    });
+  }, [navigation, userName]);
+
+  const updateName = async () => {
+    const userSnap = await getDoc(doc(db, 'users', auth.currentUser!.uid))
+    if (userSnap.exists())
+      setUserName(userSnap.data().name);
+  }
+  useEffect(() => {
+    updateName();
+  }, [])
   
   const modProviders = (eventData: DocumentData) => {
     if (eventData)
@@ -72,14 +92,14 @@ export function ConsumerRequestsView() {
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
       <View>
         <ScrollView>
-          <Text style={styles.requestHeader}>
+          <Text style={[styles.requestHeader, { marginTop: 15 }]}>
             Pending Requests
           </Text>
           <ScrollView>
             {pendingEvents.map(event => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
                 <View style={{ padding: 10 }}>
-                  <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true}/>
+                  <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
                   {event.doc.interestedProviders.length !== 0
                     ? ( 
                     <View>
@@ -107,14 +127,14 @@ export function ConsumerRequestsView() {
             ))}
           </ScrollView>
 
-          <Text style={styles.requestHeader}>
+          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
             Accepted Requests
           </Text>
           <ScrollView>
             {completedEvents.map((event) => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
                 <View style={{ padding: 10 }}>
-                  <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true}/>
+                  <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
                 </View>
               </TouchableOpacity>
             ))}
@@ -138,7 +158,6 @@ const styles = StyleSheet.create({
     fontSize: 23, 
     fontWeight: 'bold', 
     marginBottom: 10, 
-    marginTop: 40, 
     alignSelf: "center"
   },
   eventText: {

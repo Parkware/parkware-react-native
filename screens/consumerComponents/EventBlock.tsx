@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, StyleSheet } from "react-native";
 import { docDataPair } from "../providerComponents/ProviderRequestsView";
 import { useEffect, useState } from "react";
 
@@ -19,24 +19,25 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
   
   return (
     <View>
-      { showName && (
-        <Text key={event.doc.eventName} >
-          {'Event name: ' + event.doc.eventName}
-        </Text>
+      { 
+        showName && (
+          <Text key={event.doc.eventName} style={styles.eventText} >
+            {'Event name: ' + event.doc.eventName}
+          </Text>
         )
       }
-      <Text key={event.doc.address}>
+      <Text key={event.doc.address} style={styles.eventText}>
         {'Address: ' + event.doc.address}
       </Text>
-      <Text key={event.doc.accepted_provider_id}>
+      <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
         {'Date: ' + formatDate(event.doc.startTime)}
       </Text>
-      <Text key={event.doc.startTime}>
+      <Text key={event.doc.startTime} style={styles.eventText}>
         {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
       </Text>
       {showSpaces && 
         <View>
-          <Text>
+          <Text style={styles.eventText}>
             {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
           </Text>
           {showEditSpaces
@@ -47,7 +48,7 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
                 keyboardType='numeric'
                 placeholderTextColor="#aaa"
               />
-            : <Text key={event.doc.requestedSpaces + 1}>
+            : <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
                 {'Requested Spaces: ' + event.doc.requestedSpaces}
               </Text>
           }
@@ -56,3 +57,10 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  eventText: {
+    fontSize: 15,
+    paddingVertical: 1
+  }
+});

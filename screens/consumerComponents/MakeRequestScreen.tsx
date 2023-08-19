@@ -13,22 +13,20 @@ import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/d
 import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
+
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
 export const AppButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
-  Platform.OS == 'android'
-  ? (
   <TouchableOpacity 
     onPress={onPress} 
     style={
       disabled 
-      ? [styles.appButtonContainer, { backgroundColor: '#24b3a770', elevation: 0 }]
+      ? [styles.appButtonContainer, { backgroundColor: '#c7c3c3', elevation: 0 }]
       : [styles.appButtonContainer, extraStyles]}
     disabled={disabled}
   >
     <Text style={styles.appButtonText}>{title}</Text>
-  </TouchableOpacity>)
-  : <Button onPress={onPress} title={title} />
+  </TouchableOpacity>
 );
 
 export function MakeRequestScreen() {
@@ -397,7 +395,7 @@ const styles = StyleSheet.create({
   showPickerButton: {},
   appButtonContainer: {
     elevation: 8,
-    backgroundColor: "#24b3a7",
+    backgroundColor: "#737373",
     borderRadius: 10,
     paddingVertical: 7,
     paddingHorizontal: 12,

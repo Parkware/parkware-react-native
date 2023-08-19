@@ -70,47 +70,49 @@ const ChooseProviderView = ({ route }: Props) => {
 
 
   return (
-    <SafeAreaView style={{ marginLeft: 22, marginTop: 70 }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 20 }}>
+    <SafeAreaView>
+      <View style={{ padding: 16 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
           Event: {event.doc.eventName}
         </Text>
-      {providerInfo ? providerInfo.map((proObj: DocumentData) => (
-        <View key={proObj.id} style={{ marginBottom: 10}}>
-          <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
-          <Text key={proObj.address}>Address: {proObj.address}</Text>
-          {proObj.notes === undefined 
-           ? <Text>The provider has not updated any notes yet</Text>
-           : <Text key={proObj.notes}>Notes: {proObj.notes}</Text>
+        {providerInfo ? providerInfo.map((proObj: DocumentData) => (
+          <View key={proObj.id} style={styles.providerBlock}>
+            <Text key={proObj.name}>Provider Name: {proObj.name}</Text>
+            <Text key={proObj.address}>Address: {proObj.address}</Text>
+            {proObj.notes === undefined 
+            ? <Text>The provider has not updated any notes yet</Text>
+            : <Text key={proObj.notes}>Notes: {proObj.notes}</Text>
+            }
+            <Text key={proObj.providerSpaces}>Parking Spaces: {proObj.providerSpaces}</Text>
+          </View>
+        )) : <Text>Loading...</Text>}
+        {eventEnded
+        ? <View>{diff && diff > 0 && 
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
+              {timeRemaining} till your parking event.
+            </Text>
           }
-          <Text key={proObj.providerSpaces}>Parking Spaces: {proObj.providerSpaces}</Text>
+          <View style={{ marginTop: 75 }}>
+            <Text style={{ marginBottom: 10, fontSize: 17 }}>
+              Share the link below with other guests so that they can update their status to the providers
+            </Text>
+            <Text style={{ color: 'blue', fontSize: 17 }}
+                  onPress={() => Linking.openURL(shareableLink)}>
+              {shareableLink.replace('https://', '')}
+            </Text>
+          </View>
         </View>
-      )) : <Text>Loading...</Text>}
-      {eventEnded
-      ? <View>{diff && diff > 0 && 
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 40 }}>
-            {timeRemaining} till your parking event.
-          </Text>
-        }
-        <View style={{ marginTop: 75 }}>
-          <Text style={{ marginBottom: 10, fontSize: 17 }}>
-            Share the link below with other guests so that they can update their status to the providers
-          </Text>
-          <Text style={{ color: 'blue', fontSize: 17 }}
-                onPress={() => Linking.openURL(shareableLink)}>
-            {shareableLink.replace('https://', '')}
-          </Text>
-        </View>
+        : <View>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 14 }}>
+              Please fill out the survey form below. Thank you for using Parkware!
+            </Text>
+            <Text style={{ color: 'blue', fontSize: 19 }}
+                  onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
+                    https://forms.gle/DqPH34zYAfxdgzzt6
+            </Text>
+          </View>
+      }
       </View>
-      : <View>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 14 }}>
-            Please fill out the survey form below. Thank you for using Parkware!
-          </Text>
-          <Text style={{ color: 'blue', fontSize: 19 }}
-                onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
-                  https://forms.gle/DqPH34zYAfxdgzzt6
-          </Text>
-        </View>
-    }
     </SafeAreaView>
   )
 }
@@ -131,5 +133,14 @@ const styles = StyleSheet.create({
   countContainer: {
     alignItems: 'center',
     marginBottom: 30,
+  },
+  providerBlock: { 
+    borderWidth: 1,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginVertical: 5,
+    borderColor: "#9e9e9e", 
+    backgroundColor: "#c2c2c2",
+    padding: 9
   },
 })

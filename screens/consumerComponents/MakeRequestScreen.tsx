@@ -60,62 +60,11 @@ export function MakeRequestScreen() {
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
   const [requestedSpaces, setRequestedSpaces] = useState<number>(1);
-  const [isProvider, setIsProvider] = useState(false);
   const navigation = useNavigation<homeScreenProp>();
   const [date, setDate] = useState(new Date())
   const [isStartTimeVisible, setStartTimeVisible] = useState(false);
   const [isEndTimeVisible, setEndTimeVisible] = useState(false);
   const [isDateVisible, setDateVisible] = useState(false);
-  const userRef = doc(db, 'users', auth.currentUser!.uid);
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: "row", marginTop: 1, height: 45 }}>
-          <AuthButton title="Log out" onPress={showConfirmLogout}/>
-        </View>
-      ),
-    });
-  }, [navigation]);
-
-  const getIfProvider = async () => {
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists() && docSnap.data().isProvider) 
-      setIsProvider(true);
-  }
-
-  useEffect(() => {
-    getIfProvider();
-  }, [])
-  
-  const logout = async () => {
-    try {
-      // Setting the loggedInAsProvider boolean to true in case the user is a provider. 
-      switchToProvider();
-      await signOut(auth);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const showConfirmDel = () =>
-    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Delete', onPress: () => delAccount()},
-    ]);
-  
-  const delAccount = async () => {
-    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
-    await deleteUser(auth.currentUser!)
-  }
-
-  const switchToProvider = async () => {
-    const userSnap = await getDoc(userRef)
-    if (userSnap.exists() && userSnap.data().isProvider)
-      await updateDoc(userRef, { loggedAsProvider: true })
-  }
-
-  const switchView = () => navigation.navigate('consumerRequestsView');
 
   const createEventRequest = async () => {
     if (auth.currentUser) {
@@ -150,7 +99,7 @@ export function MakeRequestScreen() {
   }
   const showReqSuccess = () =>
     Alert.alert('Your event request is successful!', '', [
-      {text: 'Continue', onPress: () => switchView()},
+      {text: 'Ok', onPress: () => navigation.goBack()},
     ]);
   const startTimeFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
@@ -322,12 +271,6 @@ export function MakeRequestScreen() {
     showModeAndroid('time', 'end');
   };
 
-  const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to logout?', 'Click cancel to stay on. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Logout', onPress: () => logout()},
-    ]);
-
   const DatePickerAndroid = () => {
     return (
       <View>
@@ -342,7 +285,6 @@ export function MakeRequestScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Make a Request</Text>
-      {isProvider && <AppButton title="Switch to Provider" onPress={switchToProvider} />}
       <TextInput
         value={eventName}
         onChangeText={setEventName}
@@ -380,11 +322,7 @@ export function MakeRequestScreen() {
         onPress={createEventRequest}
         disabled={!sendable || address.length == 0 }
       />
-      <AppButton
-        title="Skip"
-        onPress={switchView}
-      />
-      <DeleteAccountButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginTop: 70, borderColor: "red" }}/>
+      
     </View>
   );
 }
@@ -454,7 +392,7 @@ const styles = StyleSheet.create({
     borderColor: "#4f9ee3"
   },
   authButtonText: {
-    fontSize: 18,
+    fontSize: 15,
     color: "#3a74a6",
     fontWeight: "bold",
     alignSelf: "center",

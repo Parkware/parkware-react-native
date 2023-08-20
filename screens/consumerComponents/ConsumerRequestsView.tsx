@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
-import { DocumentData, collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
+import { View, Text, SafeAreaView, StyleSheet, Alert } from 'react-native';
+import { DocumentData, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { Divider } from '@rneui/themed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
+import { AppButton, AuthButton, DeleteAccountButton } from './MakeRequestScreen';
+import { deleteUser, signOut } from 'firebase/auth';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
@@ -16,19 +18,42 @@ export function ConsumerRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
   const [completedEvents, setCompletedEvents] = useState<docDataPair[]>([]);
   const [userName, setUserName] = useState('');
+  const [isProvider, setIsProvider] = useState(false);
+  const userRef = doc(db, 'users', auth.currentUser!.uid);
 
   const navigation = useNavigation<consumerScreenProp>();
   
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <View style={{ marginTop: 10, height: 45 }}>
-          <Text style={{ fontSize: 16, fontFamily: 'Al Nile' }}>Logged in as {userName}</Text>
+        <View style={{ flexDirection: "row", marginTop: 6 }}>
+          <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginRight: 120}}/>
+          <Text style={{ fontSize: 16, fontFamily: 'Al Nile', marginTop: 10 }}>Logged in as {userName}</Text>
         </View>
       ),
     });
   }, [navigation, userName]);
 
+  const showConfirmLogout = () =>
+    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Log out', onPress: () => logout()},
+    ]);
+
+  const logout = async () => {
+    try {
+      // Setting the loggedInAsProvider boolean to true in case the user is a provider. 
+      switchToProvider();
+      await signOut(auth);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const switchToProvider = async () => {
+    const userSnap = await getDoc(userRef)
+    if (userSnap.exists() && userSnap.data().isProvider)
+      await updateDoc(userRef, { loggedAsProvider: true })
+  }
   const updateName = async () => {
     const userSnap = await getDoc(doc(db, 'users', auth.currentUser!.uid))
     if (userSnap.exists())
@@ -88,14 +113,37 @@ export function ConsumerRequestsView() {
     }
   }, []);
 
+  const showConfirmDel = () =>
+    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Delete', onPress: () => delAccount()},
+    ]);
+  
+  const delAccount = async () => {
+    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
+    await deleteUser(auth.currentUser!)
+  }
+
+  const switchView = () => navigation.navigate('makeRequestScreen');
+
+  const getIfProvider = async () => {
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists() && docSnap.data().isProvider) 
+      setIsProvider(true);
+  }
+
+  useEffect(() => {
+    getIfProvider();
+  }, [])
+
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <View>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={[styles.requestHeader, { marginTop: 15 }]}>
-            Pending Requests
+            Pending
           </Text>
-          <ScrollView>
+          <View>
             {pendingEvents.map(event => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
                 <View style={{ padding: 10 }}>
@@ -124,12 +172,12 @@ export function ConsumerRequestsView() {
                 </View>
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </View>
 
           <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-            Accepted Requests
+            Accepted
           </Text>
-          <ScrollView>
+          <View>
             {completedEvents.map((event) => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
                 <View style={{ padding: 10 }}>
@@ -137,7 +185,24 @@ export function ConsumerRequestsView() {
                 </View>
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </View>
+          {isProvider && 
+            <AppButton 
+              title="Switch to Provider" 
+              onPress={switchToProvider} 
+              extraStyles={{ marginTop: 70 }}
+            />
+          }
+          <AppButton
+            title="Make a Request"
+            onPress={switchView}
+            extraStyles={{ marginTop: 7 }}
+          />
+          <DeleteAccountButton 
+            title="Delete account" 
+            onPress={showConfirmDel} 
+            extraStyles={{ borderColor: "red", marginTop: 20 }}
+          />
         </ScrollView>
       </View>
     </SafeAreaView>

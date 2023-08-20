@@ -13,34 +13,10 @@ type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleV
 export const LoginRoleView = () => {
   const navigation = useNavigation<roleScreenProp>();
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: "row", marginTop: 2 }}>
-          <AuthButton title="Log out" onPress={showConfirmLogout}/>
-        </View>
-      ),
-    });
-  }, [navigation]);
-  
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   const showConfirmDel = () =>
     Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
       {text: 'Cancel', style: 'cancel'},
       {text: 'Delete', onPress: () => delAccount()},
-    ]);
-
-  const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Logout', onPress: () => logout()},
     ]);
     
   const delAccount = async () => {

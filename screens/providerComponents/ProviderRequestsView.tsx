@@ -9,7 +9,7 @@ import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import { AppButton } from '../consumerComponents/MakeRequestScreen';
+import { AppButton, AuthButton } from '../consumerComponents/MakeRequestScreen';
 
 export interface docDataPair {
   id: string,
@@ -27,11 +27,35 @@ export function ProviderRequestsView() {
 
   const navigation = useNavigation<providerScreenProp>();
   
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: "row", marginTop: 6 }}>
+          <AuthButton title="Log out" onPress={showConfirmLogout} />
+        </View>
+      ),
+    });
+  }, [navigation]);
+
+  const showConfirmLogout = () =>
+    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Log out', onPress: () => logout()},
+    ]);
+
   const updateDeniedEvents = async () => {
     const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', auth.currentUser!.uid))
     const eventsSnap = await getDocs(q);
     const deniedNames: string[] = eventsSnap.docs.map((e: DocumentData) => e.data().eventName)
     setDeniedEventArr(deniedNames);
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   // Reading the event data and setting eventData to it. 
@@ -108,7 +132,7 @@ export function ProviderRequestsView() {
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-          Accepted Requests
+          Accepted
         </Text>
         <View>
           {accEvents.map(event => (
@@ -120,7 +144,7 @@ export function ProviderRequestsView() {
           ))}
         </View>
         <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-          Pending Requests
+          Pending
         </Text>
         <View>
           {pendingEvents.map((event) => (
@@ -130,7 +154,7 @@ export function ProviderRequestsView() {
           ))}
         </View>
         <Text style={[styles.requestHeader, { marginTop: 30 }]}>
-          Open Requests
+          Open
         </Text>
         <View>
           {openEvents
@@ -139,8 +163,8 @@ export function ProviderRequestsView() {
             <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
               <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={{fontSize: 17, padding: 1}}/>
               <View style={{ padding: 10, justifyContent: 'space-between' }}>
-                <AppButton title="Accept" extraStyles={styles.eventButton} key={event.doc.address} onPress={() => updateDB(event)}/>
-                <AppButton title="Decline" extraStyles={styles.eventButton} key={event.doc.name} onPress={() => removeLocalEventData(event.id)}/>
+                <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
+                <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>
               </View>
             </View>
           ))}

@@ -28,6 +28,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const [showBackInfo, setShowBackInfo] = useState(false);
   const [editSpaces, setEditSpaces] = useState('');
   const [focus, setFocus] = useState(false);
+  const [spacePlaceholder, setSpacePlaceholder] = useState(event.doc.requestedSpaces.toString())
   const refInput = useRef<TextInput | null>(null);
 
   const navigation = useNavigation<navigationProps>();
@@ -113,6 +114,21 @@ const MultiProviderDetailsView = ({ route }: Props) => {
 
   const updateSpaces = async () => {
     await updateDoc(doc(db, "events", eventData.id), { requestedSpaces: Number(editSpaces) });
+    showUpdateSuccess();
+  }
+
+  const showUpdateSuccess = () =>
+    Alert.alert('Your requested space count has been updated!', '', [
+      {text: 'Ok', onPress: resetEditSpaces},
+    ]);
+
+  const resetEditSpaces = () => {
+    if (refInput.current != null) {
+      setSpacePlaceholder(editSpaces);
+      setEditSpaces('');
+      refInput.current.blur();
+      setFocus(false);
+    }
   }
 
   // Might have an issue as we don't have a key
@@ -147,6 +163,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       }
   }
 
+  
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
       <View style={{ margin: 9 }}>
@@ -174,7 +191,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
                 ref={refInput}
                 value={editSpaces}
                 onChangeText={setEditSpaces}
-                placeholder={event.doc.requestedSpaces.toString()}
+                placeholder={spacePlaceholder}
                 keyboardType='numeric'
                 placeholderTextColor="#454852"
                 style={[

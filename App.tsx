@@ -126,7 +126,7 @@ const ProviderScreenStack = () => {
 
 const ConsumerScreenStack = () => {
   return (
-    <ConsumerStack.Navigator initialRouteName='makeRequestScreen'>
+    <ConsumerStack.Navigator initialRouteName='consumerRequestsView'>
       <ConsumerStack.Screen 
         options={{ title: "", headerTransparent: true }}
         name="makeRequestScreen" 

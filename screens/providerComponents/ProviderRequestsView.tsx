@@ -139,8 +139,8 @@ export function ProviderRequestsView() {
             <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
               <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
               <View style={{ padding: 10, justifyContent: 'space-between' }}>
-                <AppButton title="Accept" extraStyles={styles.eventButton} key={event.doc.address.slice(1, 3)} onPress={() => updateDB(event)}/>
-                <AppButton title="Decline" extraStyles={styles.eventButton} key={event.doc.address.slice(2, 4)} onPress={() => removeLocalEventData(event.id)}/>
+                <AppButton title="Accept" extraStyles={styles.eventButton} key={event.doc.address} onPress={() => updateDB(event)}/>
+                <AppButton title="Decline" extraStyles={styles.eventButton} key={event.doc.name} onPress={() => removeLocalEventData(event.id)}/>
               </View>
             </View>
           ))}
@@ -160,7 +160,6 @@ export function ProviderRequestsView() {
             </View>
           )
         }
-        <View style={{ padding: 14 }}/>
       </ScrollView>
     </SafeAreaView>
   );

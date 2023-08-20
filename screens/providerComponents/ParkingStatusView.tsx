@@ -6,6 +6,7 @@ import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/fires
 import { auth, db } from '../../firebaseConfig'
 import { EventBlock } from '../consumerComponents/EventBlock'
 import { docDataPair } from './ProviderRequestsView'
+import { Divider } from '@rneui/base'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
 
@@ -165,23 +166,32 @@ const ParkingStatusView = ({ route }: Props) => {
     }
     return (
       <View>
-        <Text style={{ fontSize: 20, marginBottom: 10, marginTop: 40 }}>
+        <Text style={{ fontSize: 20, marginBottom: 10 }}>
+          Guest Status:
+        </Text>
+        <Text style={{ fontSize: 20 }}>
           {text}
         </Text>
-        <Text style={{ fontSize: 20, marginBottom: 40, marginTop: 40 }}>
-          {second}
-        </Text>
+        {second && 
+          <Text style={{ fontSize: 20, marginBottom: 40, marginTop: 40 }}>
+            {second}
+          </Text>
+        }
+        <Divider width={3} style={{ paddingVertical: 20 }} />
         {!eventEnded
-        ? <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+        ? <Text style={styles.boldText}>
             Event ends: {endTime.toLocaleString()}
           </Text>
         : <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-              Please fill out the survey form below. Thank you for providing your space!
+            <Text style={[styles.boldText, { marginTop: 10 }]}>
+              Please fill out the survey form below.
             </Text>
             <Text style={{ color: 'blue', fontSize: 19 }}
                   onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                     https://forms.gle/DqPH34zYAfxdgzzt6
+            </Text>
+            <Text style={[styles.boldText, { marginTop: 14 }]}>
+              Thank you for providing your space!
             </Text>
           </View>
         }
@@ -214,8 +224,8 @@ const ParkingStatusView = ({ route }: Props) => {
     if (consumerInfo)
       return (
         <View>
-          <Text>Name: {consumerInfo.name}</Text>
-          <Text>Email: {consumerInfo.email}</Text>
+          <Text style={styles.text}>Name: {consumerInfo.name}</Text>
+          <Text style={styles.text}>Email: {consumerInfo.email}</Text>
         </View>
       )
     return (
@@ -224,14 +234,20 @@ const ParkingStatusView = ({ route }: Props) => {
   }
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={[styles.inner, { marginLeft: leftMargin, marginTop: 75 }]}>
-        <Text style={{ fontSize: 20 }}>Organizer Info:</Text>
-        <RenderUserInfo />
-        <Text style={{ paddingTop: 15, fontSize: 20 }}>Event Info:</Text>
-        <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true}/>
-          <ShowArrivalStatus />
+      <SafeAreaView>
+        <View style={{ margin: 14 }}>
+          <View style={[styles.card, styles.shadowProp]}>
+            <Text style={styles.infoHeader}>Organizer Info:</Text>
+            <RenderUserInfo />
+          </View>
+          <View style={[styles.card, styles.shadowProp]}>
+            <Text style={styles.infoHeader}>Event Info:</Text>
+            <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true} eventText={[styles.text, { paddingVertical: 2 }]}/>
+          </View>
+          <View style={[styles.card, styles.shadowProp, { padding: 18 }]}>
+            <ShowArrivalStatus />
           {diff && diff > 0 && (
-            <View style={[styles.inner, { paddingRight: 10 }]}>
+            <View style={[ { padding: 10 }]}>
               <TextInput
                 value={providerNotes}
                 onChangeText={setProviderNotes}
@@ -249,6 +265,8 @@ const ParkingStatusView = ({ route }: Props) => {
               </View>
             </View>
           )}
+        </View>
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   )
@@ -258,18 +276,44 @@ export default ParkingStatusView
 
 
 const styles = StyleSheet.create({
+  infoHeader: { fontSize: 22, fontWeight: "500", color: "#e8e8e8" },
+  infoBlock: { 
+    borderWidth: 0.5,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginVertical: 5,
+    borderColor: "#9e9e9e", 
+    backgroundColor: "#737373",
+    padding: 9
+  },
+  boldText: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    marginBottom: 10
+  },
+  largeBlock: {
+    borderWidth: 0.5,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginVertical: 5,
+    borderColor: "#9e9e9e", 
+    padding: 9
+  },
+  card: {
+    backgroundColor: '#9c9c9c',
+    borderRadius: 8,
+    padding: 25,
+    width: '100%',
+    marginVertical: 10,
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
   container: {
     flex: 1,
-  },
-  outer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inner: {
-    padding: 10,
-    justifyContent: 'space-around',
-    borderColor: '#000000',
   },
   header: {
     fontSize: 24,
@@ -283,7 +327,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 2,
     marginBottom: 5
-
   },
   error: {
     marginBottom: 20,
@@ -295,5 +338,9 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     marginTop: 2,
+  },
+  text: {
+    fontSize: 19,
+    color: "white"
   },
 });

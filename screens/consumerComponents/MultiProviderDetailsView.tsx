@@ -1,6 +1,6 @@
 import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform, SafeAreaView } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
 import { DocumentData, arrayRemove, arrayUnion, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore'
 import { Divider } from '@rneui/base'
@@ -8,8 +8,11 @@ import { db } from '../../firebaseConfig'
 import { EventBlock } from './EventBlock'
 import { docDataPair } from '../providerComponents/ProviderRequestsView'
 import { AppButton } from './MakeRequestScreen'
+import { useNavigation } from '@react-navigation/native'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>
+type navigationProps = NativeStackNavigationProp<ConsumerStackParams, 'multiProviderDetailsView'>;
+
 /*
     Is there some way that I can have one onSnapshot function listen and update both these pages?
     It isn't necessary since a user may only need updates from one screen, but it could be a good addition
@@ -26,6 +29,8 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const [editSpaces, setEditSpaces] = useState('');
   const [focus, setFocus] = useState(false);
   const refInput = useRef<TextInput | null>(null);
+
+  const navigation = useNavigation<navigationProps>();
 
   // Getting the number of already available parking spaces
   useEffect(() => {
@@ -103,6 +108,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     
   const delEventReq = async () => {
     await deleteDoc(doc(db, "events", eventData.id));
+    navigation.goBack()
   }
 
   const updateSpaces = async () => {
@@ -113,13 +119,13 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   const ProviderBlock = ({providerInfo}: DocumentData) => {
     return (
       <View key={providerInfo.id}>
-        <Text key={providerInfo.name} style={styles.providerText}>
+        <Text key={providerInfo.name} style={styles.eventText}>
           {'Name: ' + providerInfo.name}
         </Text>
-        <Text key={providerInfo.address} style={styles.providerText}>
+        <Text key={providerInfo.address} style={styles.eventText}>
           {'Address: ' + providerInfo.address}
         </Text>
-        <Text key={providerInfo.address.slice(0, 3)} style={[styles.providerText, { marginBottom: 10 }]}>
+        <Text key={providerInfo.address.slice(0, 3)} style={[styles.eventText, { marginBottom: 10 }]}>
           Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
         <AppButton title="Accept" extraStyles={styles.eventButton} key={providerInfo.address.slice(1, 3)} onPress={() => disableButton(providerInfo.id)}/>
@@ -145,55 +151,58 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
       <View style={{ margin: 9 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ flexDirection: "row", marginTop: 7}}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-              Name: {eventData.doc.eventName}
-            </Text>
-            <View style={{ marginTop: -5, marginLeft: 35 }}>
-              <AppButton
-                title="Cancel Request"
-                onPress={showConfirmDel}
-                extraStyles={{height: 35}}
-              />
+          <View style={[styles.card, styles.shadowProp]}>
+            <View style={{ flexDirection: "row", marginTop: 7}}>
+              <Text style={styles.eventHeader}>
+                Name: {eventData.doc.eventName}
+              </Text>
+              <View style={{ marginTop: -5, marginLeft: 35 }}>
+                <AppButton
+                  title="Cancel"
+                  onPress={showConfirmDel}
+                  extraStyles={{height: 35}}
+                />
+              </View>
             </View>
+            <EventBlock event={eventData} showSpaces={false} showEditSpaces={true} showName={false} eventText={styles.eventText}/>
+            <Text style={styles.eventText}>
+              {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
+            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.eventText}>Requested Spaces:</Text>
+              <TextInput 
+                ref={refInput}
+                value={editSpaces}
+                onChangeText={setEditSpaces}
+                placeholder={event.doc.requestedSpaces.toString()}
+                keyboardType='numeric'
+                placeholderTextColor="#e8e8e8"
+                style={[
+                  Platform.OS == 'ios' 
+                  ? { marginLeft: 3, marginBottom: 10}
+                  : { marginTop: -3.5, marginLeft: 3},
+                {marginTop: 3, fontSize: 17}
+                ]}
+              />
+              <AppButton
+                  title={focus ? "Cancel" : "Edit"}
+                  onPress={changeSpaceCount}
+                  extraStyles={{height: 35, marginLeft: 60, marginTop: -4}}
+                />
+            </View>
+            {editSpaces.length !== 0 &&
+              <Button
+                title="Update Changes"
+                onPress={updateSpaces}
+              />
+            }
           </View>
-          <EventBlock event={eventData} showSpaces={false} showEditSpaces={true} showName={false} eventText={styles.eventText}/>
-          <Text style={styles.eventText}>
-            {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
-          </Text>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={styles.eventText}>Requested Spaces:</Text>
-            <TextInput 
-              ref={refInput}
-              value={editSpaces}
-              onChangeText={setEditSpaces}
-              placeholder={event.doc.requestedSpaces.toString()}
-              keyboardType='numeric'
-              placeholderTextColor="#000"
-              style={[
-                Platform.OS == 'ios' 
-                ? { marginLeft: 3, marginBottom: 18}
-                : { marginTop: -3.5, marginLeft: 3},
-              {marginTop: 4}
-              ]}
-            />
-            <TouchableOpacity onPress={changeSpaceCount} style={{ marginLeft: 20, marginTop: 4 }}>
-              <Text style={{ color: '#007AFF', fontSize: 15 }}>{focus ? "Cancel" : "Edit"}</Text>
-            </TouchableOpacity>
-          </View>
-          {editSpaces.length !== 0 &&
-            <Button
-              title="Update Changes"
-              onPress={updateSpaces}
-            />
-          }
           <Text style={styles.providerHeader}>Interested Providers:</Text>
-          <Divider width={5} style={{ margin: 10 }}/>
             {eventData.doc.interestedProviders
               .filter((pro: DocumentData) => 
                 (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
               .map((providerInfo: DocumentData) => (
-                <View style={styles.providerBlock}>
+                <View style={[styles.card, styles.shadowProp]}>
                   <ProviderBlock providerInfo={providerInfo}/>
                 </View>
               ))
@@ -202,7 +211,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
 
           <Text>{(currAvailPros == eventData.doc.requestedSpaces) && "Event Request Resolved!"}</Text>
           <Text style={[{ marginTop: 80 }, styles.providerHeader]}>Accepted Providers:</Text>
-          <Divider width={5} style={{ margin: 10 }}/>
           {eventData.doc.acceptedProviderIds
             .map((proId: string) => eventData.doc.interestedProviders
             .find((proObj: any) => proObj.id == proId))
@@ -231,6 +239,11 @@ const MultiProviderDetailsView = ({ route }: Props) => {
 export default MultiProviderDetailsView
 
 const styles = StyleSheet.create({
+  eventHeader: { 
+    fontSize: 22, 
+    fontWeight: "500", 
+    color: "#e8e8e8" 
+  },
   providerBlock: { 
     borderWidth: 1,
     overflow: 'hidden',
@@ -247,6 +260,18 @@ const styles = StyleSheet.create({
     width: 175, 
     alignSelf: "center" 
   },
+  card: {
+    backgroundColor: '#919090',
+    borderRadius: 8,
+    padding: 15,
+    width: '100%',
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
   accProviderBlock: { 
     borderWidth: 0.5,
     overflow: 'hidden',
@@ -262,7 +287,8 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   eventText: {
-    fontSize: 16,
-    paddingVertical: 2
+    fontSize: 17,
+    paddingVertical: 2,
+    color: "#e8e8e8" 
   }
 })

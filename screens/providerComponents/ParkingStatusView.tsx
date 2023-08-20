@@ -166,18 +166,18 @@ const ParkingStatusView = ({ route }: Props) => {
     }
     return (
       <View>
-        <Text style={{ fontSize: 20, marginBottom: 10 }}>
+        <Text style={[styles.infoHeader, { marginBottom: 10 }]}>
           Guest Status:
         </Text>
-        <Text style={{ fontSize: 20 }}>
+        <Text style={styles.infoHeader}>
           {text}
         </Text>
         {second && 
-          <Text style={{ fontSize: 20, marginBottom: 40, marginTop: 40 }}>
+          <Text style={[styles.infoHeader, { marginTop: 40 }]}>
             {second}
           </Text>
         }
-        <Divider width={3} style={{ paddingVertical: 20 }} />
+        <Divider width={3} style={{ paddingVertical: 10 }} />
         {!eventEnded
         ? <Text style={styles.boldText}>
             Event ends: {endTime.toLocaleString()}
@@ -235,7 +235,7 @@ const ParkingStatusView = ({ route }: Props) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView>
-        <View style={{ margin: 14 }}>
+        <View style={{ margin: 14, marginTop: -2 }}>
           <View style={[styles.card, styles.shadowProp]}>
             <Text style={styles.infoHeader}>Organizer Info:</Text>
             <RenderUserInfo />
@@ -276,7 +276,11 @@ export default ParkingStatusView
 
 
 const styles = StyleSheet.create({
-  infoHeader: { fontSize: 22, fontWeight: "500", color: "#e8e8e8" },
+  infoHeader: { 
+    fontSize: 22, 
+    fontWeight: "500", 
+    color: "#e8e8e8" 
+  },
   infoBlock: { 
     borderWidth: 0.5,
     overflow: 'hidden',
@@ -291,16 +295,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     marginBottom: 10
   },
-  largeBlock: {
-    borderWidth: 0.5,
-    overflow: 'hidden',
-    borderRadius: 10,
-    marginVertical: 5,
-    borderColor: "#9e9e9e", 
-    padding: 9
-  },
   card: {
-    backgroundColor: '#9c9c9c',
+    backgroundColor: '#8c8c8c',
     borderRadius: 8,
     padding: 25,
     width: '100%',

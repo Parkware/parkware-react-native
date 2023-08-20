@@ -106,7 +106,7 @@ export function ProviderRequestsView() {
   
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
-      <ScrollView showsVerticalScrollIndicator={false} >
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={[styles.requestHeader, { marginTop: 20 }]}>
           Accepted Requests
         </Text>
@@ -181,7 +181,8 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   eventText: {
-    fontSize: 16
+    fontSize: 17,
+    padding: 1
   },
   unclickableRequests: { 
     borderWidth: 0.5,

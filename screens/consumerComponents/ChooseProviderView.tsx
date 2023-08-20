@@ -71,9 +71,9 @@ const ChooseProviderView = ({ route }: Props) => {
 
   return (
     <SafeAreaView>
-      <View style={{ padding: 16 }}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-          Name: {event.doc.eventName}
+      <View style={{ paddingHorizontal: 16 }}>
+        <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 10, marginTop: -34, alignSelf: "center" }}>
+          {event.doc.eventName}
         </Text>
         {providerInfo ? providerInfo.map((proObj: DocumentData) => (
           <View key={proObj.id} style={styles.providerBlock}>
@@ -86,7 +86,6 @@ const ChooseProviderView = ({ route }: Props) => {
             <Text style={styles.text} key={proObj.providerSpaces}>Parking Spaces: {proObj.providerSpaces}</Text>
           </View>
         )) : <Text style={styles.text}>Loading...</Text>}
-        <Divider width={3} style={{ marginVertical: 15}}/>
         {eventEnded
         ? <View>{diff && diff > 0 && 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 10 }}>
@@ -103,15 +102,15 @@ const ChooseProviderView = ({ route }: Props) => {
             </Text>
           </View>
         </View>
-        : <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 10 }}>
+        : <View style={[styles.card, styles.shadowProp]}>
+            <Text style={styles.feedbackHeader}>
               Please fill out the survey form below.
             </Text>
-            <Text style={{ color: 'blue', fontSize: 19 }}
+            <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
                   onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                     https://forms.gle/DqPH34zYAfxdgzzt6
             </Text>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 14 }}>
+            <Text style={styles.feedbackHeader}>
               Thank you for using Parkware!
             </Text>
           </View>
@@ -124,6 +123,24 @@ const ChooseProviderView = ({ route }: Props) => {
 export default ChooseProviderView
 
 const styles = StyleSheet.create({
+  feedbackHeader: { 
+    fontSize: 22, 
+    fontWeight: "500", 
+    color: "#e8e8e8" 
+  },
+  card: {
+    backgroundColor: '#8c8c8c',
+    borderRadius: 8,
+    padding: 15,
+    width: '100%',
+    marginVertical: 10,
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
   container: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -148,7 +165,7 @@ const styles = StyleSheet.create({
     padding: 9
   },
   text: {
-    fontSize: 15,
+    fontSize: 16,
     paddingVertical: 2
   }
 })

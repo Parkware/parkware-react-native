@@ -91,7 +91,7 @@ export function ConsumerRequestsView() {
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
       <View>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={[styles.requestHeader, { marginTop: 15 }]}>
             Pending Requests
           </Text>
@@ -103,7 +103,7 @@ export function ConsumerRequestsView() {
                   {event.doc.interestedProviders.length !== 0
                     ? ( 
                     <View>
-                      <Divider width={5} color="gray" style={{ marginVertical: 6, borderRadius: 10 }}/>
+                      <Divider width={3} color="#a3a2a2" style={{ marginVertical: 6, borderRadius: 10 }}/>
                       <Text style={{ fontSize: 18, marginBottom: 4 }}>Available Providers:</Text>
                       {event.doc.interestedProviders
                         .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
@@ -115,7 +115,7 @@ export function ConsumerRequestsView() {
                           <Text key={providerInfo.address}>
                           {'Address: ' + providerInfo.address}
                           </Text>
-                          <Divider width={3} color="#a3a2a2" style={{ marginVertical: 6, borderRadius: 10 }}/>
+                          {/* <Divider width={3} color="#a3a2a2" style={{ marginVertical: 6, borderRadius: 10 }}/> */}
                         </View>
                       ))}
                     </View>
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   eventText: {
-    fontSize: 16
+    fontSize: 16,
+    padding: 1
   }
 });

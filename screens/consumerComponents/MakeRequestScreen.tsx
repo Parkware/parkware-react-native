@@ -60,7 +60,7 @@ export function MakeRequestScreen() {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <View style={{ flexDirection: "row", marginTop: 0, height: 45 }}>
+        <View style={{ flexDirection: "row", marginTop: 1, height: 45 }}>
           <AuthButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginRight: 110}}/>
           <AuthButton title="Log out" onPress={showConfirmLogout}/>
         </View>
@@ -139,7 +139,7 @@ export function MakeRequestScreen() {
     }
   }
   const showReqSuccess = () =>
-    Alert.alert('Your event request has been successful!', '', [
+    Alert.alert('Your event request is successful!', '', [
       {text: 'Continue', onPress: () => switchView()},
     ]);
   const startTimeFun = (event: any, selectedDate: any) => {

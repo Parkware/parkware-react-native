@@ -4,7 +4,7 @@ import React from 'react'
 const LoadingScreen = () => {
   return (
     <View style={{ alignItems: "center", marginTop: 350 }}>
-      <Text style={{ fontSize: 50 }}>Loading...</Text>
+      <Text style={{ fontSize: 50 }}>Logging in...</Text>
     </View>
   )
 }

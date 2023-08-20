@@ -41,6 +41,17 @@ export const AuthButton = ({ onPress, title, extraStyles=null, disabled, key=nul
   </TouchableOpacity>
 );
 
+export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
+  <TouchableOpacity 
+    onPress={onPress} 
+    style={[styles.authButtonContainer, extraStyles]}
+    disabled={disabled}
+    key={key}
+  >
+    <Text style={styles.deleteButtonText}>{title}</Text>
+  </TouchableOpacity>
+);
+
 export function MakeRequestScreen() {
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date());
@@ -61,7 +72,6 @@ export function MakeRequestScreen() {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row", marginTop: 1, height: 45 }}>
-          <AuthButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginRight: 110}}/>
           <AuthButton title="Log out" onPress={showConfirmLogout}/>
         </View>
       ),
@@ -374,6 +384,7 @@ export function MakeRequestScreen() {
         title="Skip"
         onPress={switchView}
       />
+      <DeleteAccountButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginTop: 70, borderColor: "red" }}/>
     </View>
   );
 }
@@ -421,7 +432,7 @@ const styles = StyleSheet.create({
   showPickerButton: {},
   appButtonContainer: {
     elevation: 8,
-    backgroundColor: "#737373",
+    backgroundColor: "#6b7080",
     borderRadius: 10,
     paddingVertical: 7,
     paddingHorizontal: 12,
@@ -445,6 +456,12 @@ const styles = StyleSheet.create({
   authButtonText: {
     fontSize: 18,
     color: "#3a74a6",
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
+  deleteButtonText: {
+    fontSize: 18,
+    color: "red",
     fontWeight: "bold",
     alignSelf: "center",
   }

@@ -183,14 +183,14 @@ const ParkingStatusView = ({ route }: Props) => {
             Event ends: {endTime.toLocaleString()}
           </Text>
         : <View>
-            <Text style={[styles.boldText, { marginTop: 10 }]}>
+            <Text style={[styles.infoHeader, { marginTop: 10, fontWeight: "700", fontSize: 20 }]}>
               Please fill out the survey form below.
             </Text>
-            <Text style={{ color: 'blue', fontSize: 19 }}
+            <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
                   onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                     https://forms.gle/DqPH34zYAfxdgzzt6
             </Text>
-            <Text style={[styles.boldText, { marginTop: 14 }]}>
+            <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
               Thank you for providing your space!
             </Text>
           </View>
@@ -207,11 +207,11 @@ const ParkingStatusView = ({ route }: Props) => {
       // need to create push notifications if the guest leaves. this needs to alert the provider
         return (
           <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 0, marginTop: 10 }}>
+            <Text style={[{ marginTop: 10 }, styles.text]}>
               {timeRemaining} till the event starts. 
               {'\n'}Please add notes for the following info to be shown to the guest:
             </Text>
-            <Text style={{ fontSize: 18 }}>
+            <Text style={styles.text}>
               {'\n'}- Which side(s) of the driveway should be used (while facing the house)
             </Text>
           </View>
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   infoHeader: { 
     fontSize: 22, 
     fontWeight: "500", 
-    color: "#e8e8e8" 
+    color: "#454852"
   },
   infoBlock: { 
     borderWidth: 0.5,
@@ -296,9 +296,9 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   card: {
-    backgroundColor: '#8c8c8c',
+    backgroundColor: '#A7ADC6',
     borderRadius: 8,
-    padding: 25,
+    padding: 15,
     width: '100%',
     marginVertical: 10,
   },
@@ -337,6 +337,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 19,
-    color: "white"
+    color: "#454852" 
   },
 });

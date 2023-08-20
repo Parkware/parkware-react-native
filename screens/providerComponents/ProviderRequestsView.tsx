@@ -125,7 +125,7 @@ export function ProviderRequestsView() {
         <View>
           {pendingEvents.map((event) => (
             <View style={styles.unclickableRequests} key={event.id.slice(0, 5)}>
-              <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+              <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={{fontSize: 17, padding: 1}}/>
             </View>
           ))}
         </View>
@@ -137,7 +137,7 @@ export function ProviderRequestsView() {
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
             .map((event) => (
             <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
-              <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+              <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={{fontSize: 17, padding: 1}}/>
               <View style={{ padding: 10, justifyContent: 'space-between' }}>
                 <AppButton title="Accept" extraStyles={styles.eventButton} key={event.doc.address} onPress={() => updateDB(event)}/>
                 <AppButton title="Decline" extraStyles={styles.eventButton} key={event.doc.name} onPress={() => removeLocalEventData(event.id)}/>
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 10,
     borderColor: "#9e9e9e", 
-    backgroundColor: "#c2c2c2",
+    backgroundColor: "#8797AF",
   },
   requestHeader: { 
     fontSize: 23, 
@@ -182,7 +182,8 @@ const styles = StyleSheet.create({
   },
   eventText: {
     fontSize: 17,
-    padding: 1
+    padding: 1,
+    color: "white"
   },
   unclickableRequests: { 
     borderWidth: 0.5,
@@ -190,7 +191,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 5,
     borderColor: "#9e9e9e", 
-    padding: 9
+    padding: 9, 
+    backgroundColor: "#d5dcf5"
   },
   eventButton: {
     width: 155, 

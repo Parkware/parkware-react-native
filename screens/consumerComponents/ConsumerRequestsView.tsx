@@ -89,7 +89,7 @@ export function ConsumerRequestsView() {
   }, []);
 
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
+    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <View>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={[styles.requestHeader, { marginTop: 15 }]}>
@@ -103,19 +103,18 @@ export function ConsumerRequestsView() {
                   {event.doc.interestedProviders.length !== 0
                     ? ( 
                     <View>
-                      <Divider width={3} color="#a3a2a2" style={{ marginVertical: 6, borderRadius: 10 }}/>
-                      <Text style={{ fontSize: 18, marginBottom: 4 }}>Available Providers:</Text>
+                      {/* <Divider width={2} color="#687487" style={{ marginVertical: 6, borderRadius: 10 }}/> */}
+                      <Text style={{ fontSize: 18, marginBottom: 4, marginTop: 7, color: "white" }}>Available Providers:</Text>
                       {event.doc.interestedProviders
                         .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
                         .map((providerInfo: DocumentData) => (
                         <View key={providerInfo.id}>
-                          <Text key={providerInfo.name}>
+                          <Text key={providerInfo.name} style={{ color: "white" }}>
                           {'Name: ' + providerInfo.name}
                           </Text>
-                          <Text key={providerInfo.address}>
+                          <Text key={providerInfo.address} style={{ color: "white" }}>
                           {'Address: ' + providerInfo.address}
                           </Text>
-                          {/* <Divider width={3} color="#a3a2a2" style={{ marginVertical: 6, borderRadius: 10 }}/> */}
                         </View>
                       ))}
                     </View>
@@ -150,18 +149,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     overflow: 'hidden',
     borderRadius: 10,
-    marginVertical: 10,
+    marginVertical: 5,
     borderColor: "#9e9e9e", 
-    backgroundColor: "#c2c2c2",
+    backgroundColor: "#8797AF",
   },
   requestHeader: { 
     fontSize: 23, 
     fontWeight: 'bold', 
     marginBottom: 10, 
-    alignSelf: "center"
+    alignSelf: "center",
   },
   eventText: {
-    fontSize: 16,
-    padding: 1
+    fontSize: 17,
+    padding: 1,
+    color: "white"
   }
 });

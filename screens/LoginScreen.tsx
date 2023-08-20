@@ -64,7 +64,7 @@ export function LoginScreen() {
             style={styles.input}
           />
           <TouchableOpacity onPress={() => navigation.navigate('resetPassword')}>
-            <Text style={[styles.link, { color: '#333' }]}>I've forgotten my password</Text>
+            <Text style={[styles.link, { color: '#2C1320' }]}>I've forgotten my password</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={loginUser} disabled={!email || !password} style={{ alignSelf: "center" }}>
             <Text style={[styles.link, { fontSize: 18 }]}>Login</Text>
@@ -90,7 +90,7 @@ export function LoginScreen() {
       alignItems: 'center',
     },
     card: {
-      backgroundColor: '#919090',
+      backgroundColor: '#56667A',
       borderRadius: 8,
       padding: 15,
       width: '100%',
@@ -105,7 +105,7 @@ export function LoginScreen() {
       fontSize: 24,
       fontWeight: 'bold',
       marginBottom: 20,
-      color: "#f5f5f5",
+      color: "#bec7ed",
       alignSelf: "center", 
       textAlign: "center" 
     },
@@ -122,7 +122,7 @@ export function LoginScreen() {
       color: 'red',
     },
     link: {
-      color: '#f5f5f5',
+      color: '#bec7ed',
       marginBottom: 20,
     },
   });

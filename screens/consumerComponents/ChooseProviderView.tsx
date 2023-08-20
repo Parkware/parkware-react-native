@@ -92,11 +92,11 @@ const ChooseProviderView = ({ route }: Props) => {
               {timeRemaining} till your parking event.
             </Text>
           }
-          <View style={{ marginTop: 75 }}>
-            <Text style={{ marginBottom: 10, fontSize: 17 }}>
+          <View style={[styles.card, styles.shadowProp, { marginTop: 7 }]}>
+            <Text style={{ marginBottom: 10, fontSize: 18, color: "white" }}>
               Share the link below with other guests so that they can update their status to the providers
             </Text>
-            <Text style={{ color: 'blue', fontSize: 17 }}
+            <Text style={{ color: 'lightblue', fontSize: 15 }}
                   onPress={() => Linking.openURL(shareableLink)}>
               {shareableLink.replace('https://', '')}
             </Text>
@@ -106,7 +106,7 @@ const ChooseProviderView = ({ route }: Props) => {
             <Text style={styles.feedbackHeader}>
               Please fill out the survey form below.
             </Text>
-            <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
+            <Text style={{ color: 'lightblue', fontSize: 19, marginVertical: 10 }}
                   onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                     https://forms.gle/DqPH34zYAfxdgzzt6
             </Text>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     color: "#e8e8e8" 
   },
   card: {
-    backgroundColor: '#8c8c8c',
+    backgroundColor: '#56667A',
     borderRadius: 8,
     padding: 15,
     width: '100%',
@@ -161,11 +161,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 5,
     borderColor: "#9e9e9e", 
-    backgroundColor: "#e8e8e8",
+    backgroundColor: "#5F4B66",
     padding: 9
   },
   text: {
     fontSize: 16,
-    paddingVertical: 2
+    paddingVertical: 2,
+    color: "white"
   }
 })

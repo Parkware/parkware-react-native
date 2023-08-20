@@ -158,7 +158,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
               </Text>
               <View style={{ marginTop: -5, marginLeft: 35 }}>
                 <AppButton
-                  title="Cancel"
+                  title="Delete"
                   onPress={showConfirmDel}
                   extraStyles={{height: 35}}
                 />
@@ -176,7 +176,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
                 onChangeText={setEditSpaces}
                 placeholder={event.doc.requestedSpaces.toString()}
                 keyboardType='numeric'
-                placeholderTextColor="#e8e8e8"
+                placeholderTextColor="#454852"
                 style={[
                   Platform.OS == 'ios' 
                   ? { marginLeft: 3, marginBottom: 10}
@@ -191,9 +191,10 @@ const MultiProviderDetailsView = ({ route }: Props) => {
                 />
             </View>
             {editSpaces.length !== 0 &&
-              <Button
+              <AppButton
                 title="Update Changes"
                 onPress={updateSpaces}
+                extraStyles={{ width: 170, alignSelf: "center" }}
               />
             }
           </View>
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
   eventHeader: { 
     fontSize: 22, 
     fontWeight: "500", 
-    color: "#e8e8e8" 
+    color: "#454852" 
   },
   providerBlock: { 
     borderWidth: 1,
@@ -254,14 +255,14 @@ const styles = StyleSheet.create({
     padding: 9
   },
   providerText: {
-    fontSize: 16
+    fontSize: 16,
   },
   eventButton: {
     width: 175, 
-    alignSelf: "center" 
+    alignSelf: "center"
   },
   card: {
-    backgroundColor: '#919090',
+    backgroundColor: '#A7ADC6',
     borderRadius: 8,
     padding: 15,
     width: '100%',
@@ -289,6 +290,6 @@ const styles = StyleSheet.create({
   eventText: {
     fontSize: 17,
     paddingVertical: 2,
-    color: "#e8e8e8" 
+    color: "#454852" 
   }
 })

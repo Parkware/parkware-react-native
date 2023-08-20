@@ -107,7 +107,7 @@ export function SignupScreen() {
       alignItems: 'center',
     },
     card: {
-      backgroundColor: '#919090',
+      backgroundColor: '#56667A',
       borderRadius: 8,
       padding: 15,
       width: '100%',
@@ -124,7 +124,7 @@ export function SignupScreen() {
       fontSize: 30,
       fontWeight: 'bold',
       marginBottom: 20,
-      color: "#f5f5f5"
+      color: "#bec7ed"
     },
     input: {
       borderWidth: 1,
@@ -139,7 +139,7 @@ export function SignupScreen() {
       color: 'red',
     },
     link: {
-      color: '#f5f5f5',
+      color: '#bec7ed',
       marginBottom: 20,
     },
   });

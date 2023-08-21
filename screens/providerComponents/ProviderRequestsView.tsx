@@ -4,12 +4,11 @@ import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot,
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
 import { signOut } from 'firebase/auth';
-import { EventStatusText } from './EventStatusText';
 import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import { AppButton, AuthButton } from '../consumerComponents/MakeRequestScreen';
+import { AppButton, AuthButton } from '../ButtonComponents';
 
 export interface docDataPair {
   id: string,

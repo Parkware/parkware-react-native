@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SignupStackParams } from '../App';
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
-import { AppButton } from './consumerComponents/MakeRequestScreen';
+import { AppButton } from './ButtonComponents';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'signupRoleView'>;
 

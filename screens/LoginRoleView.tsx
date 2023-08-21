@@ -6,7 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../App';
 import { deleteUser, signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { AppButton, AuthButton, DeleteAccountButton } from './consumerComponents/MakeRequestScreen';
+import { AppButton, AuthButton, DeleteAccountButton } from './ButtonComponents';
 
 type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleView'>;
 

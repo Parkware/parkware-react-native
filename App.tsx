@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import { auth, db } from './firebaseConfig';
-import { AppButton, MakeRequestScreen } from './screens/consumerComponents/MakeRequestScreen';
+import { MakeRequestScreen } from './screens/consumerComponents/MakeRequestScreen';
 import { SignupScreen } from './screens/SignupScreen';
 import { ResetPassword } from './screens/ResetPassword';
 import { LoginScreen } from './screens/LoginScreen';

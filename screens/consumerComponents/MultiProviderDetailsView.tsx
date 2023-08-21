@@ -7,7 +7,7 @@ import { Divider } from '@rneui/base'
 import { db } from '../../firebaseConfig'
 import { EventBlock } from './EventBlock'
 import { docDataPair } from '../providerComponents/ProviderRequestsView'
-import { AppButton } from './MakeRequestScreen'
+import { AppButton } from '../ButtonComponents'
 import { useNavigation } from '@react-navigation/native'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'multiProviderDetailsView'>

@@ -12,45 +12,10 @@ import { useNavigation } from '@react-navigation/native';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { AppButton } from '../ButtonComponents';
 
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
-
-export const AppButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
-  <TouchableOpacity 
-    onPress={onPress} 
-    style={
-      disabled 
-      ? [styles.appButtonContainer, { backgroundColor: '#c7c3c3', elevation: 0 }]
-      : [styles.appButtonContainer, extraStyles]}
-    disabled={disabled}
-    key={key}
-  >
-    <Text style={styles.appButtonText}>{title}</Text>
-  </TouchableOpacity>
-);
-
-export const AuthButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
-  <TouchableOpacity 
-    onPress={onPress} 
-    style={[styles.authButtonContainer, extraStyles]}
-    disabled={disabled}
-    key={key}
-  >
-    <Text style={styles.authButtonText}>{title}</Text>
-  </TouchableOpacity>
-);
-
-export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
-  <TouchableOpacity 
-    onPress={onPress} 
-    style={[styles.authButtonContainer, extraStyles]}
-    disabled={disabled}
-    key={key}
-  >
-    <Text style={styles.deleteButtonText}>{title}</Text>
-  </TouchableOpacity>
-);
 
 export function MakeRequestScreen() {
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -97,10 +62,15 @@ export function MakeRequestScreen() {
       }
     }
   }
-  const showReqSuccess = () =>
-    Alert.alert('Your event request is successful!', '', [
-      {text: 'Ok', onPress: () => navigation.goBack()},
-    ]);
+  
+  const dateFun = (event: any, selectedDate: any) => {
+    if (event.type === 'set' && selectedDate) {
+      startTime.setDate(selectedDate.getDate());
+      setStartTime(startTime);
+      endTime.setDate(selectedDate.getDate());
+      setEndTime(endTime);
+    }
+  };
   const startTimeFun = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setStartTime(selectedDate);
@@ -117,16 +87,17 @@ export function MakeRequestScreen() {
       setDate(selectedDate);
     }
   };
-
-  const dateFun = (event: any, selectedDate: any) => {
-    if (event.type === 'set' && selectedDate) {
-      startTime.setDate(selectedDate.getDate());
-      setStartTime(startTime);
-      endTime.setDate(selectedDate.getDate());
-      setEndTime(endTime);
+  const spaceCountFun = (count: number) => {
+    if (count < 1) {
+      setSendable(false);
+      setError('At least one parking spot needs to be requested!')
+    } else {
+      setRequestedSpaces(count)
+      setSendable(true);
     }
-  };
+  }
 
+  /* --------------------------- HELPER FUNCTIONS --------------------------- */
   const checkIfBefore = (endTime: any) => {
     if (endTime < startTime) {
       setSendable(false);
@@ -143,22 +114,16 @@ export function MakeRequestScreen() {
       setSendable(true);
   }
 
-  const spaceCountFun = (count: number) => {
-    if (count < 1) {
-      setSendable(false);
-      setError('At least one parking spot needs to be requested!')
-    } else {
-      setRequestedSpaces(count)
-      setSendable(true);
-    }
-  }
-
   const handleStartConfirm = (time: any) => {
     setStartTime(time);
     const diff = endTime.getTime()-time.getTime();
     findDiff(diff);
     setStartTimeVisible(false)
   };
+  const showReqSuccess = () =>
+    Alert.alert('Your event request is successful!', '', [
+      {text: 'Ok', onPress: () => navigation.goBack()},
+    ]);
 
   const handleEndConfirm = (time: any) => {
     setEndTime(time);
@@ -174,6 +139,43 @@ export function MakeRequestScreen() {
     setEndTime(endTime);
     setDate(date);
     setDateVisible(false);
+  };
+  
+  const showModeAndroid = (currentMode: any, type: string) => {
+    if (type === 'start') {
+      DateTimePickerAndroid.open({
+        value: startTime,
+        onChange: startTimeFun,
+        mode: currentMode,
+        is24Hour: false,
+      });
+    } else if (type === 'end') {
+        DateTimePickerAndroid.open({
+        value: endTime,
+        onChange: endTimeFun,
+        mode: currentMode,
+        is24Hour: false,
+      });
+    } else {
+      DateTimePickerAndroid.open({
+        value: startTime,
+        onChange: dateFun,
+        mode: currentMode,
+        is24Hour: false,
+      });
+    }
+  };
+
+  const showDatepicker = () => {
+    showModeAndroid('date', '');
+  };
+
+  const showStartPicker = () => {
+    showModeAndroid('time', 'start');
+  };
+
+  const showEndPicker = () => {
+    showModeAndroid('time', 'end');
   };
 
   const DatePickeriOS = () => {
@@ -234,42 +236,6 @@ export function MakeRequestScreen() {
       </View>
     )
   }
-  const showModeAndroid = (currentMode: any, type: string) => {
-    if (type === 'start') {
-      DateTimePickerAndroid.open({
-        value: startTime,
-        onChange: startTimeFun,
-        mode: currentMode,
-        is24Hour: false,
-      });
-    } else if (type === 'end') {
-        DateTimePickerAndroid.open({
-        value: endTime,
-        onChange: endTimeFun,
-        mode: currentMode,
-        is24Hour: false,
-      });
-    } else {
-      DateTimePickerAndroid.open({
-        value: startTime,
-        onChange: dateFun,
-        mode: currentMode,
-        is24Hour: false,
-      });
-    }
-  };
-
-  const showDatepicker = () => {
-    showModeAndroid('date', '');
-  };
-
-  const showStartPicker = () => {
-    showModeAndroid('time', 'start');
-  };
-
-  const showEndPicker = () => {
-    showModeAndroid('time', 'end');
-  };
 
   const DatePickerAndroid = () => {
     return (
@@ -281,7 +247,6 @@ export function MakeRequestScreen() {
     );
   }
 
-  
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={styles.header}>Make a Request</Text>
@@ -311,7 +276,7 @@ export function MakeRequestScreen() {
         autoCapitalize="none"
         placeholderTextColor="#aaa"
         autoCorrect={false}
-        style={[styles.input, { marginTop: 3}]}
+        style={[styles.input, { marginTop: 3 }]}
       />
       <View style={{ flexDirection:"row", paddingBottom: 15 }}>
         <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
@@ -322,7 +287,6 @@ export function MakeRequestScreen() {
         onPress={createEventRequest}
         disabled={!sendable || address.length == 0 }
       />
-      
     </View>
   );
 }

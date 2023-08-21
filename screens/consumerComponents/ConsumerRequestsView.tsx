@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, Alert } from 'react-native';
 import { DocumentData, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
-import { Divider } from '@rneui/themed';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
-import { AppButton, AuthButton, DeleteAccountButton } from './MakeRequestScreen';
+import { AppButton, AuthButton, DeleteAccountButton } from '../ButtonComponents';
 import { deleteUser, signOut } from 'firebase/auth';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;

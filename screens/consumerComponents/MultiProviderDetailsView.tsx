@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform, SafeAreaView } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform, SafeAreaView, StatusBar } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
@@ -144,8 +144,8 @@ const MultiProviderDetailsView = ({ route }: Props) => {
         <Text key={providerInfo.address.slice(0, 3)} style={[styles.eventText, { marginBottom: 10 }]}>
           Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
-        <AppButton title="Accept" extraStyles={styles.eventButton} key={providerInfo.address.slice(1, 3)} onPress={() => disableButton(providerInfo.id)}/>
-        <AppButton title="Decline" extraStyles={styles.eventButton} key={providerInfo.address.slice(2, 4)} onPress={() => removeLocalData(providerInfo.id)}/>
+        <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => disableButton(providerInfo.id)}/>
+        <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalData(providerInfo.id)}/>
       </View>
     )
   }
@@ -166,7 +166,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
   
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
-      <View style={{ margin: 9 }}>
+      <View style={{ margin: 9, paddingTop: Platform.OS === "android" ? 70 : 0 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={[styles.card, styles.shadowProp]}>
             <View style={{ flexDirection: "row", marginTop: 7}}>
@@ -197,8 +197,8 @@ const MultiProviderDetailsView = ({ route }: Props) => {
                 style={[
                   Platform.OS == 'ios' 
                   ? { marginLeft: 3, marginBottom: 10}
-                  : { marginTop: -3.5, marginLeft: 3},
-                {marginTop: 3, fontSize: 17}
+                  : { marginTop: -5, marginLeft: 4 },
+                {fontSize: 17}
                 ]}
               />
               <AppButton
@@ -308,5 +308,5 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingVertical: 2,
     color: "#454852" 
-  }
+  },
 })

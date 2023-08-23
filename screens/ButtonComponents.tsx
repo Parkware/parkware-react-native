@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 
 export const AppButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
   <TouchableOpacity 
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
     padding: 13, 
     fontSize: 16
   },
-  showPickerButton: {},
   appButtonContainer: {
     elevation: 8,
     backgroundColor: "#6b7080",
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   authButtonContainer: {
-    elevation: 8,
+    elevation: Platform.OS === "android" ? 0 : 8,
     borderRadius: 8,
     paddingVertical: 7,
     paddingHorizontal: 12,

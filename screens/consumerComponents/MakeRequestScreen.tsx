@@ -240,9 +240,9 @@ export function MakeRequestScreen() {
   const DatePickerAndroid = () => {
     return (
       <View>
-        <AppButton onPress={showDatepicker} title="Show date picker" extraStyles={styles.showPickerButton}/>
-        <AppButton onPress={showStartPicker} title="Show Start time picker" />
-        <AppButton onPress={showEndPicker} title="Show End time picker" />
+        <AppButton onPress={showDatepicker} title="Show date picker" extraStyles={styles.smallerWidth} />
+        <AppButton onPress={showStartPicker} title="Show Start time picker" extraStyles={styles.smallerWidth} />
+        <AppButton onPress={showEndPicker} title="Show End time picker" extraStyles={styles.smallerWidth} />
       </View>
     );
   }
@@ -366,5 +366,9 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "bold",
     alignSelf: "center",
+  },
+  smallerWidth: {
+    width: 250,
+    alignSelf: "center"
   }
 });

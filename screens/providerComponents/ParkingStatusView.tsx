@@ -235,7 +235,7 @@ const ParkingStatusView = ({ route }: Props) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView>
-        <View style={{ margin: 14, marginTop: -2 }}>
+        <View style={{ margin: 14, marginTop: -2, paddingTop: Platform.OS === "android" ? 70 : 0 }}>
           <View style={[styles.card, styles.shadowProp]}>
             <Text style={styles.infoHeader}>Organizer Info:</Text>
             <RenderUserInfo />

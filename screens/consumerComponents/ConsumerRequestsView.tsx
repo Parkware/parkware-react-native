@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, Alert } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, Alert, StatusBar, Platform } from 'react-native';
 import { DocumentData, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -26,10 +26,13 @@ export function ConsumerRequestsView() {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row", marginTop: 6 }}>
-          <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginRight: 120}}/>
-          <Text style={{ fontSize: 16, fontFamily: 'Al Nile', marginTop: 10 }}>Logged in as {userName}</Text>
+          <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={Platform.OS == "android" ? { marginRight: 150 } : { marginRight: 120 }}/>
+          <Text style={Platform.OS == "ios" ? styles.headerStyleIOS : styles.headerStyleAndroid}>Logged in as {userName}</Text>
         </View>
       ),
+      headerStyle: {
+        backgroundColor: '#F2F2F2',
+      },
     });
   }, [navigation, userName]);
 
@@ -136,8 +139,8 @@ export function ConsumerRequestsView() {
   }, [])
 
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <View>
+    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center'  }}>
+      <View style={{ paddingTop: Platform.OS === "android" ? 30 : 0 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={[styles.requestHeader, { marginTop: 15 }]}>
             Pending
@@ -227,5 +230,15 @@ const styles = StyleSheet.create({
     fontSize: 17,
     padding: 1,
     color: "white"
+  },
+  headerStyleIOS: { 
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5 
+  },
+  headerStyleAndroid: {
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5 
   }
 });

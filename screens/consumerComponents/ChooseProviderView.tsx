@@ -1,4 +1,4 @@
-import { Linking, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native'
+import { Linking, StyleSheet, Text, TouchableOpacity, View, SafeAreaView, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
@@ -71,7 +71,7 @@ const ChooseProviderView = ({ route }: Props) => {
 
   return (
     <SafeAreaView>
-      <View style={{ paddingHorizontal: 16 }}>
+      <View style={{ paddingHorizontal: 16, paddingTop: Platform.OS === "android" ? 70 : 0 }}>
         <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 10, marginTop: -34, alignSelf: "center" }}>
           {event.doc.eventName}
         </Text>

@@ -12,7 +12,7 @@ import { ProviderRequestsView, docDataPair } from './screens/providerComponents/
 import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
@@ -133,7 +133,7 @@ const ConsumerScreenStack = () => {
         component={MakeRequestScreen} 
       />
       <ConsumerStack.Screen
-        options={{ title: "", headerTransparent: true }}
+        options={{ title: "", headerTransparent: false }}
         name="consumerRequestsView"
         component={ConsumerRequestsView}
       />

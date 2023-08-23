@@ -67,6 +67,7 @@ export type SignupStackParams = {
   signupRoleView: {
     name: string,
     email: string,
+    phoneNum: string,
     password: string
   };
 }

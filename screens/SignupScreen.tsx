@@ -3,12 +3,14 @@ import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParams } from '../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
+import { AppButton } from './ButtonComponents';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Signup'>;
 
 export function SignupScreen() {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState('');
+    const [phoneNum, setPhoneNum] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
@@ -20,6 +22,7 @@ export function SignupScreen() {
         params: {
           name,
           email,
+          phoneNum,
           password
         } 
       });
@@ -64,6 +67,15 @@ export function SignupScreen() {
             style={styles.input}
           />
           <TextInput
+            value={phoneNum}
+            onChangeText={setPhoneNum}
+            keyboardType="phone-pad"
+            placeholder="Enter phone number"
+            autoCapitalize="none"
+            placeholderTextColor="#ccc"
+            style={styles.input}
+          />
+          <TextInput
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -81,10 +93,10 @@ export function SignupScreen() {
             placeholderTextColor="#ccc"
             style={styles.input}
           />
-          <Button
+          <AppButton
             title="Create Account"
             onPress={checkPassword}
-            disabled={!email || !password }
+            disabled={ !email || !password || (password !== confirmPassword) || (password.length < 6)}
           />
         </View>
       </View>

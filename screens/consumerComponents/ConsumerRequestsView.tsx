@@ -153,7 +153,6 @@ export function ConsumerRequestsView() {
                   {event.doc.interestedProviders.length !== 0
                     ? ( 
                     <View>
-                      {/* <Divider width={2} color="#687487" style={{ marginVertical: 6, borderRadius: 10 }}/> */}
                       <Text style={{ fontSize: 18, marginBottom: 4, marginTop: 7, color: "white" }}>Available Providers:</Text>
                       {event.doc.interestedProviders
                         .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
@@ -176,7 +175,7 @@ export function ConsumerRequestsView() {
             ))}
           </View>
 
-          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
+          <Text style={[styles.requestHeader, { marginTop: 15 }]}>
             Accepted
           </Text>
           <View>

@@ -152,7 +152,7 @@ export function ProviderRequestsView() {
             </View>
           ))}
         </View>
-        <Text style={[styles.requestHeader, { marginTop: 30 }]}>
+        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
           Open
         </Text>
         <View>

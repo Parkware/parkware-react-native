@@ -20,6 +20,7 @@ import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
 import { LoginRoleView } from './screens/LoginRoleView';
+import { Platform } from 'react-native';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -134,7 +135,7 @@ const ConsumerScreenStack = () => {
         component={MakeRequestScreen} 
       />
       <ConsumerStack.Screen
-        options={{ title: "", headerTransparent: false }}
+        options={{ title: "", headerTransparent: Platform.OS === "android" ? false : true }}
         name="consumerRequestsView"
         component={ConsumerRequestsView}
       />

@@ -27,7 +27,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.narenm07.parkware",
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/logo.png"

@@ -178,23 +178,25 @@ const ParkingStatusView = ({ route }: Props) => {
           </Text>
         }
         <Divider width={3} style={{ paddingVertical: 10 }} />
+        <View style={{ marginTop: 10 }}>
         {!eventEnded
-        ? <Text style={styles.boldText}>
-            Event ends: {endTime.toLocaleString()}
-          </Text>
-        : <View>
-            <Text style={[styles.infoHeader, { marginTop: 10, fontWeight: "700", fontSize: 20 }]}>
-              Please fill out the survey form below.
+          ? <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+              Event ends: {endTime.toLocaleString()}
             </Text>
-            <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
-                  onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
-                    https://forms.gle/DqPH34zYAfxdgzzt6
-            </Text>
-            <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
-              Thank you for providing your space!
-            </Text>
-          </View>
-        }
+          : <View>
+              <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                Please fill out the survey form below.
+              </Text>
+              <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
+                    onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
+                      https://forms.gle/DqPH34zYAfxdgzzt6
+              </Text>
+              <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                Thank you for providing your space!
+              </Text>
+            </View>
+          }
+        </View>
       </View>
     )
   }
@@ -229,7 +231,7 @@ const ParkingStatusView = ({ route }: Props) => {
         </View>
       )
     return (
-      <Text>Loading...</Text>
+      <Text style={styles.text}>Loading...</Text>
     )
   }
   return (

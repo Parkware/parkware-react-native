@@ -202,7 +202,11 @@ export function ConsumerRequestsView() {
           <DeleteAccountButton 
             title="Delete account" 
             onPress={showConfirmDel} 
-            extraStyles={{ borderColor: "red", marginTop: 20 }}
+            extraStyles={{ 
+              borderColor: "red", 
+              marginTop: 20,
+              marginBottom: Platform.OS === "android" ? 15 : 0
+            }}
           />
         </ScrollView>
       </View>

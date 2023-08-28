@@ -130,9 +130,11 @@ export function ProviderRequestsView() {
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-          Accepted
-        </Text>
+        {accEvents.length !== 0 && (
+          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
+            Accepted
+          </Text>
+        )}
         <View>
           {accEvents.map(event => (
             <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
@@ -142,9 +144,11 @@ export function ProviderRequestsView() {
             </TouchableOpacity>
           ))}
         </View>
-        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-          Pending
-        </Text>
+        {pendingEvents.length !== 0 && (
+          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
+            Pending
+          </Text>
+        )}
         <View>
           {pendingEvents.map((event) => (
             <View style={styles.unclickableRequests} key={event.id.slice(0, 5)}>
@@ -152,9 +156,12 @@ export function ProviderRequestsView() {
             </View>
           ))}
         </View>
-        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-          Open
-        </Text>
+        {openEvents.length !== 0 && (
+          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
+            Open
+          </Text>
+        )}
+        {(accEvents.length == 0 && openEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>}
         <View>
           {openEvents
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))

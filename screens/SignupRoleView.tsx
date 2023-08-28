@@ -52,7 +52,7 @@ export const SignupRoleView = ({ route }: Props) => {
 
   return (
     <SafeAreaView>
-      <View style={[styles.viewBlock, { marginTop: 300 }]}>
+      <View style={[styles.viewBlock, { marginTop: 150 }]}>
         <Text style={{ fontSize: 35, fontWeight: "300" }}>Sign up as a </Text>
       </View>
       <View style={styles.viewBlock}>
@@ -77,7 +77,7 @@ export const SignupRoleView = ({ route }: Props) => {
           <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => updateProviderSpaces(value)} />
         </View>
         <View style={{ margin: 10 }} />
-          <AuthButton title="Add details" onPress={() => createAccount(true)} />
+          <AuthButton title="Create Account" onPress={() => createAccount(true)} />
         </View>
     )}
     </SafeAreaView>

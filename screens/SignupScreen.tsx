@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParams } from '../App';
@@ -28,14 +28,23 @@ export function SignupScreen() {
       });
     }
     
-    const checkPassword = () => {
+    const navNext = () => {
+      navNextView();
+    };
+
+    useEffect(() => {
       if (password !== confirmPassword)
         setError("Passwords don't match");
-      else if (password.length < 6)
+      else
+        setError('')
+    }, [confirmPassword])
+    
+    useEffect(() => {
+      if ((password.length < 6) && password.length !== 0)
         setError("Password must be at least 6 characters")
       else
-        navNextView();
-    };
+        setError('')
+    }, [password])
   
     return (
       <View style={styles.outer}>
@@ -55,6 +64,7 @@ export function SignupScreen() {
             placeholder="Enter display name"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -64,6 +74,7 @@ export function SignupScreen() {
             placeholder="Enter email address"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -73,6 +84,7 @@ export function SignupScreen() {
             placeholder="Enter phone number"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -82,6 +94,7 @@ export function SignupScreen() {
             placeholder="Enter password"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -91,11 +104,12 @@ export function SignupScreen() {
             placeholder="Confirm password"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <AppButton
-            title="Create Account"
-            onPress={checkPassword}
+            title="Next"
+            onPress={navNext}
             disabled={ !email || !password || (password !== confirmPassword) || (password.length < 6)}
           />
         </View>
@@ -109,7 +123,7 @@ export function SignupScreen() {
       overflow: 'hidden',
       borderRadius: 10,
       marginBottom: 8,
-      borderColor: "#ffff",
+      borderColor: "#FFFF",
       backgroundColor: "#bfbfbf", 
       padding: 12
     },

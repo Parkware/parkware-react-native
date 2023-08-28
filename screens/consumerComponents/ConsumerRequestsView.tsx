@@ -142,9 +142,11 @@ export function ConsumerRequestsView() {
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center'  }}>
       <View style={{ paddingTop: Platform.OS === "android" ? 30 : 0 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={[styles.requestHeader, { marginTop: 15 }]}>
-            Pending
-          </Text>
+          {pendingEvents.length !== 0 && (
+            <Text style={[styles.requestHeader, { marginTop: 15 }]}>
+              Pending
+            </Text>
+          )}
           <View>
             {pendingEvents.map(event => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
@@ -174,10 +176,12 @@ export function ConsumerRequestsView() {
               </TouchableOpacity>
             ))}
           </View>
-
-          <Text style={[styles.requestHeader, { marginTop: 15 }]}>
-            Accepted
-          </Text>
+          {completedEvents.length !== 0 && (
+            <Text style={[styles.requestHeader, { marginTop: 15 }]}>
+              Accepted
+            </Text>
+          )}
+          {(completedEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>}
           <View>
             {completedEvents.map((event) => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>

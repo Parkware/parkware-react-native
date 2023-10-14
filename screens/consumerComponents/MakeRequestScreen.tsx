@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, Platform, Alert, TouchableOpacity } from 'react-native';
-import {
-  deleteUser,
-  signOut,
-} from 'firebase/auth';
 import { auth, db } from '../../firebaseConfig';
 import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

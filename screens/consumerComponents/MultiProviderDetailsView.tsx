@@ -163,7 +163,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       }
   }
 
-  
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
       <View style={{ margin: 9, paddingTop: Platform.OS === "android" ? 70 : 0 }}>
@@ -226,7 +225,7 @@ const MultiProviderDetailsView = ({ route }: Props) => {
               ))
             }
           {showBackInfo && <Text style={[styles.eventHeader, { marginVertical: 15 }]}>Go back and re-enter screen to see changes!</Text>}
-          {(currAvailPros == eventData.doc.requestedSpaces) && <Text style={[styles.eventHeader, { marginVertical: 15 }]}>Event Request Resolved! Go back and see the app move down to accepted.</Text>}
+          {(currAvailPros == eventData.doc.requestedSpaces) && <Text style={[styles.eventHeader, { marginVertical: 15 }]}>Event Request Resolved! Go back and see the app update.</Text>}
           <Text style={[{ marginTop: 80 }, styles.providerHeader]}>Accepted Providers:</Text>
           {eventData.doc.acceptedProviderIds
             .map((proId: string) => eventData.doc.interestedProviders

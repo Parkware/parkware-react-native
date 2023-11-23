@@ -263,7 +263,6 @@ export function MakeRequestScreen() {
             <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
           </View>
       }
-
       <TextInput
         value={address}
         onChangeText={setAddress}

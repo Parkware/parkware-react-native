@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, Alert, StatusBar, Platform } from 'react-native';
-import { DocumentData, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { DocumentData, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
@@ -37,7 +37,7 @@ export function ConsumerRequestsView() {
   }, [navigation, userName]);
 
   const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on. ', [
+    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on.', [
       {text: 'Cancel', style: 'cancel'},
       {text: 'Log out', onPress: () => logout()},
     ]);
@@ -61,9 +61,24 @@ export function ConsumerRequestsView() {
     if (userSnap.exists())
       setUserName(userSnap.data().name);
   }
-  useEffect(() => {
-    updateName();
-  }, [])
+  const showConfirmDel = () =>
+    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Delete', onPress: () => delAccount()},
+    ]);
+  
+  const delAccount = async () => {
+    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
+    await deleteUser(auth.currentUser!)
+  }
+
+  const switchView = () => navigation.navigate('makeRequestScreen');
+
+  const getIfProvider = async () => {
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists() && docSnap.data().isProvider) 
+      setIsProvider(true);
+  }
   
   const modProviders = (eventData: DocumentData) => {
     if (eventData)
@@ -93,7 +108,7 @@ export function ConsumerRequestsView() {
           // Will need to ensure that accepted providers are never greater than the requested number
           if (!e.data().isOpen)
             compEventPromises.push(eventObj);
-          else 
+          else
             penEventPromises.push(eventObj);
         });
         
@@ -115,24 +130,9 @@ export function ConsumerRequestsView() {
     }
   }, []);
 
-  const showConfirmDel = () =>
-    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Delete', onPress: () => delAccount()},
-    ]);
-  
-  const delAccount = async () => {
-    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
-    await deleteUser(auth.currentUser!)
-  }
-
-  const switchView = () => navigation.navigate('makeRequestScreen');
-
-  const getIfProvider = async () => {
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists() && docSnap.data().isProvider) 
-      setIsProvider(true);
-  }
+  useEffect(() => {
+    updateName();
+  }, [])
 
   useEffect(() => {
     getIfProvider();

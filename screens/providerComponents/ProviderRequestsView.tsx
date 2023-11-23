@@ -121,9 +121,6 @@ export function ProviderRequestsView() {
       }, { merge: true });
     /*
     A provider may need to be able to revert their acceptance to an event request. 
-    else {
-      await deleteDoc(doc(db, "interested_providers/", auth.currentUser.uid));
-    }
     */
   }
   

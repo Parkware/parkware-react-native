@@ -63,7 +63,7 @@ export const checkIfEnd = functions.firestore
     return null;
   });
 
-  export const deleteAfterEnd = functions.firestore
+export const deleteAfterEnd = functions.firestore
   .document("/events/{eventId}")
   .onUpdate(async (change: any, context: any) => {
     const after = change.after.data();

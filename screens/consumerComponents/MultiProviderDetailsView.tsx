@@ -52,7 +52,6 @@ const MultiProviderDetailsView = ({ route }: Props) => {
     Alert.alert('The provider has been notified.', '', [
       {text: 'Ok', onPress: () => navigation.goBack()},
     ]);
-    navigation.goBack();
   };
   
   const updateAcceptStatus = async (currProviderId: string) => {

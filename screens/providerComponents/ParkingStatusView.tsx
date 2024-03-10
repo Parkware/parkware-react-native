@@ -183,7 +183,10 @@ const ParkingStatusView = ({ route }: Props) => {
           <View style={{ marginTop: 10 }}>
           {!eventEnded
             ? <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
-                Event ends: {endTime.toLocaleString()}
+                Event ends: {endTime.toLocaleString(navigator.language, {
+              hour: '2-digit',
+              minute:'2-digit'
+            })}
               </Text>
             : <View>
                 <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
@@ -239,7 +242,7 @@ const ParkingStatusView = ({ route }: Props) => {
           </View>
           <View style={[styles.card, styles.shadowProp]}>
             <ArrivalText />
-            {!notesPresent && (
+            {(!notesPresent && !eventEnded) && (
               <View style={[ { padding: 10 }]}>
                 <TextInput
                   value={providerNotes}

@@ -48,8 +48,11 @@ const MultiProviderDetailsView = ({ route }: Props) => {
       ...prevState,
       [providerId]: true, // Set the specific provider's button as disabled
     }));
-    setShowBackInfo(true);
     updateAcceptStatus(providerId);
+    Alert.alert('The provider has been notified.', '', [
+      {text: 'Ok', onPress: () => navigation.goBack()},
+    ]);
+    navigation.goBack();
   };
   
   const updateAcceptStatus = async (currProviderId: string) => {

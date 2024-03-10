@@ -35,7 +35,7 @@ export function LoginScreen() {
     return (
       <View style={styles.outer}>
         <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Welcome Back!</Text>
+          <Text style={styles.header}>Login</Text>
           {error && 
             <View style={styles.contrastBg}>
               <Text style={styles.error}>{error}</Text>

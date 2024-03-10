@@ -28,7 +28,8 @@ const ParkingStatusView = ({ route }: Props) => {
   const [leftMargin, setLeftMargin] = useState(20)
   const [sentNotes, setSentNotes] = useState(false);
   const [eventEnded, setEventEnded] = useState(false);
-  
+  const [notesPresent, setNotesPresent] = useState(true);
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
       if (eventSnap.exists()) {
@@ -145,82 +146,69 @@ const ParkingStatusView = ({ route }: Props) => {
   }
 
   const ArrivalText = () => {
-    let text: string = '';
-    let second: string = '';
-    if (!guestInfo1 && !guestInfo2) {
-      text = "Your guest isn't there yet!";
-    }
-    if (guestInfo1) {
-      if (!guestOneLeft) {
-        text = `${guestInfo1.name} is currently at the spot. Their phone number is ${guestInfo1.phoneNumber}`;
-      } else {
-        text = `${guestInfo1.name} has left the spot. Their phone number is ${guestInfo1.phoneNumber}`;
+    if (diff && diff <= 0) {
+      let text: string = '';
+      let second: string = '';
+      if (!guestInfo1 && !guestInfo2) {
+        text = "Your guest isn't there yet!";
       }
-    }
-    if (guestInfo2) {
-      if (!guestTwoLeft) {
-        second = `${guestInfo2.name} is currently at the spot. Their phone number is ${guestInfo2.phoneNumber}`;
-      } else {
-        second = `${guestInfo2.name} has left the spot. Their phone number is ${guestInfo2.phoneNumber}`;
-      }
-    }
-    return (
-      <View>
-        <Text style={[styles.infoHeader, { marginBottom: 10 }]}>
-          Guest Status:
-        </Text>
-        <Text style={styles.infoHeader}>
-          {text}
-        </Text>
-        {second && 
-          <Text style={[styles.infoHeader, { marginTop: 40 }]}>
-            {second}
-          </Text>
+      if (guestInfo1) {
+        if (!guestOneLeft) {
+          text = `${guestInfo1.name} is currently at the spot. Their phone number is ${guestInfo1.phoneNumber}`;
+        } else {
+          text = `${guestInfo1.name} has left the spot. Their phone number is ${guestInfo1.phoneNumber}`;
         }
-        <Divider width={3} style={{ paddingVertical: 10 }} />
-        <View style={{ marginTop: 10 }}>
-        {!eventEnded
-          ? <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
-              Event ends: {endTime.toLocaleString()}
+      }
+      if (guestInfo2) {
+        if (!guestTwoLeft) {
+          second = `${guestInfo2.name} is currently at the spot. Their phone number is ${guestInfo2.phoneNumber}`;
+        } else {
+          second = `${guestInfo2.name} has left the spot. Their phone number is ${guestInfo2.phoneNumber}`;
+        }
+      }
+      return (
+        <View>
+          <Text style={[styles.infoHeader, { marginBottom: 10 }]}>
+            Guest Status:
+          </Text>
+          <Text style={styles.infoHeader}>
+            {text}
+          </Text>
+          {second && 
+            <Text style={[styles.infoHeader, { marginTop: 40 }]}>
+              {second}
             </Text>
-          : <View>
-              <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
-                Please fill out the survey form below.
-              </Text>
-              <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
-                    onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
-                      https://forms.gle/DqPH34zYAfxdgzzt6
-              </Text>
-              <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
-                Thank you for providing your space!
-              </Text>
-            </View>
           }
-        </View>
-      </View>
-    )
-  }
-
-  const ShowArrivalStatus = () => {
-    if (diff) {
-      if (diff <= 0) 
-        return <ArrivalText />
-      else
-      // need to create push notifications if the guest leaves. this needs to alert the provider
-        return (
-          <View>
-            <Text style={[{ marginTop: 10 }, styles.text]}>
-              {timeRemaining} till the event starts. 
-              {'\n'}Please add notes for the following info to be shown to the guest:
-            </Text>
-            <Text style={styles.text}>
-              {'\n'}- Which side(s) of the driveway should be used (while facing the house)
-            </Text>
+          <Divider width={3} style={{ paddingVertical: 10 }} />
+          <View style={{ marginTop: 10 }}>
+          {!eventEnded
+            ? <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                Event ends: {endTime.toLocaleString()}
+              </Text>
+            : <View>
+                <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                  Please fill out the survey form below.
+                </Text>
+                <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
+                      onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
+                        https://forms.gle/DqPH34zYAfxdgzzt6
+                </Text>
+                <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                  Thank you for providing your space!
+                </Text>
+              </View>
+            }
           </View>
-        )
+        </View>
+      )
     }
     return <Text>Loading...</Text>
   }
+
+  useEffect(() => {
+    const proObj = eventData.doc.interestedProviders.find((proObj: DocumentData) => proObj.id == auth.currentUser!.uid)
+    if (!proObj.notes || proObj.notes == "") setNotesPresent(false);
+  }, [])
 
   const RenderUserInfo = () => {
     if (consumerInfo)
@@ -234,6 +222,7 @@ const ParkingStatusView = ({ route }: Props) => {
       <Text style={styles.text}>Loading...</Text>
     )
   }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView>
@@ -247,26 +236,26 @@ const ParkingStatusView = ({ route }: Props) => {
             <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true} eventText={[styles.text, { paddingVertical: 2 }]}/>
           </View>
           <View style={[styles.card, styles.shadowProp, { padding: 18 }]}>
-            <ShowArrivalStatus />
-          {diff && diff > 0 && (
-            <View style={[ { padding: 10 }]}>
-              <TextInput
-                value={providerNotes}
-                onChangeText={setProviderNotes}
-                placeholder="Enter notes here"
-                placeholderTextColor="#aaa"
-                multiline={true}
-                style={styles.input}
-              />
-              <View style={styles.btnContainer}>
-                <Button 
-                  title="Upload notes"
-                  disabled={providerNotes.length == 0 || sentNotes}
-                  onPress={sendNotes}
+            <ArrivalText />
+            {!notesPresent && (
+              <View style={[ { padding: 10 }]}>
+                <TextInput
+                  value={providerNotes}
+                  onChangeText={setProviderNotes}
+                  placeholder="Enter notes here"
+                  placeholderTextColor="#000000"
+                  multiline={true}
+                  style={styles.input}
                 />
+                <View style={styles.btnContainer}>
+                  <Button 
+                    title="Upload notes"
+                    disabled={providerNotes.length == 0 || sentNotes}
+                    onPress={sendNotes}
+                  />
+                </View>
               </View>
-            </View>
-          )}
+            )}
         </View>
         </View>
       </SafeAreaView>

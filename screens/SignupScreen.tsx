@@ -49,7 +49,7 @@ export function SignupScreen() {
     return (
       <View style={styles.outer}>
         <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Welcome to Parkware!</Text>
+          <Text style={styles.header}>Sign up for Parkware!</Text>
           {error && 
             <View style={styles.contrastBg}>
               <Text style={styles.error}>{error}</Text>

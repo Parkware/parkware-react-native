@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, Platform, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, Platform, Alert, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { auth, db } from '../../firebaseConfig';
 import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -244,49 +244,47 @@ export function MakeRequestScreen() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={styles.header}>Make a Request</Text>
-      <TextInput
-        value={eventName}
-        onChangeText={setEventName}
-        keyboardType="default"
-        placeholder="Event Name"
-        autoCapitalize="none"
-        placeholderTextColor="#aaa"
-        autoCorrect={false}
-        style={styles.input}
-      />
-      {Platform.OS === 'ios' 
-        ? <DatePickeriOS /> 
-        : <View>
-            <DatePickerAndroid />
-            <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], {
-  timeStyle: 'short'
-})} - {endTime.toLocaleTimeString([], {
-  timeStyle: 'short'
-})}</Text>
-          </View>
-      }
-      <TextInput
-        value={address}
-        onChangeText={setAddress}
-        keyboardType="default"
-        placeholder="Address"
-        autoCapitalize="none"
-        placeholderTextColor="#aaa"
-        autoCorrect={false}
-        style={[styles.input, { marginTop: 3 }]}
-      />
-      <View style={{ flexDirection:"row", paddingBottom: 15 }}>
-        <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
-        <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={styles.header}>Make a Request</Text>
+        <TextInput
+          value={eventName}
+          onChangeText={setEventName}
+          keyboardType="default"
+          placeholder="Event Name"
+          autoCapitalize="none"
+          placeholderTextColor="#aaa"
+          autoCorrect={false}
+          style={styles.input}
+        />
+        {Platform.OS === 'ios' 
+          ? <DatePickeriOS /> 
+          : <View>
+              <DatePickerAndroid />
+              <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], { timeStyle: 'short'})} - {endTime.toLocaleTimeString([], { timeStyle: 'short' })}</Text>
+            </View>
+        }
+        <TextInput
+          value={address}
+          onChangeText={setAddress}
+          keyboardType="default"
+          placeholder="Address"
+          autoCapitalize="none"
+          placeholderTextColor="#aaa"
+          autoCorrect={false}
+          style={[styles.input, { marginTop: 3 }]}
+        />
+        <View style={{ flexDirection:"row", paddingBottom: 15 }}>
+          <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
+          <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+        </View>
+        <AppButton
+          title="Send Request"
+          onPress={createEventRequest}
+          disabled={!sendable || address.length == 0 }
+        />
       </View>
-      <AppButton
-        title="Send Request"
-        onPress={createEventRequest}
-        disabled={!sendable || address.length == 0 }
-      />
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

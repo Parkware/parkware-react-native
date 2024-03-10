@@ -269,7 +269,7 @@ export default ParkingStatusView
 
 const styles = StyleSheet.create({
   inner: {
-    paddingTop: Platform.OS === "android" ? 60 : 0,
+    paddingTop: 0,
     padding: 20,
     flex: 1,
     justifyContent: 'space-around',

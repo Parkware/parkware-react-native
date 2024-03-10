@@ -113,7 +113,9 @@ const ProviderScreenStack = () => {
         component={ProviderRequestsView}
       />
       <ProviderStack.Screen
-        options={{ title: "", headerTransparent: true }}
+        options={{ title: "", headerTransparent: false, headerStyle: {
+          backgroundColor: '#f2f2f2',
+        }, }}
         name="consumerStatusView"
         component={ParkingStatusView}
       />

@@ -3,7 +3,7 @@ import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, 
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
-import { signOut } from 'firebase/auth';
+import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
@@ -23,7 +23,14 @@ export function ProviderRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
   const [unwantedEvents, setUnwantedEvents] = useState<string[]>([]);
   const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
+  const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    
+    return unsubscribe;
+  }, [])
+  
   const navigation = useNavigation<providerScreenProp>();
   
   React.useLayoutEffect(() => {
@@ -43,7 +50,7 @@ export function ProviderRequestsView() {
     ]);
 
   const updateDeniedEvents = async () => {
-    const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', auth.currentUser!.uid))
+    const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', user!.uid))
     const eventsSnap = await getDocs(q);
     const deniedNames: string[] = eventsSnap.docs.map((e: DocumentData) => e.data().eventName)
     setDeniedEventArr(deniedNames);
@@ -60,13 +67,11 @@ export function ProviderRequestsView() {
   // Reading the event data and setting eventData to it. 
   useEffect(() => {
     try {
+      if (user) {
       const unsub = onSnapshot(collection(db, 'events'), async (snapshot) => {            
         const openEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
         const accEventPromises: docDataPair[] = [];
-        let currUid: string = '';
-        if (auth.currentUser)
-          currUid = auth.currentUser.uid;
 
         snapshot.docs.map(e => {
           let eventObj = {
@@ -75,13 +80,13 @@ export function ProviderRequestsView() {
           } as docDataPair
           
           // Order matters!
-          if (e.data().acceptedProviderIds.includes(currUid)) {
+          if (e.data().acceptedProviderIds.includes(user!.uid)) {
             accEventPromises.push(eventObj);
-          } else if (e.data().interestedProviderIds.includes(currUid)) {
+          } else if (e.data().interestedProviderIds.includes(user!.uid)) {
             penEventPromises.push(eventObj);
           } else if (e.data().isOpen 
-                    && !e.data().unwantedProviders.includes(auth.currentUser!.uid)
-                    && e.data().consumer_id !== auth.currentUser!.uid) {
+                    && !e.data().unwantedProviders.includes(user!.uid)
+                    && e.data().consumer_id !== user!.uid) {
             openEventPromises.push(eventObj);
           }
         });
@@ -95,10 +100,11 @@ export function ProviderRequestsView() {
         updateDeniedEvents();
       });
       return () => unsub();
+    }
     } catch (error) {
       console.error('Error fetching events:', error);
     }
-  }, []);
+  }, [user]);
 
   const removeLocalEventData = (id: string) => {
     setUnwantedEvents(current => [...current, id]);
@@ -106,7 +112,7 @@ export function ProviderRequestsView() {
   }
   
   const updateDB = async (eventData: docDataPair) => {
-    const id = auth.currentUser!.uid;
+    const id = user!.uid;
     const currUserSnap = await getDoc(doc(db, 'users/', id));
     if (currUserSnap.exists())
       await setDoc(doc(db, 'events/', eventData.id), {

@@ -1,17 +1,23 @@
-import { Button, Text, View, StyleSheet, Alert, SafeAreaView } from 'react-native'
-import React from 'react'
+import { Text, View, StyleSheet, Alert, SafeAreaView } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../App';
-import { deleteUser, signOut } from 'firebase/auth';
+import { User, deleteUser, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { AppButton, AuthButton, DeleteAccountButton } from './ButtonComponents';
+import { AppButton, DeleteAccountButton } from './ButtonComponents';
 
 type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleView'>;
 
 export const LoginRoleView = () => {
   const navigation = useNavigation<roleScreenProp>();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    return unsubscribe;
+  }, [])
 
   const showConfirmDel = () =>
     Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
@@ -20,12 +26,12 @@ export const LoginRoleView = () => {
     ]);
     
   const delAccount = async () => {
-    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
-    await deleteUser(auth.currentUser!)
+    await deleteDoc(doc(db, "users", user!.uid));
+    await deleteUser(user!)
   }
 
   const chooseConsumer = async () => {
-    await updateDoc(doc(db, 'users', auth.currentUser!.uid), { loggedAsProvider: false })
+    await updateDoc(doc(db, 'users', user!.uid), { loggedAsProvider: false })
   }
 
   const chooseProvider = async () => {

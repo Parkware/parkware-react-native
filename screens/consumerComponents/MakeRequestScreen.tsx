@@ -9,6 +9,7 @@ import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/d
 import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AppButton } from '../ButtonComponents';
+import { User, onAuthStateChanged } from 'firebase/auth';
 
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
@@ -26,15 +27,22 @@ export function MakeRequestScreen() {
   const [isStartTimeVisible, setStartTimeVisible] = useState(false);
   const [isEndTimeVisible, setEndTimeVisible] = useState(false);
   const [isDateVisible, setDateVisible] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    
+    return unsubscribe;
+  }, [])
 
   const createEventRequest = async () => {
-    if (auth.currentUser) {
-      const consRef = doc(db, 'users/', auth.currentUser.uid);
+    if (user) {
+      const consRef = doc(db, 'users/', user.uid);
       const userSnap = await getDoc(consRef)
       if (userSnap.exists()) {
         await addDoc(collection(db, 'events/'), {
           eventName,
-          consumer_id: auth.currentUser.uid,
+          consumer_id: user.uid,
           name: userSnap.data().name,
           address,
           startTime,

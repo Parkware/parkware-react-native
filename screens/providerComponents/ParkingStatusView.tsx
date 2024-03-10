@@ -7,6 +7,7 @@ import { auth, db } from '../../firebaseConfig'
 import { EventBlock } from '../consumerComponents/EventBlock'
 import { docDataPair } from './ProviderRequestsView'
 import { Divider } from '@rneui/base'
+import { User, onAuthStateChanged } from 'firebase/auth'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
 
@@ -29,17 +30,26 @@ const ParkingStatusView = ({ route }: Props) => {
   const [sentNotes, setSentNotes] = useState(false);
   const [eventEnded, setEventEnded] = useState(false);
   const [notesPresent, setNotesPresent] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
-      if (eventSnap.exists()) {
-        // Order matters!
-        checkDepartStatus(eventSnap.data().departedProviderSpaces)
-        checkArrivalStatus(eventSnap.data().arrivedProviderSpaces)
-      }
-    })
-    return () => unsub()
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    getConsumerInfo();
+    return unsubscribe;
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
+        if (eventSnap.exists()) {
+          // Order matters!
+          checkDepartStatus(eventSnap.data().departedProviderSpaces)
+          checkArrivalStatus(eventSnap.data().arrivedProviderSpaces)
+        }
+      })
+      return () => unsub()
+    }
+  }, [user])
   
   const checkArrivalStatus = (arr: DocumentData) => {
     const fullVal = getFullVal(arr);
@@ -72,7 +82,7 @@ const ParkingStatusView = ({ route }: Props) => {
     }
   }
 
-  const getFullVal = (arr: DocumentData) => arr.filter((el: DocumentData) => el.replace('.1', '').replace('.2', '') == auth.currentUser!.uid);
+  const getFullVal = (arr: DocumentData) => arr.filter((el: DocumentData) => el.replace('.1', '').replace('.2', '') == user!.uid);
 
   const updateGuestInfo = async (modProviderId: any, setGuestInfo: any, num: number) => {
     const eventSnap = await getDoc(doc(db, 'events', event.id))
@@ -96,15 +106,9 @@ const ParkingStatusView = ({ route }: Props) => {
   
   const getConsumerInfo = async () => {
     const userSnap = await getDoc(doc(db, 'users', eventData.doc.consumer_id))
-    if (userSnap.exists())   
+    if (userSnap.exists())
       setConsumerInfo(userSnap.data());
   }
-  
-  useEffect(() => {
-    if (Platform.OS == "android")
-      setLeftMargin(20);
-    getConsumerInfo();
-  }, [])
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -128,10 +132,10 @@ const ParkingStatusView = ({ route }: Props) => {
 
   const sendNotes = async () => {
     const myProviderObj = eventData.doc.interestedProviders
-      .find((proObj: DocumentData) => proObj.id == auth.currentUser!.uid);
+      .find((proObj: DocumentData) => proObj.id == user!.uid);
       
     const existingList = eventData.doc.interestedProviders
-      .filter((proObj: DocumentData) => proObj.id !== auth.currentUser!.uid);
+      .filter((proObj: DocumentData) => proObj.id !== user!.uid);
 
     existingList.push({
       ...myProviderObj,
@@ -209,9 +213,11 @@ const ParkingStatusView = ({ route }: Props) => {
   }
 
   useEffect(() => {
-    const proObj = eventData.doc.interestedProviders.find((proObj: DocumentData) => proObj.id == auth.currentUser!.uid)
-    if (!proObj.notes || proObj.notes == "") setNotesPresent(false);
-  }, [])
+    if (user) {
+      const proObj = eventData.doc.interestedProviders.find((proObj: DocumentData) => proObj.id == user.uid)
+      if (!proObj.notes || proObj.notes == "") setNotesPresent(false);
+    }
+  }, [user])
 
   const RenderUserInfo = () => {
     if (consumerInfo)

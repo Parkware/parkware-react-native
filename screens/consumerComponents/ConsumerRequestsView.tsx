@@ -9,7 +9,7 @@ import { ScrollView, TouchableOpacity } from 'react-native';
 import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
 import { AppButton, AuthButton, DeleteAccountButton } from '../ButtonComponents';
-import { deleteUser, signOut } from 'firebase/auth';
+import { User, deleteUser, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
@@ -18,7 +18,21 @@ export function ConsumerRequestsView() {
   const [completedEvents, setCompletedEvents] = useState<docDataPair[]>([]);
   const [userName, setUserName] = useState('');
   const [isProvider, setIsProvider] = useState(false);
-  const userRef = doc(db, 'users', auth.currentUser!.uid);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    
+    return unsubscribe;
+  }, [])
+
+  useEffect(() => {
+    if (user?.uid) {
+      getIfProvider();
+      updateName();
+      getEvents();
+    }
+  }, [user])
 
   const navigation = useNavigation<consumerScreenProp>();
   
@@ -52,34 +66,41 @@ export function ConsumerRequestsView() {
     }
   };
   const switchToProvider = async () => {
-    const userSnap = await getDoc(userRef)
-    if (userSnap.exists() && userSnap.data().isProvider)
-      await updateDoc(userRef, { loggedAsProvider: true })
-  }
-  const updateName = async () => {
-    const userSnap = await getDoc(doc(db, 'users', auth.currentUser!.uid))
-    if (userSnap.exists())
-      setUserName(userSnap.data().name);
+    if (user) {
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef)
+      if (userSnap.exists() && userSnap.data().isProvider)
+        await updateDoc(userRef, { loggedAsProvider: true })
+    }
   }
   const showConfirmDel = () =>
     Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
       {text: 'Cancel', style: 'cancel'},
       {text: 'Delete', onPress: () => delAccount()},
     ]);
-  
+
   const delAccount = async () => {
-    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
-    await deleteUser(auth.currentUser!)
+    if (user) {
+      await deleteDoc(doc(db, "users", user.uid));
+      await deleteUser(user)
+    }
   }
-
+  
   const switchView = () => navigation.navigate('makeRequestScreen');
-
+  
   const getIfProvider = async () => {
+    const userRef = doc(db, 'users', user!.uid);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists() && docSnap.data().isProvider) 
       setIsProvider(true);
   }
-  
+
+  const updateName = async () => {
+    const userSnap = await getDoc(doc(db, 'users', user!.uid))
+    if (userSnap.exists())
+      setUserName(userSnap.data().name);
+  }
+
   const modProviders = (eventData: DocumentData) => {
     if (eventData)
       return eventData.interestedProviders
@@ -88,8 +109,8 @@ export function ConsumerRequestsView() {
   }
 
   const getEvents = async () => {
-    if (auth.currentUser) {
-      const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
+    if (user) {
+      const q = query(collection(db, 'events'), where('consumer_id', '==', user.uid))
       const unsub = onSnapshot(q, async (snap) => {
         const compEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
@@ -121,22 +142,6 @@ export function ConsumerRequestsView() {
       return () => unsub;
     }
   }
-
-  useEffect(() => {
-    try {
-      getEvents();
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    updateName();
-  }, [])
-
-  useEffect(() => {
-    getIfProvider();
-  }, [])
 
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center'  }}>

@@ -224,9 +224,11 @@ const ParkingStatusView = ({ route }: Props) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView>
-        <View style={{ margin: 14, marginTop: -2, paddingTop: Platform.OS === "android" ? 70 : 0 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.inner}>
           <View style={[styles.card, styles.shadowProp]}>
             <Text style={styles.infoHeader}>Organizer Info:</Text>
             <RenderUserInfo />
@@ -235,7 +237,7 @@ const ParkingStatusView = ({ route }: Props) => {
             <Text style={styles.infoHeader}>Event Info:</Text>
             <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true} eventText={[styles.text, { paddingVertical: 2 }]}/>
           </View>
-          <View style={[styles.card, styles.shadowProp, { padding: 18 }]}>
+          <View style={[styles.card, styles.shadowProp]}>
             <ArrivalText />
             {!notesPresent && (
               <View style={[ { padding: 10 }]}>
@@ -256,17 +258,22 @@ const ParkingStatusView = ({ route }: Props) => {
                 </View>
               </View>
             )}
+          </View>
         </View>
-        </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 
 export default ParkingStatusView
 
-
 const styles = StyleSheet.create({
+  inner: {
+    paddingTop: Platform.OS === "android" ? 60 : 0,
+    padding: 20,
+    flex: 1,
+    justifyContent: 'space-around',
+  },
   infoHeader: { 
     fontSize: 22, 
     fontWeight: "500", 
@@ -290,8 +297,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#A7ADC6',
     borderRadius: 8,
     padding: 15,
-    width: '100%',
-    marginVertical: 10,
   },
   shadowProp: {
     shadowColor: '#171717',

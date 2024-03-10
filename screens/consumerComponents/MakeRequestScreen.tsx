@@ -260,7 +260,11 @@ export function MakeRequestScreen() {
         ? <DatePickeriOS /> 
         : <View>
             <DatePickerAndroid />
-            <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
+            <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], {
+  timeStyle: 'short'
+})} - {endTime.toLocaleTimeString([], {
+  timeStyle: 'short'
+})}</Text>
           </View>
       }
       <TextInput

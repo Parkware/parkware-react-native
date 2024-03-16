@@ -13,7 +13,6 @@ import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerReque
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
-import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
@@ -21,14 +20,15 @@ import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
 import { LoginRoleView } from './screens/LoginRoleView';
 import { Platform } from 'react-native';
+import EventInfoView from './screens/consumerComponents/EventInfoView';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
   consumerRequestsView: any;
-  multiProviderDetailsView: {
+  chooseProviderView: {
     event: docDataPair;
   };
-  chooseProviderView: {
+  eventInfoView: {
     event: docDataPair;
   };
   departureGuestView: {
@@ -143,13 +143,13 @@ const ConsumerScreenStack = () => {
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
-        name="multiProviderDetailsView"
-        component={MultiProviderDetailsView}
+        name="chooseProviderView"
+        component={ChooseProviderView}
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
-        name="chooseProviderView"
-        component={ChooseProviderView}
+        name="eventInfoView"
+        component={EventInfoView}
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}

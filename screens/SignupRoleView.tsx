@@ -16,6 +16,7 @@ export const SignupRoleView = ({ route }: Props) => {
   const [providerSpaces, setProviderSpaces] = useState<number>();
   const { name, email, phoneNum, password }  = route.params;
   
+  // Create user
   const createAccount = async (isProvider: boolean) => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password)

@@ -143,6 +143,38 @@ export function ConsumerRequestsView() {
     }
   }
 
+  const EventBlock = ({event, showSpaces}: any) => {
+    const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    const formatDate = (date: any) => date.toDate().toLocaleDateString();
+    
+    return (
+      <View>
+        <Text key={event.doc.eventName+event.id} style={styles.eventText} >
+          {'Event name: ' + event.doc.eventName}
+        </Text>
+        <Text key={event.doc.address} style={styles.eventText}>
+          {'Address: ' + event.doc.address}
+        </Text>
+        <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+          {'Date: ' + formatDate(event.doc.startTime)}
+        </Text>
+        <Text key={event.doc.startTime} style={styles.eventText}>
+          {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
+        </Text>
+        {showSpaces && 
+          <View>
+            <Text style={styles.eventText}>
+              {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
+            </Text>
+            <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
+              {'Requested Spaces: ' + event.doc.requestedSpaces}
+            </Text>
+          </View>
+        }
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center'  }}>
       <View style={{ paddingTop: Platform.OS === "android" ? 30 : 0 }}>
@@ -154,11 +186,11 @@ export function ConsumerRequestsView() {
           )}
           <View>
             {pendingEvents.map(event => (
-              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
+              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
                 <View style={{ padding: 10 }}>
-                  <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+                  <EventBlock event={event} showSpaces={true} />
                   {event.doc.interestedProviders.length !== 0
-                    ? ( 
+                    && ( 
                     <View>
                       <Text style={{ fontSize: 18, marginBottom: 4, marginTop: 7, color: "white" }}>Available Providers:</Text>
                       {event.doc.interestedProviders
@@ -175,7 +207,6 @@ export function ConsumerRequestsView() {
                       ))}
                     </View>
                     )
-                    : <Text style={styles.eventText}>No providers are interested yet.</Text>
                   }
                 </View>
               </TouchableOpacity>
@@ -189,9 +220,9 @@ export function ConsumerRequestsView() {
           {(completedEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>}
           <View>
             {completedEvents.map((event) => (
-              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
+              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('eventInfoView', { event })}>
                 <View style={{ padding: 10 }}>
-                  <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+                <EventBlock event={event} showSpaces={false} />
                 </View>
               </TouchableOpacity>
             ))}

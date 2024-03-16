@@ -10,7 +10,7 @@
 ____________________________________________________________________________________________________________________________________________________________________________________________________________
 
 ### Improvements
-in `MultiProviderDetailsView.tsx`, i'm getting the interested provider information that the user hasn't declined using a method that may not be very efficient since certain logic has to run during runtime:
+in `ChooseProviderView.tsx`, i'm getting the interested provider information that the user hasn't declined using a method that may not be very efficient since certain logic has to run during runtime:
 ```jsx
 {eventData.doc.interestedProviders
   .filter((pro: DocumentData) => !unwantedPros.includes(pro.provider_id))

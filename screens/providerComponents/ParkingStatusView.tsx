@@ -223,13 +223,40 @@ const ParkingStatusView = ({ route }: Props) => {
     if (consumerInfo)
       return (
         <View>
-          <Text style={styles.text}>Name: {consumerInfo.name}</Text>
-          <Text style={styles.text}>Email: {consumerInfo.email}</Text>
+          <Text style={styles.eventText}>Name: {consumerInfo.name}</Text>
+          <Text style={styles.eventText}>Email: {consumerInfo.email}</Text>
         </View>
       )
     return (
-      <Text style={styles.text}>Loading...</Text>
+      <Text style={styles.eventText}>Loading...</Text>
     )
+  }
+
+  const EventBlock = () => {
+    const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    const formatDate = (date: any) => date.toDate().toLocaleDateString();
+    
+    return (
+      <View>
+        <Text key={event.doc.eventName+event.id} style={styles.eventText} >
+          {'Event name: ' + event.doc.eventName}
+        </Text>
+        <Text key={event.doc.address} style={styles.eventText}>
+          {'Address: ' + event.doc.address}
+        </Text>
+        <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+          {'Date: ' + formatDate(event.doc.startTime)}
+        </Text>
+        <Text key={event.doc.startTime} style={styles.eventText}>
+          {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
+        </Text>
+        <View>
+          <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
+            {'Requested Spaces: ' + event.doc.requestedSpaces}
+          </Text>
+        </View>
+      </View>
+    );
   }
 
   return (
@@ -243,8 +270,8 @@ const ParkingStatusView = ({ route }: Props) => {
             <RenderUserInfo />
           </View>
           <View style={[styles.card, styles.shadowProp]}>
-            <Text style={styles.infoHeader}>Event Info:</Text>
-            <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true} eventText={[styles.text, { paddingVertical: 2 }]}/>
+            <Text style={styles.infoHeader}>Event Information:</Text>
+            <EventBlock />
           </View>
           <View style={[styles.card, styles.shadowProp]}>
             <ArrivalText />
@@ -277,6 +304,12 @@ const ParkingStatusView = ({ route }: Props) => {
 export default ParkingStatusView
 
 const styles = StyleSheet.create({
+  eventText: {
+    fontSize: 19,
+    padding: 1,
+    color: "#454852", 
+    paddingVertical: 2
+  },
   inner: {
     paddingTop: 0,
     padding: 20,
@@ -339,9 +372,5 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     marginTop: 2,
-  },
-  text: {
-    fontSize: 19,
-    color: "#454852" 
-  },
+  }
 });

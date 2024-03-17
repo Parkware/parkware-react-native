@@ -7,6 +7,7 @@ import { auth, db } from '../../firebaseConfig'
 import { EventBlock } from '../consumerComponents/EventBlock'
 import { docDataPair } from './ProviderRequestsView'
 import { Divider } from '@rneui/base'
+import { User, onAuthStateChanged } from 'firebase/auth'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
 
@@ -28,17 +29,27 @@ const ParkingStatusView = ({ route }: Props) => {
   const [leftMargin, setLeftMargin] = useState(20)
   const [sentNotes, setSentNotes] = useState(false);
   const [eventEnded, setEventEnded] = useState(false);
-  
+  const [notesPresent, setNotesPresent] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
-      if (eventSnap.exists()) {
-        // Order matters!
-        checkDepartStatus(eventSnap.data().departedProviderSpaces)
-        checkArrivalStatus(eventSnap.data().arrivedProviderSpaces)
-      }
-    })
-    return () => unsub()
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    getConsumerInfo();
+    return unsubscribe;
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
+        if (eventSnap.exists()) {
+          // Order matters!
+          checkDepartStatus(eventSnap.data().departedProviderSpaces)
+          checkArrivalStatus(eventSnap.data().arrivedProviderSpaces)
+        }
+      })
+      return () => unsub()
+    }
+  }, [user])
   
   const checkArrivalStatus = (arr: DocumentData) => {
     const fullVal = getFullVal(arr);
@@ -71,7 +82,7 @@ const ParkingStatusView = ({ route }: Props) => {
     }
   }
 
-  const getFullVal = (arr: DocumentData) => arr.filter((el: DocumentData) => el.replace('.1', '').replace('.2', '') == auth.currentUser!.uid);
+  const getFullVal = (arr: DocumentData) => arr.filter((el: DocumentData) => el.replace('.1', '').replace('.2', '') == user!.uid);
 
   const updateGuestInfo = async (modProviderId: any, setGuestInfo: any, num: number) => {
     const eventSnap = await getDoc(doc(db, 'events', event.id))
@@ -95,15 +106,9 @@ const ParkingStatusView = ({ route }: Props) => {
   
   const getConsumerInfo = async () => {
     const userSnap = await getDoc(doc(db, 'users', eventData.doc.consumer_id))
-    if (userSnap.exists())   
+    if (userSnap.exists())
       setConsumerInfo(userSnap.data());
   }
-  
-  useEffect(() => {
-    if (Platform.OS == "android")
-      setLeftMargin(20);
-    getConsumerInfo();
-  }, [])
   
   useEffect(() => {
     const interval = setInterval(() => {
@@ -126,11 +131,13 @@ const ParkingStatusView = ({ route }: Props) => {
   }, []);
 
   const sendNotes = async () => {
+    Keyboard.dismiss
+
     const myProviderObj = eventData.doc.interestedProviders
-      .find((proObj: DocumentData) => proObj.id == auth.currentUser!.uid);
+      .find((proObj: DocumentData) => proObj.id == user!.uid);
       
     const existingList = eventData.doc.interestedProviders
-      .filter((proObj: DocumentData) => proObj.id !== auth.currentUser!.uid);
+      .filter((proObj: DocumentData) => proObj.id !== user!.uid);
 
     existingList.push({
       ...myProviderObj,
@@ -145,137 +152,172 @@ const ParkingStatusView = ({ route }: Props) => {
   }
 
   const ArrivalText = () => {
-    let text: string = '';
-    let second: string = '';
-    if (!guestInfo1 && !guestInfo2) {
-      text = "Your guest isn't there yet!";
-    }
-    if (guestInfo1) {
-      if (!guestOneLeft) {
-        text = `${guestInfo1.name} is currently at the spot. Their phone number is ${guestInfo1.phoneNumber}`;
-      } else {
-        text = `${guestInfo1.name} has left the spot. Their phone number is ${guestInfo1.phoneNumber}`;
+    if (diff && diff <= 0) {
+      let text: string = '';
+      let second: string = '';
+      if (!guestInfo1 && !guestInfo2) {
+        text = "Your guest isn't there yet!";
       }
-    }
-    if (guestInfo2) {
-      if (!guestTwoLeft) {
-        second = `${guestInfo2.name} is currently at the spot. Their phone number is ${guestInfo2.phoneNumber}`;
-      } else {
-        second = `${guestInfo2.name} has left the spot. Their phone number is ${guestInfo2.phoneNumber}`;
+      if (guestInfo1) {
+        if (!guestOneLeft) {
+          text = `${guestInfo1.name} is currently at the spot. Their phone number is ${guestInfo1.phoneNumber}`;
+        } else {
+          text = `${guestInfo1.name} has left the spot. Their phone number is ${guestInfo1.phoneNumber}`;
+        }
       }
-    }
-    return (
-      <View>
-        <Text style={[styles.infoHeader, { marginBottom: 10 }]}>
-          Guest Status:
-        </Text>
-        <Text style={styles.infoHeader}>
-          {text}
-        </Text>
-        {second && 
-          <Text style={[styles.infoHeader, { marginTop: 40 }]}>
-            {second}
-          </Text>
+      if (guestInfo2) {
+        if (!guestTwoLeft) {
+          second = `${guestInfo2.name} is currently at the spot. Their phone number is ${guestInfo2.phoneNumber}`;
+        } else {
+          second = `${guestInfo2.name} has left the spot. Their phone number is ${guestInfo2.phoneNumber}`;
         }
-        <Divider width={3} style={{ paddingVertical: 10 }} />
-        {!eventEnded
-        ? <Text style={styles.boldText}>
-            Event ends: {endTime.toLocaleString()}
+      }
+      return (
+        <View>
+          <Text style={[styles.infoHeader, { marginBottom: 10 }]}>
+            Guest Status:
           </Text>
-        : <View>
-            <Text style={[styles.infoHeader, { marginTop: 10, fontWeight: "700", fontSize: 20 }]}>
-              Please fill out the survey form below.
+          <Text style={styles.infoHeader}>
+            {text}
+          </Text>
+          {second && 
+            <Text style={[styles.infoHeader, { marginTop: 40 }]}>
+              {second}
             </Text>
-            <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
-                  onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
-                    https://forms.gle/DqPH34zYAfxdgzzt6
-            </Text>
-            <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
-              Thank you for providing your space!
-            </Text>
+          }
+          <Divider width={3} style={{ paddingVertical: 10 }} />
+          <View style={{ marginTop: 10 }}>
+          {!eventEnded
+            ? <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                Event ends: {endTime.toLocaleString(navigator.language, {
+              hour: '2-digit',
+              minute:'2-digit'
+            })}
+              </Text>
+            : <View>
+                <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                  Please fill out the survey form below.
+                </Text>
+                <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
+                      onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
+                        https://forms.gle/DqPH34zYAfxdgzzt6
+                </Text>
+                <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                  Thank you for providing your space!
+                </Text>
+              </View>
+            }
           </View>
-        }
-      </View>
-    )
-  }
-
-  const ShowArrivalStatus = () => {
-    if (diff) {
-      if (diff <= 0) 
-        return <ArrivalText />
-      else
-      // need to create push notifications if the guest leaves. this needs to alert the provider
-        return (
-          <View>
-            <Text style={[{ marginTop: 10 }, styles.text]}>
-              {timeRemaining} till the event starts. 
-              {'\n'}Please add notes for the following info to be shown to the guest:
-            </Text>
-            <Text style={styles.text}>
-              {'\n'}- Which side(s) of the driveway should be used (while facing the house)
-            </Text>
-          </View>
-        )
+        </View>
+      )
     }
     return <Text>Loading...</Text>
   }
+
+  useEffect(() => {
+    if (user) {
+      const proObj = eventData.doc.interestedProviders.find((proObj: DocumentData) => proObj.id == user.uid)
+      if (!proObj.notes || proObj.notes == "") setNotesPresent(false);
+    }
+  }, [user])
 
   const RenderUserInfo = () => {
     if (consumerInfo)
       return (
         <View>
-          <Text style={styles.text}>Name: {consumerInfo.name}</Text>
-          <Text style={styles.text}>Email: {consumerInfo.email}</Text>
+          <Text style={styles.eventText}>Name: {consumerInfo.name}</Text>
+          <Text style={styles.eventText}>Email: {consumerInfo.email}</Text>
         </View>
       )
     return (
-      <Text>Loading...</Text>
+      <Text style={styles.eventText}>Loading...</Text>
     )
   }
+
+  const EventBlock = () => {
+    const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    const formatDate = (date: any) => date.toDate().toLocaleDateString();
+    
+    return (
+      <View>
+        <Text key={event.doc.eventName+event.id} style={styles.eventText} >
+          {'Event name: ' + event.doc.eventName}
+        </Text>
+        <Text key={event.doc.address} style={styles.eventText}>
+          {'Address: ' + event.doc.address}
+        </Text>
+        <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+          {'Date: ' + formatDate(event.doc.startTime)}
+        </Text>
+        <Text key={event.doc.startTime} style={styles.eventText}>
+          {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
+        </Text>
+        <View>
+          <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
+            {'Requested Spaces: ' + event.doc.requestedSpaces}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView>
-        <View style={{ margin: 14, marginTop: -2 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.inner}>
           <View style={[styles.card, styles.shadowProp]}>
-            <Text style={styles.infoHeader}>Organizer Info:</Text>
+            <Text style={styles.infoHeader}>Organizer Information:</Text>
             <RenderUserInfo />
           </View>
           <View style={[styles.card, styles.shadowProp]}>
-            <Text style={styles.infoHeader}>Event Info:</Text>
-            <EventBlock event={eventData} showSpaces={true} showEditSpaces={false} showName={true} eventText={[styles.text, { paddingVertical: 2 }]}/>
+            <Text style={styles.infoHeader}>Event Information:</Text>
+            <EventBlock />
           </View>
-          <View style={[styles.card, styles.shadowProp, { padding: 18 }]}>
-            <ShowArrivalStatus />
-          {diff && diff > 0 && (
-            <View style={[ { padding: 10 }]}>
-              <TextInput
-                value={providerNotes}
-                onChangeText={setProviderNotes}
-                placeholder="Enter notes here"
-                placeholderTextColor="#aaa"
-                multiline={true}
-                style={styles.input}
-              />
-              <View style={styles.btnContainer}>
-                <Button 
-                  title="Upload notes"
-                  disabled={providerNotes.length == 0 || sentNotes}
-                  onPress={sendNotes}
+          <View style={[styles.card, styles.shadowProp]}>
+            <ArrivalText />
+            {(!notesPresent && !eventEnded) && (
+              <View style={{ paddingTop: 10 }}>
+                <TextInput
+                  value={providerNotes}
+                  onChangeText={setProviderNotes}
+                  placeholder="Enter notes here"
+                  placeholderTextColor="#454852"
+                  multiline={true}
+                  style={styles.input}
                 />
+                <View style={styles.btnContainer}>
+                  <Button 
+                    title="Upload notes"
+                    disabled={providerNotes.length == 0 || sentNotes}
+                    onPress={sendNotes}
+                  />
+                </View>
               </View>
-            </View>
-          )}
+            )}
+          </View>
         </View>
-        </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 
 export default ParkingStatusView
 
-
 const styles = StyleSheet.create({
+  eventText: {
+    fontSize: 19,
+    padding: 1,
+    color: "#454852", 
+    paddingVertical: 2
+  },
+  inner: {
+    paddingTop: 0,
+    padding: 20,
+    flex: 1,
+    justifyContent: 'space-around',
+  },
   infoHeader: { 
     fontSize: 22, 
     fontWeight: "500", 
@@ -299,8 +341,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#A7ADC6',
     borderRadius: 8,
     padding: 15,
-    width: '100%',
-    marginVertical: 10,
   },
   shadowProp: {
     shadowColor: '#171717',
@@ -321,7 +361,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 4,
     paddingVertical: 4,
-    paddingHorizontal: 2,
+    paddingHorizontal: 3,
     marginBottom: 5
   },
   error: {
@@ -334,9 +374,5 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     marginTop: 2,
-  },
-  text: {
-    fontSize: 19,
-    color: "#454852" 
-  },
+  }
 });

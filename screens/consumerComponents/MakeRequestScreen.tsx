@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, Platform, Alert, TouchableOpacity } from 'react-native';
-import {
-  deleteUser,
-  signOut,
-} from 'firebase/auth';
+import { View, Text, Button, TextInput, StyleSheet, Platform, Alert, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { auth, db } from '../../firebaseConfig';
 import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -13,6 +9,7 @@ import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/d
 import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AppButton } from '../ButtonComponents';
+import { User, onAuthStateChanged } from 'firebase/auth';
 
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
@@ -30,15 +27,21 @@ export function MakeRequestScreen() {
   const [isStartTimeVisible, setStartTimeVisible] = useState(false);
   const [isEndTimeVisible, setEndTimeVisible] = useState(false);
   const [isDateVisible, setDateVisible] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    
+    return unsubscribe;
+  }, [])
 
   const createEventRequest = async () => {
-    if (auth.currentUser) {
-      const consRef = doc(db, 'users/', auth.currentUser.uid);
-      const userSnap = await getDoc(consRef)
+    if (user) {
+      const userSnap = await getDoc(doc(db, 'users/', user.uid))
       if (userSnap.exists()) {
         await addDoc(collection(db, 'events/'), {
           eventName,
-          consumer_id: auth.currentUser.uid,
+          consumer_id: user.uid,
           name: userSnap.data().name,
           address,
           startTime,
@@ -240,54 +243,55 @@ export function MakeRequestScreen() {
   const DatePickerAndroid = () => {
     return (
       <View>
-        <AppButton onPress={showDatepicker} title="Show date picker" extraStyles={styles.showPickerButton}/>
-        <AppButton onPress={showStartPicker} title="Show Start time picker" />
-        <AppButton onPress={showEndPicker} title="Show End time picker" />
+        <AppButton onPress={showDatepicker} title="Show date picker" extraStyles={styles.smallerWidth} />
+        <AppButton onPress={showStartPicker} title="Show Start time picker" extraStyles={styles.smallerWidth} />
+        <AppButton onPress={showEndPicker} title="Show End time picker" extraStyles={styles.smallerWidth} />
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={styles.header}>Make a Request</Text>
-      <TextInput
-        value={eventName}
-        onChangeText={setEventName}
-        keyboardType="default"
-        placeholder="Event Name"
-        autoCapitalize="none"
-        placeholderTextColor="#aaa"
-        autoCorrect={false}
-        style={styles.input}
-      />
-      {Platform.OS === 'ios' 
-        ? <DatePickeriOS /> 
-        : <View>
-            <DatePickerAndroid />
-            <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString()} - {endTime.toLocaleTimeString()}</Text>
-          </View>
-      }
-
-      <TextInput
-        value={address}
-        onChangeText={setAddress}
-        keyboardType="default"
-        placeholder="Address"
-        autoCapitalize="none"
-        placeholderTextColor="#aaa"
-        autoCorrect={false}
-        style={[styles.input, { marginTop: 3 }]}
-      />
-      <View style={{ flexDirection:"row", paddingBottom: 15 }}>
-        <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
-        <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={styles.header}>Make a Request</Text>
+        <TextInput
+          value={eventName}
+          onChangeText={setEventName}
+          keyboardType="default"
+          placeholder="Event Name"
+          autoCapitalize="none"
+          placeholderTextColor="#aaa"
+          autoCorrect={false}
+          style={styles.input}
+        />
+        {Platform.OS === 'ios' 
+          ? <DatePickeriOS /> 
+          : <View>
+              <DatePickerAndroid />
+              <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], { timeStyle: 'short'})} - {endTime.toLocaleTimeString([], { timeStyle: 'short' })}</Text>
+            </View>
+        }
+        <TextInput
+          value={address}
+          onChangeText={setAddress}
+          keyboardType="default"
+          placeholder="Address"
+          autoCapitalize="none"
+          placeholderTextColor="#aaa"
+          autoCorrect={false}
+          style={[styles.input, { marginTop: 3 }]}
+        />
+        <View style={{ flexDirection:"row", paddingBottom: 15 }}>
+          <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
+          <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+        </View>
+        <AppButton
+          title="Send Request"
+          onPress={createEventRequest}
+          disabled={!sendable || address.length == 0 }
+        />
       </View>
-      <AppButton
-        title="Send Request"
-        onPress={createEventRequest}
-        disabled={!sendable || address.length == 0 }
-      />
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -366,5 +370,9 @@ const styles = StyleSheet.create({
     color: "red",
     fontWeight: "bold",
     alignSelf: "center",
+  },
+  smallerWidth: {
+    width: 250,
+    alignSelf: "center"
   }
 });

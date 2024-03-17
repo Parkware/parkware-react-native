@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, Alert } from 'react-native';
-import { DocumentData, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { View, Text, SafeAreaView, StyleSheet, Alert, StatusBar, Platform } from 'react-native';
+import { DocumentData, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
@@ -9,7 +9,7 @@ import { ScrollView, TouchableOpacity } from 'react-native';
 import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
 import { AppButton, AuthButton, DeleteAccountButton } from '../ButtonComponents';
-import { deleteUser, signOut } from 'firebase/auth';
+import { User, deleteUser, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
@@ -18,7 +18,21 @@ export function ConsumerRequestsView() {
   const [completedEvents, setCompletedEvents] = useState<docDataPair[]>([]);
   const [userName, setUserName] = useState('');
   const [isProvider, setIsProvider] = useState(false);
-  const userRef = doc(db, 'users', auth.currentUser!.uid);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    
+    return unsubscribe;
+  }, [])
+
+  useEffect(() => {
+    if (user?.uid) {
+      getIfProvider();
+      updateName();
+      getEvents();
+    }
+  }, [user])
 
   const navigation = useNavigation<consumerScreenProp>();
   
@@ -26,15 +40,18 @@ export function ConsumerRequestsView() {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row", marginTop: 6 }}>
-          <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginRight: 120}}/>
-          <Text style={{ fontSize: 16, fontFamily: 'Al Nile', marginTop: 10 }}>Logged in as {userName}</Text>
+          <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={Platform.OS == "android" ? { marginRight: 150 } : { marginRight: 120 }}/>
+          <Text style={Platform.OS == "ios" ? styles.headerStyleIOS : styles.headerStyleAndroid}>Logged in as {userName}</Text>
         </View>
       ),
+      headerStyle: {
+        backgroundColor: '#F2F2F2',
+      },
     });
   }, [navigation, userName]);
 
   const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on. ', [
+    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on.', [
       {text: 'Cancel', style: 'cancel'},
       {text: 'Log out', onPress: () => logout()},
     ]);
@@ -49,19 +66,41 @@ export function ConsumerRequestsView() {
     }
   };
   const switchToProvider = async () => {
-    const userSnap = await getDoc(userRef)
-    if (userSnap.exists() && userSnap.data().isProvider)
-      await updateDoc(userRef, { loggedAsProvider: true })
+    if (user) {
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef)
+      if (userSnap.exists() && userSnap.data().isProvider)
+        await updateDoc(userRef, { loggedAsProvider: true })
+    }
   }
+  const showConfirmDel = () =>
+    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Delete', onPress: () => delAccount()},
+    ]);
+
+  const delAccount = async () => {
+    if (user) {
+      await deleteDoc(doc(db, "users", user.uid));
+      await deleteUser(user)
+    }
+  }
+  
+  const switchView = () => navigation.navigate('makeRequestScreen');
+  
+  const getIfProvider = async () => {
+    const userRef = doc(db, 'users', user!.uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists() && docSnap.data().isProvider) 
+      setIsProvider(true);
+  }
+
   const updateName = async () => {
-    const userSnap = await getDoc(doc(db, 'users', auth.currentUser!.uid))
+    const userSnap = await getDoc(doc(db, 'users', user!.uid))
     if (userSnap.exists())
       setUserName(userSnap.data().name);
   }
-  useEffect(() => {
-    updateName();
-  }, [])
-  
+
   const modProviders = (eventData: DocumentData) => {
     if (eventData)
       return eventData.interestedProviders
@@ -70,8 +109,8 @@ export function ConsumerRequestsView() {
   }
 
   const getEvents = async () => {
-    if (auth.currentUser) {
-      const q = query(collection(db, 'events'), where('consumer_id', '==', auth.currentUser.uid))
+    if (user) {
+      const q = query(collection(db, 'events'), where('consumer_id', '==', user.uid))
       const unsub = onSnapshot(q, async (snap) => {
         const compEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
@@ -90,7 +129,7 @@ export function ConsumerRequestsView() {
           // Will need to ensure that accepted providers are never greater than the requested number
           if (!e.data().isOpen)
             compEventPromises.push(eventObj);
-          else 
+          else
             penEventPromises.push(eventObj);
         });
         
@@ -104,53 +143,55 @@ export function ConsumerRequestsView() {
     }
   }
 
-  useEffect(() => {
-    try {
-      getEvents();
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
-  }, []);
-
-  const showConfirmDel = () =>
-    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Delete', onPress: () => delAccount()},
-    ]);
-  
-  const delAccount = async () => {
-    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
-    await deleteUser(auth.currentUser!)
+  const EventBlock = ({event, showSpaces}: any) => {
+    const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    const formatDate = (date: any) => date.toDate().toLocaleDateString();
+    
+    return (
+      <View>
+        <Text key={event.doc.eventName+event.id} style={styles.eventText} >
+          {'Event name: ' + event.doc.eventName}
+        </Text>
+        <Text key={event.doc.address} style={styles.eventText}>
+          {'Address: ' + event.doc.address}
+        </Text>
+        <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+          {'Date: ' + formatDate(event.doc.startTime)}
+        </Text>
+        <Text key={event.doc.startTime} style={styles.eventText}>
+          {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
+        </Text>
+        {showSpaces && 
+          <View>
+            <Text style={styles.eventText}>
+              {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
+            </Text>
+            <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
+              {'Requested Spaces: ' + event.doc.requestedSpaces}
+            </Text>
+          </View>
+        }
+      </View>
+    );
   }
-
-  const switchView = () => navigation.navigate('makeRequestScreen');
-
-  const getIfProvider = async () => {
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists() && docSnap.data().isProvider) 
-      setIsProvider(true);
-  }
-
-  useEffect(() => {
-    getIfProvider();
-  }, [])
 
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <View>
+    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center'  }}>
+      <View style={{ paddingTop: Platform.OS === "android" ? 30 : 0 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={[styles.requestHeader, { marginTop: 15 }]}>
-            Pending
-          </Text>
+          {pendingEvents.length !== 0 && (
+            <Text style={[styles.requestHeader, { marginTop: 15 }]}>
+              Pending
+            </Text>
+          )}
           <View>
             {pendingEvents.map(event => (
-              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('multiProviderDetailsView', { event })}>
+              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
                 <View style={{ padding: 10 }}>
-                  <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+                  <EventBlock event={event} showSpaces={true} />
                   {event.doc.interestedProviders.length !== 0
-                    ? ( 
+                    && ( 
                     <View>
-                      {/* <Divider width={2} color="#687487" style={{ marginVertical: 6, borderRadius: 10 }}/> */}
                       <Text style={{ fontSize: 18, marginBottom: 4, marginTop: 7, color: "white" }}>Available Providers:</Text>
                       {event.doc.interestedProviders
                         .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
@@ -166,21 +207,22 @@ export function ConsumerRequestsView() {
                       ))}
                     </View>
                     )
-                    : <Text style={styles.eventText}>No providers are interested yet.</Text>
                   }
                 </View>
               </TouchableOpacity>
             ))}
           </View>
-
-          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-            Accepted
-          </Text>
+          {completedEvents.length !== 0 && (
+            <Text style={[styles.requestHeader, { marginTop: 15 }]}>
+              Accepted
+            </Text>
+          )}
+          {(completedEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>}
           <View>
             {completedEvents.map((event) => (
-              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
+              <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('eventInfoView', { event })}>
                 <View style={{ padding: 10 }}>
-                  <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+                <EventBlock event={event} showSpaces={false} />
                 </View>
               </TouchableOpacity>
             ))}
@@ -200,7 +242,11 @@ export function ConsumerRequestsView() {
           <DeleteAccountButton 
             title="Delete account" 
             onPress={showConfirmDel} 
-            extraStyles={{ borderColor: "red", marginTop: 20 }}
+            extraStyles={{ 
+              borderColor: "red", 
+              marginTop: 20,
+              marginBottom: Platform.OS === "android" ? 15 : 0
+            }}
           />
         </ScrollView>
       </View>
@@ -227,5 +273,15 @@ const styles = StyleSheet.create({
     fontSize: 17,
     padding: 1,
     color: "white"
+  },
+  headerStyleIOS: { 
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5 
+  },
+  headerStyleAndroid: {
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5 
   }
 });

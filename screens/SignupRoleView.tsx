@@ -1,4 +1,4 @@
-import { Button, Text, TextInput, View, StyleSheet, SafeAreaView } from 'react-native'
+import { Button, Text, TextInput, View, StyleSheet, SafeAreaView, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SignupStackParams } from '../App';
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
-import { AppButton } from './ButtonComponents';
+import { AppButton, AuthButton } from './ButtonComponents';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'signupRoleView'>;
 
@@ -14,14 +14,16 @@ export const SignupRoleView = ({ route }: Props) => {
   const [showAddress, setShowAddress] = useState(false);
   const [address, setAddress] = useState('');
   const [providerSpaces, setProviderSpaces] = useState<number>();
-  const { name, email, password }  = route.params;
+  const { name, email, phoneNum, password }  = route.params;
   
+  // Create user
   const createAccount = async (isProvider: boolean) => {
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCred.user;
       let userObj: any = {
         email,
+        phoneNumber: phoneNum,
         name,
         isProvider,
         loggedAsProvider: isProvider
@@ -35,17 +37,23 @@ export const SignupRoleView = ({ route }: Props) => {
         }
 
       await setDoc(doc(db, "users", user.uid), userObj);
+      showAccountSuccess();
     } catch (e) {
       console.log('Something went wrong with sign up: ', e);
     }
   };
   
+  const showAccountSuccess = () =>
+    Alert.alert('Your account has been created!', '', [
+      {text: 'Continue'},
+    ]);
+    
   const updateProviderSpaces = (value: number) =>
     setProviderSpaces(value);
 
   return (
     <SafeAreaView>
-      <View style={[styles.viewBlock, { marginTop: 300 }]}>
+      <View style={[styles.viewBlock, { marginTop: 150 }]}>
         <Text style={{ fontSize: 35, fontWeight: "300" }}>Sign up as a </Text>
       </View>
       <View style={styles.viewBlock}>
@@ -57,7 +65,7 @@ export const SignupRoleView = ({ route }: Props) => {
         </View>
       </View>
     {showAddress && (
-      <View style={{ marginTop: 15}}>
+      <View style={[styles.shadowProp, styles.card, { marginTop: 15, width: 370, alignSelf: 'center' } ]}>
         <TextInput
           value={address}
           onChangeText={setAddress}
@@ -66,11 +74,11 @@ export const SignupRoleView = ({ route }: Props) => {
           style={styles.input}
         />
         <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
-          <Text style={{ fontSize: 20 }}>Spaces able to provide: </Text>
+          <Text style={{ fontSize: 18 }}>Spaces able to provide: </Text>
           <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => updateProviderSpaces(value)} />
         </View>
         <View style={{ margin: 10 }} />
-          <Button title="Add details" onPress={() => createAccount(true)} />
+          <AuthButton title="Create Account" onPress={() => createAccount(true)} />
         </View>
     )}
     </SafeAreaView>
@@ -90,5 +98,17 @@ const styles = StyleSheet.create({
     justifyContent: "center", 
     marginTop: 50, 
     flexDirection: "row"
-  }
+  },
+  card: {
+    backgroundColor: '#FFFF',
+    borderRadius: 8,
+    padding: 15,
+    width: '100%',
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+  },
 })

@@ -8,7 +8,8 @@ interface StatusTextProps {
   // in the component as it's actively being updated (i.e. MultiProvidrDetailsView.tsx)
   showSpaces: boolean;
   showEditSpaces: boolean;
-  showName: boolean;eventText: any;
+  showName: boolean;
+  eventText: any;
 }
     
 export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=true, eventText }: StatusTextProps) => {
@@ -57,9 +58,3 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
     </View>
   );
 }
-
-const styles = StyleSheet.create({eventText: {
-    fontSize: 15,
-    paddingVertical: 1
-  }
-});

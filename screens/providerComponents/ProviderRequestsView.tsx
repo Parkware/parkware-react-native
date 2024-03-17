@@ -3,7 +3,7 @@ import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, 
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
-import { signOut } from 'firebase/auth';
+import { User, onAuthStateChanged, signOut } from 'firebase/auth';
 import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
@@ -23,7 +23,14 @@ export function ProviderRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
   const [unwantedEvents, setUnwantedEvents] = useState<string[]>([]);
   const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
+  const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
+    
+    return unsubscribe;
+  }, [])
+  
   const navigation = useNavigation<providerScreenProp>();
   
   React.useLayoutEffect(() => {
@@ -43,7 +50,7 @@ export function ProviderRequestsView() {
     ]);
 
   const updateDeniedEvents = async () => {
-    const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', auth.currentUser!.uid))
+    const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', user!.uid))
     const eventsSnap = await getDocs(q);
     const deniedNames: string[] = eventsSnap.docs.map((e: DocumentData) => e.data().eventName)
     setDeniedEventArr(deniedNames);
@@ -60,13 +67,11 @@ export function ProviderRequestsView() {
   // Reading the event data and setting eventData to it. 
   useEffect(() => {
     try {
+      if (user) {
       const unsub = onSnapshot(collection(db, 'events'), async (snapshot) => {            
         const openEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
         const accEventPromises: docDataPair[] = [];
-        let currUid: string = '';
-        if (auth.currentUser)
-          currUid = auth.currentUser.uid;
 
         snapshot.docs.map(e => {
           let eventObj = {
@@ -75,13 +80,13 @@ export function ProviderRequestsView() {
           } as docDataPair
           
           // Order matters!
-          if (e.data().acceptedProviderIds.includes(currUid)) {
+          if (e.data().acceptedProviderIds.includes(user!.uid)) {
             accEventPromises.push(eventObj);
-          } else if (e.data().interestedProviderIds.includes(currUid)) {
+          } else if (e.data().interestedProviderIds.includes(user!.uid)) {
             penEventPromises.push(eventObj);
           } else if (e.data().isOpen 
-                    && !e.data().unwantedProviders.includes(auth.currentUser!.uid)
-                    && e.data().consumer_id !== auth.currentUser!.uid) {
+                    && !e.data().unwantedProviders.includes(user!.uid)
+                    && e.data().consumer_id !== user!.uid) {
             openEventPromises.push(eventObj);
           }
         });
@@ -95,10 +100,11 @@ export function ProviderRequestsView() {
         updateDeniedEvents();
       });
       return () => unsub();
+    }
     } catch (error) {
       console.error('Error fetching events:', error);
     }
-  }, []);
+  }, [user]);
 
   const removeLocalEventData = (id: string) => {
     setUnwantedEvents(current => [...current, id]);
@@ -106,7 +112,7 @@ export function ProviderRequestsView() {
   }
   
   const updateDB = async (eventData: docDataPair) => {
-    const id = auth.currentUser!.uid;
+    const id = user!.uid;
     const currUserSnap = await getDoc(doc(db, 'users/', id));
     if (currUserSnap.exists())
       await setDoc(doc(db, 'events/', eventData.id), {
@@ -121,46 +127,84 @@ export function ProviderRequestsView() {
       }, { merge: true });
     /*
     A provider may need to be able to revert their acceptance to an event request. 
-    else {
-      await deleteDoc(doc(db, "interested_providers/", auth.currentUser.uid));
-    }
     */
+  }
+
+  const EventBlock = ({event, showSpaces, eventTextStyle}: any) => {
+    const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    const formatDate = (date: any) => date.toDate().toLocaleDateString();
+    
+    return (
+      <View>
+        <Text key={event.doc.eventName+event.id} style={eventTextStyle} >
+          {'Event name: ' + event.doc.eventName}
+        </Text>
+        <Text key={event.doc.address} style={eventTextStyle}>
+          {'Address: ' + event.doc.address}
+        </Text>
+        <Text key={event.doc.accepted_provider_id} style={eventTextStyle}>
+          {'Date: ' + formatDate(event.doc.startTime)}
+        </Text>
+        <Text key={event.doc.startTime} style={eventTextStyle}>
+          {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
+        </Text>
+        {showSpaces && 
+          <View>
+            {event.doc.accSpaceCount !== 0 && (
+              <Text style={eventTextStyle}>
+                Current Parking Spaces ${event.doc.accSpaceCount}
+              </Text>
+            )}
+            <Text key={event.doc.requestedSpaces + 1} style={eventTextStyle}>
+              {'Requested Spaces: ' + event.doc.requestedSpaces}
+            </Text>
+          </View>
+        }
+      </View>
+    );
   }
   
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-          Accepted
-        </Text>
+        {accEvents.length !== 0 && (
+          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
+            Accepted
+          </Text>
+        )}
         <View>
           {accEvents.map(event => (
             <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
               <View style={{ padding: 10 }} key={event.id}>
-                <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={styles.eventText}/>
+                <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={styles.eventText} />
               </View>
             </TouchableOpacity>
           ))}
         </View>
-        <Text style={[styles.requestHeader, { marginTop: 20 }]}>
-          Pending
-        </Text>
+        {pendingEvents.length !== 0 && (
+          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
+            Pending
+          </Text>
+        )}
         <View>
           {pendingEvents.map((event) => (
             <View style={styles.unclickableRequests} key={event.id.slice(0, 5)}>
-              <EventBlock event={event} showSpaces={false} showEditSpaces={false} showName={true} eventText={{fontSize: 17, padding: 1}}/>
+              <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]} />
             </View>
           ))}
         </View>
-        <Text style={[styles.requestHeader, { marginTop: 30 }]}>
-          Open
-        </Text>
+        {openEvents.length !== 0 && (
+          <Text style={[styles.requestHeader, { marginTop: 20 }]}>
+            Open
+          </Text>
+        )}
+        {(accEvents.length == 0 && openEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>}
         <View>
           {openEvents
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
             .map((event) => (
             <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
-              <EventBlock event={event} showSpaces={true} showEditSpaces={false} showName={true} eventText={{fontSize: 17, padding: 1}}/>
+              <EventBlock event={event} showSpaces={true} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]}/>
               <View style={{ padding: 10, justifyContent: 'space-between' }}>
                 <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
                 <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>

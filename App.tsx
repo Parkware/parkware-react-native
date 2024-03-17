@@ -12,22 +12,23 @@ import { ProviderRequestsView, docDataPair } from './screens/providerComponents/
 import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
-import MultiProviderDetailsView from './screens/consumerComponents/MultiProviderDetailsView';
+import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
 import { LoginRoleView } from './screens/LoginRoleView';
+import { Platform } from 'react-native';
+import EventInfoView from './screens/consumerComponents/EventInfoView';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
   consumerRequestsView: any;
-  multiProviderDetailsView: {
+  chooseProviderView: {
     event: docDataPair;
   };
-  chooseProviderView: {
+  eventInfoView: {
     event: docDataPair;
   };
   departureGuestView: {
@@ -67,6 +68,7 @@ export type SignupStackParams = {
   signupRoleView: {
     name: string,
     email: string,
+    phoneNum: string,
     password: string
   };
 }
@@ -111,7 +113,9 @@ const ProviderScreenStack = () => {
         component={ProviderRequestsView}
       />
       <ProviderStack.Screen
-        options={{ title: "", headerTransparent: true }}
+        options={{ title: "", headerTransparent: false, headerStyle: {
+          backgroundColor: '#f2f2f2',
+        }, }}
         name="consumerStatusView"
         component={ParkingStatusView}
       />
@@ -133,19 +137,19 @@ const ConsumerScreenStack = () => {
         component={MakeRequestScreen} 
       />
       <ConsumerStack.Screen
-        options={{ title: "", headerTransparent: true }}
+        options={{ title: "", headerTransparent: Platform.OS === "android" ? false : true }}
         name="consumerRequestsView"
         component={ConsumerRequestsView}
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
-        name="multiProviderDetailsView"
-        component={MultiProviderDetailsView}
+        name="chooseProviderView"
+        component={ChooseProviderView}
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
-        name="chooseProviderView"
-        component={ChooseProviderView}
+        name="eventInfoView"
+        component={EventInfoView}
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}

@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParams } from '../App';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
+import { AppButton } from './ButtonComponents';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Signup'>;
 
 export function SignupScreen() {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState('');
+    const [phoneNum, setPhoneNum] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
@@ -20,24 +22,34 @@ export function SignupScreen() {
         params: {
           name,
           email,
+          phoneNum,
           password
         } 
       });
     }
     
-    const checkPassword = () => {
+    const navNext = () => {
+      navNextView();
+    };
+
+    useEffect(() => {
       if (password !== confirmPassword)
         setError("Passwords don't match");
-      else if (password.length < 6)
+      else
+        setError('')
+    }, [confirmPassword])
+    
+    useEffect(() => {
+      if ((password.length < 6) && password.length !== 0)
         setError("Password must be at least 6 characters")
       else
-        navNextView();
-    };
+        setError('')
+    }, [password])
   
     return (
       <View style={styles.outer}>
         <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Welcome to Parkware!</Text>
+          <Text style={styles.header}>Sign up for Parkware!</Text>
           {error && 
             <View style={styles.contrastBg}>
               <Text style={styles.error}>{error}</Text>
@@ -52,6 +64,7 @@ export function SignupScreen() {
             placeholder="Enter display name"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -61,6 +74,17 @@ export function SignupScreen() {
             placeholder="Enter email address"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
+            style={styles.input}
+          />
+          <TextInput
+            value={phoneNum}
+            onChangeText={setPhoneNum}
+            keyboardType="phone-pad"
+            placeholder="Enter phone number"
+            autoCapitalize="none"
+            placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -70,6 +94,7 @@ export function SignupScreen() {
             placeholder="Enter password"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -79,12 +104,13 @@ export function SignupScreen() {
             placeholder="Confirm password"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
-          <Button
-            title="Create Account"
-            onPress={checkPassword}
-            disabled={!email || !password }
+          <AppButton
+            title="Next"
+            onPress={navNext}
+            disabled={ !email || !password || (password !== confirmPassword) || (password.length < 6)}
           />
         </View>
       </View>
@@ -97,7 +123,7 @@ export function SignupScreen() {
       overflow: 'hidden',
       borderRadius: 10,
       marginBottom: 8,
-      borderColor: "#ffff",
+      borderColor: "#FFFF",
       backgroundColor: "#bfbfbf", 
       padding: 12
     },

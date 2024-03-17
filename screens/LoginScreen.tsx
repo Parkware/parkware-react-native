@@ -35,7 +35,7 @@ export function LoginScreen() {
     return (
       <View style={styles.outer}>
         <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Welcome Back!</Text>
+          <Text style={styles.header}>Login</Text>
           {error && 
             <View style={styles.contrastBg}>
               <Text style={styles.error}>{error}</Text>
@@ -52,6 +52,7 @@ export function LoginScreen() {
             placeholder="Enter email address"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TextInput
@@ -61,10 +62,11 @@ export function LoginScreen() {
             placeholder="Enter password"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
+            selectionColor={'white'}
             style={styles.input}
           />
           <TouchableOpacity onPress={() => navigation.navigate('resetPassword')}>
-            <Text style={[styles.link, { color: '#2C1320' }]}>I've forgotten my password</Text>
+            <Text style={[styles.link, { color: '#FFFF' }]}>I've forgotten my password</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={loginUser} disabled={!email || !password} style={{ alignSelf: "center" }}>
             <Text style={[styles.link, { fontSize: 18 }]}>Login</Text>

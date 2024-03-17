@@ -130,30 +130,32 @@ export function ProviderRequestsView() {
     */
   }
 
-  const EventBlock = ({event, showSpaces, eventTextStyle=styles.eventText}: any) => {
+  const EventBlock = ({event, showSpaces, eventTextStyle}: any) => {
     const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
     const formatDate = (date: any) => date.toDate().toLocaleDateString();
     
     return (
       <View>
-        <Text key={event.doc.eventName+event.id} style={styles.eventText} >
+        <Text key={event.doc.eventName+event.id} style={eventTextStyle} >
           {'Event name: ' + event.doc.eventName}
         </Text>
-        <Text key={event.doc.address} style={styles.eventText}>
+        <Text key={event.doc.address} style={eventTextStyle}>
           {'Address: ' + event.doc.address}
         </Text>
-        <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+        <Text key={event.doc.accepted_provider_id} style={eventTextStyle}>
           {'Date: ' + formatDate(event.doc.startTime)}
         </Text>
-        <Text key={event.doc.startTime} style={styles.eventText}>
+        <Text key={event.doc.startTime} style={eventTextStyle}>
           {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
         </Text>
         {showSpaces && 
           <View>
-            <Text style={styles.eventText}>
-              {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
-            </Text>
-            <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
+            {event.doc.accSpaceCount !== 0 && (
+              <Text style={eventTextStyle}>
+                Current Parking Spaces ${event.doc.accSpaceCount}
+              </Text>
+            )}
+            <Text key={event.doc.requestedSpaces + 1} style={eventTextStyle}>
               {'Requested Spaces: ' + event.doc.requestedSpaces}
             </Text>
           </View>
@@ -174,7 +176,7 @@ export function ProviderRequestsView() {
           {accEvents.map(event => (
             <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
               <View style={{ padding: 10 }} key={event.id}>
-                <EventBlock event={event} showSpaces={false} showName={true} />
+                <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={styles.eventText} />
               </View>
             </TouchableOpacity>
           ))}
@@ -187,7 +189,7 @@ export function ProviderRequestsView() {
         <View>
           {pendingEvents.map((event) => (
             <View style={styles.unclickableRequests} key={event.id.slice(0, 5)}>
-              <EventBlock event={event} showSpaces={false} showName={true} eventText={{fontSize: 17, padding: 1}}/>
+              <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={styles.eventText} />
             </View>
           ))}
         </View>
@@ -202,7 +204,7 @@ export function ProviderRequestsView() {
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
             .map((event) => (
             <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
-              <EventBlock event={event} showSpaces={true} showName={true} eventText={{ color: "454852" }}/>
+              <EventBlock event={event} showSpaces={true} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]}/>
               <View style={{ padding: 10, justifyContent: 'space-between' }}>
                 <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
                 <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>

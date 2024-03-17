@@ -169,7 +169,7 @@ const ChooseProviderView = ({ route }: Props) => {
         <Text key={event.doc.address} style={styles.eventText}>
           {'Address: ' + event.doc.address}
         </Text>
-        <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+        <Text key={event.doc.endTime} style={styles.eventText}>
           {'Date: ' + formatDate(event.doc.startTime)}
         </Text>
         <Text key={event.doc.startTime} style={styles.eventText}>

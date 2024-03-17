@@ -189,7 +189,7 @@ export function ProviderRequestsView() {
         <View>
           {pendingEvents.map((event) => (
             <View style={styles.unclickableRequests} key={event.id.slice(0, 5)}>
-              <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={styles.eventText} />
+              <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]} />
             </View>
           ))}
         </View>

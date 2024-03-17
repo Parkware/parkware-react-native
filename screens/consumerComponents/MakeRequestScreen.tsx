@@ -37,8 +37,7 @@ export function MakeRequestScreen() {
 
   const createEventRequest = async () => {
     if (user) {
-      const consRef = doc(db, 'users/', user.uid);
-      const userSnap = await getDoc(consRef)
+      const userSnap = await getDoc(doc(db, 'users/', user.uid))
       if (userSnap.exists()) {
         await addDoc(collection(db, 'events/'), {
           eventName,

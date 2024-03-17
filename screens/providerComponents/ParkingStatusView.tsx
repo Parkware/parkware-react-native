@@ -131,6 +131,8 @@ const ParkingStatusView = ({ route }: Props) => {
   }, []);
 
   const sendNotes = async () => {
+    Keyboard.dismiss
+
     const myProviderObj = eventData.doc.interestedProviders
       .find((proObj: DocumentData) => proObj.id == user!.uid);
       
@@ -266,7 +268,7 @@ const ParkingStatusView = ({ route }: Props) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.inner}>
           <View style={[styles.card, styles.shadowProp]}>
-            <Text style={styles.infoHeader}>Organizer Info:</Text>
+            <Text style={styles.infoHeader}>Organizer Information:</Text>
             <RenderUserInfo />
           </View>
           <View style={[styles.card, styles.shadowProp]}>
@@ -276,12 +278,12 @@ const ParkingStatusView = ({ route }: Props) => {
           <View style={[styles.card, styles.shadowProp]}>
             <ArrivalText />
             {(!notesPresent && !eventEnded) && (
-              <View style={[ { padding: 10 }]}>
+              <View style={{ paddingTop: 10 }}>
                 <TextInput
                   value={providerNotes}
                   onChangeText={setProviderNotes}
                   placeholder="Enter notes here"
-                  placeholderTextColor="#000000"
+                  placeholderTextColor="#454852"
                   multiline={true}
                   style={styles.input}
                 />
@@ -359,7 +361,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 4,
     paddingVertical: 4,
-    paddingHorizontal: 2,
+    paddingHorizontal: 3,
     marginBottom: 5
   },
   error: {

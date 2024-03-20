@@ -9,6 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import { AppButton, AuthButton } from '../ButtonComponents';
+import { FirebaseError } from 'firebase/app';
 
 export interface docDataPair {
   id: string,
@@ -24,6 +25,7 @@ export function ProviderRequestsView() {
   const [unwantedEvents, setUnwantedEvents] = useState<string[]>([]);
   const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState<FirebaseError>();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
@@ -72,6 +74,13 @@ export function ProviderRequestsView() {
         const openEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
         const accEventPromises: docDataPair[] = [];
+        let unwantedEvents: any[] = [];
+
+        const userSnap = await getDoc(doc(db, 'users', user.uid))
+        if (userSnap.exists()) {
+          unwantedEvents = userSnap.data().unwantedEvents
+          if (!unwantedEvents) unwantedEvents = [];
+        }
 
         snapshot.docs.map(e => {
           let eventObj = {
@@ -86,7 +95,8 @@ export function ProviderRequestsView() {
             penEventPromises.push(eventObj);
           } else if (e.data().isOpen 
                     && !e.data().unwantedProviders.includes(user!.uid)
-                    && e.data().consumer_id !== user!.uid) {
+                    && e.data().consumer_id !== user!.uid
+                    && !unwantedEvents.includes(e.id)) {
             openEventPromises.push(eventObj);
           }
         });
@@ -102,14 +112,20 @@ export function ProviderRequestsView() {
       return () => unsub();
     }
     } catch (error) {
-      console.error('Error fetching events:', error);
+      setError((error) as FirebaseError);
     }
   }, [user]);
 
   const removeLocalEventData = (id: string) => {
+    // Update the state variable
     setUnwantedEvents(current => [...current, id]);
+    // Show open events without this id
     setOpenEvents(openEvents.filter((e: DocumentData) => e.id !== id));
+    addToNoEventsList(id);
   }
+
+  const addToNoEventsList = async (id: string) =>
+    await setDoc(doc(db, 'users', user!.uid), { unwantedEvents: arrayUnion(id) }, { merge: true })
   
   const updateDB = async (eventData: docDataPair) => {
     const id = user!.uid;

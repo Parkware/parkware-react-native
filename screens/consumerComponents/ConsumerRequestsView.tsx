@@ -126,8 +126,8 @@ export function ConsumerRequestsView() {
             },
           } as docDataPair;
           
-          // Will need to ensure that accepted providers are never greater than the requested number
-          if (!e.data().isOpen)
+          // Can add another condition to add previously ended events to an ended event list. 
+          if (!e.data().isOpen && !e.data().eventEnded)
             compEventPromises.push(eventObj);
           else
             penEventPromises.push(eventObj);

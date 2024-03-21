@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, StyleSheet, Platform } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
@@ -26,6 +26,20 @@ export function ProviderRequestsView() {
   const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<FirebaseError>();
+  const [userName, setUserName] = useState('');
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: "row", marginTop: 6 }}>
+          <Text style={Platform.OS == "ios" ? styles.headerStyleIOS : styles.headerStyleAndroid}>Logged in as {userName}</Text>
+        </View>
+      ),
+      headerStyle: {
+        backgroundColor: '#F2F2F2',
+      },
+    });
+  }, [userName]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
@@ -35,35 +49,12 @@ export function ProviderRequestsView() {
   
   const navigation = useNavigation<providerScreenProp>();
   
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: "row", marginTop: 6 }}>
-          <AuthButton title="Log out" onPress={showConfirmLogout} />
-        </View>
-      ),
-    });
-  }, [navigation]);
-
-  const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Log out', onPress: () => logout()},
-    ]);
 
   const updateDeniedEvents = async () => {
     const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', user!.uid))
     const eventsSnap = await getDocs(q);
     const deniedNames: string[] = eventsSnap.docs.map((e: DocumentData) => e.data().eventName)
     setDeniedEventArr(deniedNames);
-  };
-
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (e) {
-      console.error(e);
-    }
   };
 
   // Reading the event data and setting eventData to it. 
@@ -110,12 +101,22 @@ export function ProviderRequestsView() {
         updateDeniedEvents();
       });
       return () => unsub();
-    }
+      }
     } catch (error) {
       setError((error) as FirebaseError);
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user?.uid) updateName();
+  }, [user])
+
+  const updateName = async () => {
+    const userSnap = await getDoc(doc(db, 'users', user!.uid))
+    if (userSnap.exists())
+      setUserName(userSnap.data().name);
+  }
+  
   const removeLocalEventData = (id: string) => {
     // Update the state variable
     setUnwantedEvents(current => [...current, id]);
@@ -214,7 +215,7 @@ export function ProviderRequestsView() {
             Open
           </Text>
         )}
-        {(accEvents.length == 0 && openEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>}
+        {/* {(accEvents.length == 0 && openEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>} */}
         <View>
           {openEvents
             .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
@@ -281,4 +282,14 @@ const styles = StyleSheet.create({
     width: 155, 
     alignSelf: "center" 
   },
+  headerStyleIOS: { 
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5 
+  },
+  headerStyleAndroid: {
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5,
+  }
 });

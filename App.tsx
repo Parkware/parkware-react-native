@@ -19,8 +19,12 @@ import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
 import { LoginRoleView } from './screens/LoginRoleView';
-import { Platform } from 'react-native';
+import { Platform, View, Text } from 'react-native';
 import EventInfoView from './screens/consumerComponents/EventInfoView';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import SettingsScreen from './screens/SettingsScreen';
+import { HomeScreen } from './screens/HomeScreen';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -41,7 +45,6 @@ const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
 
 export type ProviderStackParams = {
   providerRequestsView: undefined;
-  loginRoleView: undefined;
   consumerStatusView: {
     event: docDataPair;
   };
@@ -106,7 +109,7 @@ const AuthScreenStack = () => {
 
 const ProviderScreenStack = () => {
   return (
-    <ProviderStack.Navigator initialRouteName='loginRoleView'>
+    <ProviderStack.Navigator initialRouteName='providerRequestsView'>
       <ProviderStack.Screen
         options={{ title: "", headerTransparent: true }}
         name="providerRequestsView"
@@ -118,11 +121,6 @@ const ProviderScreenStack = () => {
         }, }}
         name="consumerStatusView"
         component={ParkingStatusView}
-      />
-      <ProviderStack.Screen
-        options={{ title: "", headerTransparent: true }}
-        name="loginRoleView"
-        component={LoginRoleView}
       />
     </ProviderStack.Navigator>
   )
@@ -159,10 +157,68 @@ const ConsumerScreenStack = () => {
     </ConsumerStack.Navigator>
   );
 }
+
+
+
+const Tab = createBottomTabNavigator();
+
+const RootTabs = ({ loggedAsProvider }: any) => {
+  return (
+    <Tab.Navigator 
+      initialRouteName='Home'
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused
+              ? 'home'
+              : 'home-outline';
+          } else if (route.name === 'ConsumerStack') {
+            iconName = focused ? 'send' : 'send-outline';
+          } else if (route.name === 'ProviderStack') {
+            iconName = focused ? 'car' : 'car-outline';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'settings' : 'settings-outline';
+          } else {
+            iconName = 'ios-list';
+          }
+          
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#8797AF',
+        tabBarInactiveTintColor: 'gray',
+      })}
+    >
+      <Tab.Screen 
+        options={{ title: "Home", headerShown: false }}
+        name="Home"
+        component={HomeScreen}
+      />
+      <Tab.Screen 
+        options={{ title: "Organizer", headerShown: false }}
+        name="ConsumerStack"
+        component={ConsumerScreenStack}
+      />
+      {loggedAsProvider && (
+        <Tab.Screen 
+          options={{ title: "Provider", headerShown: false }}
+          name="ProviderStack"
+          component={ProviderScreenStack}
+        />
+      )}
+      <Tab.Screen 
+        options={{ title: "Settings", headerShown: false }}
+        name="Settings"
+        component={SettingsScreen}
+      />
+    </Tab.Navigator>
+  )
+}
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loggedAsProvider, setLoggedAsProvider] = useState<boolean | null>(null);
-  const [noUser, setNoUser] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -172,8 +228,6 @@ export default function App() {
         const snapshot = await getDoc(doc(db, 'users', user.uid))
         if (snapshot.exists())
           setLoggedAsProvider(snapshot.data().loggedAsProvider);
-        else
-          setNoUser(true);
       }
     });
     return unsubscribe;
@@ -193,12 +247,8 @@ export default function App() {
     if (user) {
       if (loggedAsProvider == null)
         return <LoadingScreen />;
-      else if (noUser)
-        return <AuthScreenStack />;
-      else if (loggedAsProvider)
-        return <ProviderScreenStack /> 
       else
-        return <ConsumerScreenStack />
+        return <RootTabs loggedAsProvider />
     } else {
       return <AuthScreenStack />;
     }
@@ -206,3 +256,4 @@ export default function App() {
 
   return <NavigationContainer><RenderContent /></NavigationContainer>;
 }
+

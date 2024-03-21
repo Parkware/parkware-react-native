@@ -7,12 +7,16 @@ import { ProviderStackParams } from '../App';
 import { User, deleteUser, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { AppButton, DeleteAccountButton } from './ButtonComponents';
+import { usePushNotifications } from '../usePushNotifications';
 
 type roleScreenProp = NativeStackNavigationProp<ProviderStackParams, 'loginRoleView'>;
 
 export const LoginRoleView = () => {
   const navigation = useNavigation<roleScreenProp>();
   const [user, setUser] = useState<User | null>(null);
+  const { expoPushToken, notification } = usePushNotifications();
+  
+  const data = JSON.stringify(notification, undefined, 2);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
@@ -41,6 +45,7 @@ export const LoginRoleView = () => {
   return (
     <SafeAreaView>
       <View style={[styles.viewBlock, { marginTop: 200 }]}>
+        <Text>{data}</Text>
         <Text style={{ fontSize: 35, fontWeight: "300" }}>Continue as a </Text>
       </View>
       <View style={styles.viewBlock}>

@@ -18,7 +18,6 @@ import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
-import { LoginRoleView } from './screens/LoginRoleView';
 import { Platform, View, Text } from 'react-native';
 import EventInfoView from './screens/consumerComponents/EventInfoView';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';

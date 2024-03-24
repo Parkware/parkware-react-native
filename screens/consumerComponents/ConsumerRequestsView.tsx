@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, Alert, StatusBar, Platform } from 'react-native';
-import { DocumentData, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { View, Text, SafeAreaView, StyleSheet, Platform } from 'react-native';
+import { DocumentData, collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView, TouchableOpacity } from 'react-native';
-import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
-import { AppButton, AuthButton, DeleteAccountButton } from '../ButtonComponents';
-import { User, deleteUser, onAuthStateChanged, signOut } from 'firebase/auth';
+import { AppButton } from '../ButtonComponents';
+import { User, onAuthStateChanged } from 'firebase/auth';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
@@ -81,7 +80,7 @@ export function ConsumerRequestsView() {
           } as docDataPair;
           
           // Can add another condition to add previously ended events to an ended event list. 
-          if (!e.data().isOpen && !e.data().eventEnded)
+          if (!e.data().isOpen || !e.data().eventEnded)
             compEventPromises.push(eventObj);
           else
             penEventPromises.push(eventObj);
@@ -117,11 +116,8 @@ export function ConsumerRequestsView() {
         </Text>
         {showSpaces && 
           <View>
-            <Text style={styles.eventText}>
-              {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
-            </Text>
             <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
-              {'Requested Spaces: ' + event.doc.requestedSpaces}
+              {`Spaces: ${event.doc.accSpaceCount} / ${event.doc.requestedSpaces}`}
             </Text>
           </View>
         }
@@ -182,9 +178,9 @@ export function ConsumerRequestsView() {
             ))}
           </View>
           <AppButton
-            title="Make a Request"
+            title="Request Spaces"
             onPress={switchView}
-            extraStyles={{ marginTop: 7 }}
+            extraStyles={{ marginTop: 7, marginBottom: 30 }}
           />
         </ScrollView>
       </View>

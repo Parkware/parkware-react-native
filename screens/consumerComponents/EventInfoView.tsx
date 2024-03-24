@@ -70,7 +70,7 @@ const EventInfoView = ({ route }: Props) => {
 
   return (
     <SafeAreaView>
-      <View style={{ paddingHorizontal: 16, paddingTop: Platform.OS === "android" ? 70 : 0 }}>
+      <View style={{ paddingHorizontal: 16, paddingTop: Platform.OS === "android" ? 90 : 0 }}>
         <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 10, marginTop: -34, alignSelf: "center" }}>
           {event.doc.eventName}
         </Text>

@@ -181,7 +181,7 @@ const ChooseProviderView = ({ route }: Props) => {
 
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
-      <View style={{ margin: 9, paddingTop: Platform.OS === "android" ? 70 : 0 }}>
+      <View style={{ margin: 9, paddingTop: Platform.OS === "android" ? 90 : 0 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={[styles.card, styles.shadowProp]}>
             <View style={{ flexDirection: "row", marginTop: 7}}>
@@ -198,7 +198,7 @@ const ChooseProviderView = ({ route }: Props) => {
             </View>
             <EventBlock />
             <Text style={styles.eventText}>
-              {eventData.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces: ${event.doc.accSpaceCount}`}
+              Current Spaces: {event.doc.accSpaceCount}
             </Text>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.eventText}>Requested Spaces:</Text>

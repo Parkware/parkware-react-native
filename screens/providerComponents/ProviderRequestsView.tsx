@@ -28,6 +28,8 @@ export function ProviderRequestsView() {
   const [error, setError] = useState<FirebaseError>();
   const [userName, setUserName] = useState('');
 
+  const navigation = useNavigation<providerScreenProp>();
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -47,9 +49,6 @@ export function ProviderRequestsView() {
     return unsubscribe;
   }, [])
   
-  const navigation = useNavigation<providerScreenProp>();
-  
-
   const updateDeniedEvents = async () => {
     const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', user!.uid))
     const eventsSnap = await getDocs(q);
@@ -191,7 +190,7 @@ export function ProviderRequestsView() {
         )}
         <View>
           {accEvents.map(event => (
-            <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
+            <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('parkingStatusView', { event })}>
               <View style={{ padding: 10 }} key={event.id}>
                 <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={styles.eventText} />
               </View>

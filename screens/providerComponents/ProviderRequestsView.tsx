@@ -71,13 +71,14 @@ export function ProviderRequestsView() {
           unwantedEvents = userSnap.data().unwantedEvents
           if (!unwantedEvents) unwantedEvents = [];
         }
-
         snapshot.docs.map(e => {
           let eventObj = {
             id: e.id,
             doc: e.data(),
           } as docDataPair
-          
+
+          if (!e.data().exists) return
+
           // Order matters!
           if (e.data().acceptedProviderIds.includes(user!.uid)) {
             accEventPromises.push(eventObj);
@@ -215,19 +216,21 @@ export function ProviderRequestsView() {
           </Text>
         )}
         {/* {(accEvents.length == 0 && openEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>} */}
-        <View>
-          {openEvents
-            .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
-            .map((event) => (
-            <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
-              <EventBlock event={event} showSpaces={true} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]}/>
-              <View style={{ padding: 10, justifyContent: 'space-between' }}>
-                <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
-                <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>
+        {openEvents.length !== 0 && (
+          <View>
+            {openEvents
+              .filter((e: DocumentData) => !unwantedEvents.includes(e!.id))
+              .map((event) => (
+              <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
+                <EventBlock event={event} showSpaces={true} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]}/>
+                <View style={{ padding: 10, justifyContent: 'space-between' }}>
+                  <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
+                  <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>
+                </View>
               </View>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        )}
         {deniedEventArr.length !== 0 &&
           (
             <View>

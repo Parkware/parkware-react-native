@@ -12,7 +12,7 @@ import { ProviderRequestsView, docDataPair } from './screens/providerComponents/
 import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { DocumentData, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
@@ -24,7 +24,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SettingsScreen from './screens/SettingsScreen';
 import { HomeScreen } from './screens/HomeScreen';
-import { usePushNotifications } from './usePushNotifications';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
+import { log } from 'firebase-functions/logger';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -161,8 +164,7 @@ const ConsumerScreenStack = () => {
 const Tab = createBottomTabNavigator();
 
 function LogoTitle() {
-  const logoDim = 150;
-
+  const logoDim = Platform.OS == 'android' ? 150 : 115;
   return (
     <Image
       style={{ width: logoDim, height: logoDim }}
@@ -234,14 +236,58 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loggedAsProvider, setLoggedAsProvider] = useState<boolean | null>(null);
 
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      
+      if (existingStatus !== 'granted') {
+        const response = await Notifications.requestPermissionsAsync();
+        // console.log("req perms returned: ", response);
+        finalStatus = response.status;
+      }
+      
+      // REMOVE 'undetermined' if necessary
+      if (finalStatus !== 'granted' || 'undetermined') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig!.extra!.eas.projectId })).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+    
+    return token;
+  }
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoggedAsProvider(null);
       if (user) {
         const snapshot = await getDoc(doc(db, 'users', user.uid))
-        if (snapshot.exists())
+        if (snapshot.exists()) {
           setLoggedAsProvider(snapshot.data().loggedAsProvider);
+          const token = await registerForPushNotificationsAsync();
+          try {
+            if (token)
+              await setDoc(doc(db, 'users', user.uid), { expoPushToken: token }, { merge: true });
+          } catch (e) {
+            console.log(e);
+          }
+        }
       }
     });
     return unsubscribe;

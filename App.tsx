@@ -27,7 +27,6 @@ import { HomeScreen } from './screens/HomeScreen';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
-import { log } from 'firebase-functions/logger';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;

@@ -77,8 +77,8 @@ export function ProviderRequestsView() {
             doc: e.data(),
           } as docDataPair
 
-          if (!e.data().exists) return
-
+          if (!e.exists) return
+          
           // Order matters!
           if (e.data().acceptedProviderIds.includes(user!.uid)) {
             accEventPromises.push(eventObj);

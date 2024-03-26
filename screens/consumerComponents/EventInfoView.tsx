@@ -86,33 +86,33 @@ const EventInfoView = ({ route }: Props) => {
           </View>
         )) : <Text style={styles.text}>Loading...</Text>}
         {eventEnded
-        ? <View>{diff && diff > 0 && 
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 10 }}>
-              {timeRemaining} till your parking event.
-            </Text>
-          }
-          <View style={[styles.card, styles.shadowProp, { marginTop: 7 }]}>
-            <Text style={{ marginBottom: 10, fontSize: 18, color: "white" }}>
-              Share the link below with other guests so that they can update their status to the providers
-            </Text>
-            <Text style={{ color: 'lightblue', fontSize: 15 }}
-                  onPress={() => Linking.openURL(shareableLink)}>
-              {shareableLink.replace('https://', '')}
-            </Text>
-          </View>
-        </View>
-        : <View style={[styles.card, styles.shadowProp]}>
-            <Text style={styles.feedbackHeader}>
-              Please fill out the survey form below.
-            </Text>
-            <Text style={{ color: 'lightblue', fontSize: 19, marginVertical: 10 }}
-                  onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
-                    https://forms.gle/DqPH34zYAfxdgzzt6
-            </Text>
-            <Text style={styles.feedbackHeader}>
-              Thank you for using Parkware!
-            </Text>
-          </View>
+          ? <View style={[styles.card, styles.shadowProp]}>
+              <Text style={styles.feedbackHeader}>
+                Please fill out the survey form below.
+              </Text>
+              <Text style={{ color: 'lightblue', fontSize: 19, marginVertical: 10 }}
+                    onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
+                      https://forms.gle/DqPH34zYAfxdgzzt6
+              </Text>
+              <Text style={styles.feedbackHeader}>
+                Thank you for using Parkware!
+              </Text>
+            </View>
+          : <View>{diff && diff > 0 && 
+              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 10 }}>
+                {timeRemaining} till your parking event.
+              </Text>
+            }
+              <View style={[styles.card, styles.shadowProp, { marginTop: 7 }]}>
+                <Text style={{ marginBottom: 10, fontSize: 18, color: "white" }}>
+                  Share the link below with other guests so that they can update their status to the providers
+                </Text>
+                <Text style={{ color: 'lightblue', fontSize: 15 }}
+                      onPress={() => Linking.openURL(shareableLink)}>
+                  {shareableLink.replace('https://', '')}
+                </Text>
+              </View>
+            </View>
       }
       </View>
     </SafeAreaView>

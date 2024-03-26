@@ -232,7 +232,8 @@ const ChooseProviderView = ({ route }: Props) => {
           </View>
           <Text style={styles.providerHeader}>Interested Providers:</Text>
             {eventData.doc.interestedProviders
-              .filter((pro: DocumentData) => 
+              .filter((pro: DocumentData) =>
+                // only want providers who haven't already been accepeted or denied
                 (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
               .map((providerInfo: DocumentData) => (
                 <View style={[styles.card, styles.shadowProp]}>

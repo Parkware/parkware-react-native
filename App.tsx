@@ -258,13 +258,11 @@ export default function App() {
         finalStatus = response.status;
       }
       
-      // REMOVE 'undetermined' if necessary
-      if (finalStatus !== 'granted' || 'undetermined') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
+      // if (finalStatus !== 'granted') {
+      //   alert('Failed to get push token for push notification!');
+      //   return;
+      // }
       token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig!.extra!.eas.projectId })).data;
-      console.log(token);
     } else {
       alert('Must use physical device for Push Notifications');
     }
@@ -283,6 +281,7 @@ export default function App() {
           const token = await registerForPushNotificationsAsync();
           try {
             if (token)
+              // tokens are generated and saved with each user data sample
               await setDoc(doc(db, 'users', user.uid), { expoPushToken: token }, { merge: true });
           } catch (e) {
             console.log(e);

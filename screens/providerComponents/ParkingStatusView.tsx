@@ -133,6 +133,7 @@ const ParkingStatusView = ({ route }: Props) => {
       const now = new Date();
       const difference = startTime.getTime() - now.getTime();
       setDiff(difference);
+      
       if (difference <= 0) {
         clearInterval(interval);
         setTimeRemaining("Parking Time!");
@@ -229,7 +230,7 @@ const ParkingStatusView = ({ route }: Props) => {
         </View>
       )
     }
-    return <Text>Loading...</Text>
+    return <Text style={[styles.infoHeader, { fontSize: 20 }]}>Upload notes for guest</Text>
   }
 
   useEffect(() => {

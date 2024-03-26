@@ -8,7 +8,6 @@ export const HomeScreen = () => {
     return (
         <View style={styles.container}>
         <Text>Token: {expoPushToken?.data ?? ""}</Text>
-        <Text>Notification: {data}</Text>
         </View>
     );
 }

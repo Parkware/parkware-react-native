@@ -172,69 +172,70 @@ function LogoTitle() {
   );
 }
 
-const RootTabs = ({ loggedAsProvider }: any) => {
-  return (
-    <Tab.Navigator 
-      initialRouteName='Home'
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
 
-          if (route.name === 'Home') {
-            iconName = focused
-              ? 'home'
-              : 'home-outline';
-          } else if (route.name === 'ConsumerStack') {
-            iconName = focused ? 'send' : 'send-outline';
-          } else if (route.name === 'ProviderStack') {
-            iconName = focused ? 'car' : 'car-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
-          } else {
-            iconName = 'ios-list';
-          }
-          
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: '#8797AF',
-        tabBarInactiveTintColor: 'gray',
-      })}
-    >
-      <Tab.Screen 
-        options={{ 
-          title: "Home", 
-          headerShown: true,
-          headerTitleAlign: 'center',
-          headerTitle: () => <LogoTitle />
-        }}
-        name="Home"
-        component={HomeScreen}
-      />
-      <Tab.Screen 
-        options={{ title: "Organizer", headerShown: false }}
-        name="ConsumerStack"
-        component={ConsumerScreenStack}
-      />
-      {loggedAsProvider && (
-        <Tab.Screen 
-          options={{ title: "Provider", headerShown: false }}
-          name="ProviderStack"
-          component={ProviderScreenStack}
-        />
-      )}
-      <Tab.Screen 
-        options={{ title: "Settings", headerShown: false }}
-        name="Settings"
-        component={SettingsScreen}
-      />
-    </Tab.Navigator>
-  )
-}
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loggedAsProvider, setLoggedAsProvider] = useState<boolean | null>(null);
 
+  const RootTabs = () => {
+    return (
+      <Tab.Navigator 
+        initialRouteName='Home'
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+  
+            if (route.name === 'Home') {
+              iconName = focused
+                ? 'home'
+                : 'home-outline';
+            } else if (route.name === 'ConsumerStack') {
+              iconName = focused ? 'send' : 'send-outline';
+            } else if (route.name === 'ProviderStack') {
+              iconName = focused ? 'car' : 'car-outline';
+            } else if (route.name === 'Settings') {
+              iconName = focused ? 'settings' : 'settings-outline';
+            } else {
+              iconName = 'ios-list';
+            }
+            
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#8797AF',
+          tabBarInactiveTintColor: 'gray',
+        })}
+      >
+        <Tab.Screen 
+          options={{ 
+            title: "Home", 
+            headerShown: true,
+            headerTitleAlign: 'center',
+            headerTitle: () => <LogoTitle />
+          }}
+          name="Home"
+          component={HomeScreen}
+        />
+        <Tab.Screen 
+          options={{ title: "Organizer", headerShown: false }}
+          name="ConsumerStack"
+          component={ConsumerScreenStack}
+        />
+        {loggedAsProvider && (
+          <Tab.Screen 
+            options={{ title: "Provider", headerShown: false }}
+            name="ProviderStack"
+            component={ProviderScreenStack}
+          />
+        )}
+        <Tab.Screen 
+          options={{ title: "Settings", headerShown: false }}
+          name="Settings"
+          component={SettingsScreen}
+        />
+      </Tab.Navigator>
+    )
+  }
   async function registerForPushNotificationsAsync() {
     let token;
   
@@ -291,22 +292,22 @@ export default function App() {
     return unsubscribe;
   }, [])
   
-  useEffect(() => {
-    if (user?.uid) {
-      const unsub = onSnapshot(doc(db, 'users', user.uid), (snapshot) => {            
-        if (snapshot.exists())
-          setLoggedAsProvider(snapshot.data().loggedAsProvider);
-      });
-      return () => unsub()
-    }
-  }, [user])
-
+  // useEffect(() => {
+  //   if (user?.uid) {
+  //     const unsub = onSnapshot(doc(db, 'users', user.uid), (snapshot) => {            
+  //       if (snapshot.exists())
+  //         setLoggedAsProvider(snapshot.data().loggedAsProvider);
+  //     });
+  //     return () => unsub()
+  //   }
+  // }, [user])
+  
   const RenderContent = () => {
     if (user) {
       if (loggedAsProvider == null)
         return <LoadingScreen />;
       else
-        return <RootTabs loggedAsProvider />
+        return <RootTabs />
     } else {
       return <AuthScreenStack />;
     }

@@ -26,7 +26,11 @@ export function LoginScreen() {
           setError('Your email or password was incorrect');
         } else if ((error as FirebaseError).code === 'auth/email-already-in-use') {
           setError('An account with this email already exists');
+        } else if ((error as FirebaseError).code === 'auth/user-not-found') {
+          setError('User not found');
         } else {
+          console.log((error as FirebaseError).code);
+          
           setError('There was a problem with your request');
         }
       }

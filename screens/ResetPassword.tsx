@@ -80,6 +80,7 @@ export function ResetPassword() {
       fontSize: 24,
       fontWeight: 'bold',
       marginBottom: 20,
+      color: "#FFF"
     },
     input: {
       borderWidth: 1,

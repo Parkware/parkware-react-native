@@ -4,7 +4,6 @@ import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot,
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
 import { User, onAuthStateChanged, signOut } from 'firebase/auth';
-import { EventBlock } from '../consumerComponents/EventBlock';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
@@ -29,19 +28,6 @@ export function ProviderRequestsView() {
   const [userName, setUserName] = useState('');
 
   const navigation = useNavigation<providerScreenProp>();
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: "row", marginTop: 6 }}>
-          <Text style={Platform.OS == "ios" ? styles.headerStyleIOS : styles.headerStyleAndroid}>Logged in as {userName}</Text>
-        </View>
-      ),
-      headerStyle: {
-        backgroundColor: '#F2F2F2',
-      },
-    });
-  }, [userName]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));

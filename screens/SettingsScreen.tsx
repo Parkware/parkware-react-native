@@ -1,7 +1,7 @@
 import { Alert, Button, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AuthButton, DeleteAccountButton } from './ButtonComponents'
-import { deleteDoc, doc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { User, onAuthStateChanged, signOut } from 'firebase/auth';
@@ -10,6 +10,7 @@ import * as Notifications from 'expo-notifications';
 
 const SettingsScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [userName, setUserName] = useState('');
   
   const showConfirmDel = () =>
     Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
@@ -67,10 +68,20 @@ const SettingsScreen = () => {
       setNotificationsEnabled(true);
     }
   };
+  useEffect(() => {
+    if (auth.currentUser?.uid) updateName();
+  }, [])
+
+  const updateName = async () => {
+    const userSnap = await getDoc(doc(db, 'users', auth.currentUser!.uid))
+    if (userSnap.exists())
+      setUserName(userSnap.data().name);
+  }
   return (
     <View style={{ alignItems: "center", marginTop: 120 }}>
       <Text style={{ fontSize: 25 }}>Settings</Text>
-      <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginTop: 30 }}/>
+      <Text style={{ fontSize: 18, marginTop: 20 }}>Logged in as {userName}</Text>
+      <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginTop: 15 }}/>
       <Text style={{ fontSize: 18, marginVertical: 10 }}>Notifications are {notificationsEnabled ? 'enabled' : 'disabled'}</Text>
       <AuthButton title={notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'} onPress={toggleNotifications} />
       <DeleteAccountButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginTop: 30, borderColor: "red" }}/>

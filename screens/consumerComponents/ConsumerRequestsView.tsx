@@ -33,19 +33,6 @@ export function ConsumerRequestsView() {
 
   const navigation = useNavigation<consumerScreenProp>();
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: "row", marginTop: 6 }}>
-          <Text style={Platform.OS == "ios" ? styles.headerStyleIOS : styles.headerStyleAndroid}>Logged in as {userName}</Text>
-        </View>
-      ),
-      headerStyle: {
-        backgroundColor: '#F2F2F2',
-      },
-    });
-  }, [userName]);
-
   const switchView = () => navigation.navigate('makeRequestScreen');
 
   const updateName = async () => {

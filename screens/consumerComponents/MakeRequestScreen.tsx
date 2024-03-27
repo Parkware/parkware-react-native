@@ -88,17 +88,9 @@ export function MakeRequestScreen() {
       findDiff(diff);
       checkIfBefore(selectedDate);
       setDate(selectedDate);
-    }
-  };
-  const spaceCountFun = (count: number) => {
-    if (count < 1) {
-      setSendable(false);
-      setError('At least one parking spot needs to be requested!')
-    } else {
-      setRequestedSpaces(count)
       setSendable(true);
     }
-  }
+  };
 
   /* --------------------------- HELPER FUNCTIONS --------------------------- */
   const checkIfBefore = (endTime: any) => {
@@ -268,7 +260,7 @@ export function MakeRequestScreen() {
           ? <DatePickeriOS /> 
           : <View>
               <DatePickerAndroid />
-              <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], { timeStyle: 'short'})} - {endTime.toLocaleTimeString([], { timeStyle: 'short' })}</Text>
+              <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
             </View>
         }
         <TextInput
@@ -283,7 +275,7 @@ export function MakeRequestScreen() {
         />
         <View style={{ flexDirection:"row", paddingBottom: 15 }}>
           <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
-          <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={value => spaceCountFun(value)} />
+          <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={count => setRequestedSpaces(count)} />
         </View>
         <AppButton
           title="Send Request"

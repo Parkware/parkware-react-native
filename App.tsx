@@ -180,10 +180,10 @@ const RootTabs = ({ loggedAsProvider }: any) => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Inbox') {
+          if (route.name === 'Home') {
             iconName = focused
-              ? 'albums'
-              : 'albums-outline';
+              ? 'home'
+              : 'home-outline';
           } else if (route.name === 'ConsumerStack') {
             iconName = focused ? 'send' : 'send-outline';
           } else if (route.name === 'ProviderStack') {
@@ -202,12 +202,12 @@ const RootTabs = ({ loggedAsProvider }: any) => {
     >
       <Tab.Screen 
         options={{ 
-          title: "Inbox", 
+          title: "Home", 
           headerShown: true,
           headerTitleAlign: 'center',
           headerTitle: () => <LogoTitle />
         }}
-        name="Inbox"
+        name="Home"
         component={HomeScreen}
       />
       <Tab.Screen 

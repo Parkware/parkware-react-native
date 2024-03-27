@@ -71,18 +71,20 @@ export function ProviderRequestsView() {
           unwantedEvents = userSnap.data().unwantedEvents
           if (!unwantedEvents) unwantedEvents = [];
         }
+        
         snapshot.docs.map(e => {
           let eventObj = {
             id: e.id,
             doc: e.data(),
           } as docDataPair
 
-          if (!e.exists) return
+          if (!e.exists || Object.keys(e.data()).length === 0) return
           
           // Order matters!
           if (e.data().acceptedProviderIds.includes(user!.uid)) {
             accEventPromises.push(eventObj);
-          } else if (e.data().interestedProviderIds.includes(user!.uid)) {
+          } 
+          else if (e.data().interestedProviderIds.includes(user!.uid)) {
             penEventPromises.push(eventObj);
           } else if (e.data().isOpen 
                     && !e.data().unwantedProviders.includes(user!.uid)

@@ -49,7 +49,7 @@ export function SignupScreen() {
     return (
       <View style={styles.outer}>
         <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Sign up for Parkware!</Text>
+          <Text style={styles.header}>Sign up</Text>
           {error && 
             <View style={styles.contrastBg}>
               <Text style={styles.error}>{error}</Text>
@@ -81,7 +81,7 @@ export function SignupScreen() {
             value={phoneNum}
             onChangeText={setPhoneNum}
             keyboardType="phone-pad"
-            placeholder="Enter phone number"
+            placeholder="Enter phone number (optional)"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
             selectionColor={'white'}
@@ -124,7 +124,7 @@ export function SignupScreen() {
       borderRadius: 10,
       marginBottom: 8,
       borderColor: "#FFFF",
-      backgroundColor: "#bfbfbf", 
+      backgroundColor: "#FFFF", 
       padding: 12
     },
     outer: {
@@ -150,7 +150,7 @@ export function SignupScreen() {
       fontSize: 30,
       fontWeight: 'bold',
       marginBottom: 20,
-      color: "#bec7ed"
+      color: "#FFF"
     },
     input: {
       borderWidth: 1,

@@ -34,7 +34,7 @@ export function ResetPassword() {
   
     return (
       <View style={styles.outer}>
-        <View style={styles.inner}>
+        <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
           <Text style={styles.header}>Reset Password</Text>
   
           {error && <Text style={styles.error}>{error}</Text>}
@@ -57,7 +57,9 @@ export function ResetPassword() {
                 style={styles.input}
               />
   
-              <Button title="Reset Password" onPress={resetUserPassword} disabled={!email} />
+              <TouchableOpacity onPress={resetUserPassword} disabled={!email} style={{ alignSelf: "center" }}>
+                <Text style={[styles.link, { fontSize: 18 }]}>Reset Password</Text>
+              </TouchableOpacity>
             </>
           )}
         </View>
@@ -92,7 +94,19 @@ export function ResetPassword() {
       color: 'red',
     },
     link: {
-      color: 'blue',
+      color: '#bec7ed',
       marginBottom: 20,
+    },
+    card: {
+      backgroundColor: '#56667A',
+      borderRadius: 8,
+      padding: 15,
+      width: '100%',
+    },
+    shadowProp: {
+      shadowColor: '#171717',
+      shadowOffset: {width: -2, height: 4},
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
     },
   });

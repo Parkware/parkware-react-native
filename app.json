@@ -6,6 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
+    "notification":{
+      "icon":"./assets/logo.png"
+   },
     "splash": {
       "image": "./assets/logo.png",
       "resizeMode": "contain",

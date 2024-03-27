@@ -4,11 +4,11 @@ import * as functions from "firebase-functions";
 // The Firebase Admin SDK to access Firestore.
 import {initializeApp} from "firebase-admin/app";
 import {DocumentData, FieldValue, getFirestore} from "firebase-admin/firestore";
-
+import Expo from "expo-server-sdk";
 initializeApp();
 const db = getFirestore();
 
-export const incrementSpaceCount = functions.firestore
+export const updateAccProvider = functions.firestore
   .document("/events/{eventId}")
   .onUpdate(async (change: any, context: any) => {
     const afterArr = change.after.data().acceptedProviderIds;
@@ -18,6 +18,7 @@ export const incrementSpaceCount = functions.firestore
     if (afterArr.length > beforeArr.length) {
       const addedProviderId: string = afterArr
         .filter((id: string) => !beforeArr.includes(id)).toString();
+      // Get the no. of spaces from this acc provider
       let newProviderSpaces: number =
         change.after.data().interestedProviders
           .find((proObj: DocumentData) =>
@@ -28,9 +29,25 @@ export const incrementSpaceCount = functions.firestore
         newProviderSpaces = diff;
       }
 
-      return db.collection("/events/").doc(eventId).update({
+      db.collection("events/").doc(eventId).update({
         accSpaceCount: FieldValue.increment(newProviderSpaces),
       });
+
+      const proDoc = await db.collection("users").doc(addedProviderId).get();
+
+      return expo.sendPushNotificationsAsync([
+        {
+          to: proDoc.data()!.expoPushToken,
+          sound: "default",
+          title: "Organizer Accepted Interest",
+          subtitle: "",
+          body: "Click to view",
+          data: {
+            withSome: "notification",
+          },
+          priority: "high",
+        },
+      ]);
     }
     return null;
   });
@@ -55,7 +72,8 @@ export const checkIfEnd = functions.firestore
     const after = change.after.data();
     const eventId = context.params.eventId;
     const dateNow = Date.now();
-    if (after.departedProviderSpaces.length == 0 && dateNow > after.endTime) {
+    const eventEnd = after.endTime.toMillis();
+    if (after.departedProviderSpaces.length == 0 && dateNow > eventEnd) {
       return db.collection("/events/").doc(eventId).set({
         eventEnded: true,
       }, {merge: true});
@@ -63,16 +81,61 @@ export const checkIfEnd = functions.firestore
     return null;
   });
 
-export const deleteAfterEnd = functions.firestore
+const expo = new Expo();
+
+export const notifyNewEvent = functions.firestore
   .document("/events/{eventId}")
-  .onUpdate(async (change: any, context: any) => {
-    const after = change.after.data();
-    const eventId = context.params.eventId;
-    const dateNow = Date.now();
-    if (after.departedProviderSpaces.length == 0 && dateNow > after.endTime) {
-      return db.collection("/events/").doc(eventId).set({
-        eventEnded: true,
-      }, {merge: true});
+  .onCreate(async (eventsSnap: any) => {
+    const usersColl = db.collection("users");
+    const snap = await usersColl.where("isProvider", "==", true)
+      .where("expoPushToken", "!=", "").get();
+    snap.forEach((doc: any) => {
+      if (doc.id !== eventsSnap.consumer_id) {
+        return expo.sendPushNotificationsAsync([
+          {
+            to: doc.data().expoPushToken,
+            sound: "default",
+            title: "New Event Request",
+            subtitle: "",
+            body: "Click to provide your space",
+            data: {
+              withSome: "notification",
+            },
+            priority: "high",
+          },
+        ]);
+      }
+      return null;
+    });
+    return null;
+  });
+
+export const notifyNewProvider = functions.firestore
+  .document("/events/{eventId}")
+  .onUpdate(async (change: any) => {
+    const afterArr = change.after.data().interestedProviderIds;
+    const beforeArr = change.before.data().interestedProviderIds;
+
+    // If there's a new interested provider
+    if (afterArr.length > beforeArr.length) {
+      const consumerId = change.after.data().consumer_id;
+      const userDoc = await db.collection("users").doc(consumerId).get();
+      const consPushToken = userDoc.data()!.expoPushToken;
+
+      return expo.sendPushNotificationsAsync([
+        {
+          to: consPushToken,
+          sound: "default",
+          title: "New Provider Interested",
+          subtitle: "",
+          body: "Click to accept",
+          data: {
+            withSome: "notification",
+          },
+          priority: "high",
+        },
+      ]);
+      return null;
     }
     return null;
   });

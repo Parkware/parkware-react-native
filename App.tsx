@@ -12,15 +12,21 @@ import { ProviderRequestsView, docDataPair } from './screens/providerComponents/
 import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { DocumentData, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
 import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
-import { LoginRoleView } from './screens/LoginRoleView';
-import { Platform } from 'react-native';
+import { Platform, View, Text, StyleSheet, Image } from 'react-native';
 import EventInfoView from './screens/consumerComponents/EventInfoView';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import SettingsScreen from './screens/SettingsScreen';
+import { HomeScreen } from './screens/HomeScreen';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
@@ -41,8 +47,7 @@ const ConsumerStack = createNativeStackNavigator<ConsumerStackParams>();
 
 export type ProviderStackParams = {
   providerRequestsView: undefined;
-  loginRoleView: undefined;
-  consumerStatusView: {
+  parkingStatusView: {
     event: docDataPair;
   };
 }
@@ -106,7 +111,7 @@ const AuthScreenStack = () => {
 
 const ProviderScreenStack = () => {
   return (
-    <ProviderStack.Navigator initialRouteName='loginRoleView'>
+    <ProviderStack.Navigator initialRouteName='providerRequestsView'>
       <ProviderStack.Screen
         options={{ title: "", headerTransparent: true }}
         name="providerRequestsView"
@@ -116,13 +121,8 @@ const ProviderScreenStack = () => {
         options={{ title: "", headerTransparent: false, headerStyle: {
           backgroundColor: '#f2f2f2',
         }, }}
-        name="consumerStatusView"
+        name="parkingStatusView"
         component={ParkingStatusView}
-      />
-      <ProviderStack.Screen
-        options={{ title: "", headerTransparent: true }}
-        name="loginRoleView"
-        component={LoginRoleView}
       />
     </ProviderStack.Navigator>
   )
@@ -159,21 +159,133 @@ const ConsumerScreenStack = () => {
     </ConsumerStack.Navigator>
   );
 }
+
+const Tab = createBottomTabNavigator();
+
+function LogoTitle() {
+  const logoDim = Platform.OS == 'android' ? 150 : 115;
+  return (
+    <Image
+      style={{ width: logoDim, height: logoDim }}
+      source={require('./assets/logo_splash.png')}
+    />
+  );
+}
+
+const RootTabs = ({ loggedAsProvider }: any) => {
+  return (
+    <Tab.Navigator 
+      initialRouteName='Home'
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Inbox') {
+            iconName = focused
+              ? 'albums'
+              : 'albums-outline';
+          } else if (route.name === 'ConsumerStack') {
+            iconName = focused ? 'send' : 'send-outline';
+          } else if (route.name === 'ProviderStack') {
+            iconName = focused ? 'car' : 'car-outline';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'settings' : 'settings-outline';
+          } else {
+            iconName = 'ios-list';
+          }
+          
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#8797AF',
+        tabBarInactiveTintColor: 'gray',
+      })}
+    >
+      <Tab.Screen 
+        options={{ 
+          title: "Inbox", 
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitle: () => <LogoTitle />
+        }}
+        name="Inbox"
+        component={HomeScreen}
+      />
+      <Tab.Screen 
+        options={{ title: "Organizer", headerShown: false }}
+        name="ConsumerStack"
+        component={ConsumerScreenStack}
+      />
+      {loggedAsProvider && (
+        <Tab.Screen 
+          options={{ title: "Provider", headerShown: false }}
+          name="ProviderStack"
+          component={ProviderScreenStack}
+        />
+      )}
+      <Tab.Screen 
+        options={{ title: "Settings", headerShown: false }}
+        name="Settings"
+        component={SettingsScreen}
+      />
+    </Tab.Navigator>
+  )
+}
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [loggedAs, setLoggedAs] = useState<boolean | null>(null);
-  const [noUser, setNoUser] = useState(false);
+  const [loggedAsProvider, setLoggedAsProvider] = useState<boolean | null>(null);
 
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      
+      if (existingStatus !== 'granted') {
+        const response = await Notifications.requestPermissionsAsync();
+        // console.log("req perms returned: ", response);
+        finalStatus = response.status;
+      }
+      
+      // if (finalStatus !== 'granted') {
+      //   alert('Failed to get push token for push notification!');
+      //   return;
+      // }
+      token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig!.extra!.eas.projectId })).data;
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+    
+    return token;
+  }
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
-      setLoggedAs(null);
+      setLoggedAsProvider(null);
       if (user) {
         const snapshot = await getDoc(doc(db, 'users', user.uid))
-        if (snapshot.exists())
-          setLoggedAs(snapshot.data().loggedAsProvider);
-        else
-          setNoUser(true);
+        if (snapshot.exists()) {
+          setLoggedAsProvider(snapshot.data().loggedAsProvider);
+          const token = await registerForPushNotificationsAsync();
+          try {
+            if (token)
+              // tokens are generated and saved with each user data sample
+              await setDoc(doc(db, 'users', user.uid), { expoPushToken: token }, { merge: true });
+          } catch (e) {
+            console.log(e);
+          }
+        }
       }
     });
     return unsubscribe;
@@ -183,7 +295,7 @@ export default function App() {
     if (user?.uid) {
       const unsub = onSnapshot(doc(db, 'users', user.uid), (snapshot) => {            
         if (snapshot.exists())
-          setLoggedAs(snapshot.data().loggedAsProvider);
+          setLoggedAsProvider(snapshot.data().loggedAsProvider);
       });
       return () => unsub()
     }
@@ -191,18 +303,24 @@ export default function App() {
 
   const RenderContent = () => {
     if (user) {
-      if (loggedAs == null)
+      if (loggedAsProvider == null)
         return <LoadingScreen />;
-      else if (noUser)
-        return <AuthScreenStack />;
-      else if (loggedAs)
-        return <ProviderScreenStack /> 
       else
-        return <ConsumerScreenStack />
+        return <RootTabs loggedAsProvider />
     } else {
       return <AuthScreenStack />;
     }
   };
 
   return <NavigationContainer><RenderContent /></NavigationContainer>;
+  
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

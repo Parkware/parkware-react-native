@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, StyleSheet, Platform } from 'react-native';
 import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
@@ -9,6 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import { AppButton, AuthButton } from '../ButtonComponents';
+import { FirebaseError } from 'firebase/app';
 
 export interface docDataPair {
   id: string,
@@ -24,6 +25,23 @@ export function ProviderRequestsView() {
   const [unwantedEvents, setUnwantedEvents] = useState<string[]>([]);
   const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState<FirebaseError>();
+  const [userName, setUserName] = useState('');
+
+  const navigation = useNavigation<providerScreenProp>();
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={{ flexDirection: "row", marginTop: 6 }}>
+          <Text style={Platform.OS == "ios" ? styles.headerStyleIOS : styles.headerStyleAndroid}>Logged in as {userName}</Text>
+        </View>
+      ),
+      headerStyle: {
+        backgroundColor: '#F2F2F2',
+      },
+    });
+  }, [userName]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
@@ -31,37 +49,11 @@ export function ProviderRequestsView() {
     return unsubscribe;
   }, [])
   
-  const navigation = useNavigation<providerScreenProp>();
-  
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <View style={{ flexDirection: "row", marginTop: 6 }}>
-          <AuthButton title="Log out" onPress={showConfirmLogout} />
-        </View>
-      ),
-    });
-  }, [navigation]);
-
-  const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Log out', onPress: () => logout()},
-    ]);
-
   const updateDeniedEvents = async () => {
     const q = query(collection(db, 'events'), where('unwantedProviders', 'array-contains', user!.uid))
     const eventsSnap = await getDocs(q);
     const deniedNames: string[] = eventsSnap.docs.map((e: DocumentData) => e.data().eventName)
     setDeniedEventArr(deniedNames);
-  };
-
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (e) {
-      console.error(e);
-    }
   };
 
   // Reading the event data and setting eventData to it. 
@@ -72,12 +64,20 @@ export function ProviderRequestsView() {
         const openEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
         const accEventPromises: docDataPair[] = [];
+        let unwantedEvents: any[] = [];
 
+        const userSnap = await getDoc(doc(db, 'users', user.uid))
+        if (userSnap.exists()) {
+          unwantedEvents = userSnap.data().unwantedEvents
+          if (!unwantedEvents) unwantedEvents = [];
+        }
         snapshot.docs.map(e => {
           let eventObj = {
             id: e.id,
             doc: e.data(),
           } as docDataPair
+
+          if (!e.exists) return
           
           // Order matters!
           if (e.data().acceptedProviderIds.includes(user!.uid)) {
@@ -86,7 +86,8 @@ export function ProviderRequestsView() {
             penEventPromises.push(eventObj);
           } else if (e.data().isOpen 
                     && !e.data().unwantedProviders.includes(user!.uid)
-                    && e.data().consumer_id !== user!.uid) {
+                    && e.data().consumer_id !== user!.uid
+                    && !unwantedEvents.includes(e.id)) {
             openEventPromises.push(eventObj);
           }
         });
@@ -100,16 +101,32 @@ export function ProviderRequestsView() {
         updateDeniedEvents();
       });
       return () => unsub();
-    }
+      }
     } catch (error) {
-      console.error('Error fetching events:', error);
+      setError((error) as FirebaseError);
     }
   }, [user]);
 
-  const removeLocalEventData = (id: string) => {
-    setUnwantedEvents(current => [...current, id]);
-    setOpenEvents(openEvents.filter((e: DocumentData) => e.id !== id));
+  useEffect(() => {
+    if (user?.uid) updateName();
+  }, [user])
+
+  const updateName = async () => {
+    const userSnap = await getDoc(doc(db, 'users', user!.uid))
+    if (userSnap.exists())
+      setUserName(userSnap.data().name);
   }
+  
+  const removeLocalEventData = (id: string) => {
+    // Update the state variable
+    setUnwantedEvents(current => [...current, id]);
+    // Show open events without this id
+    setOpenEvents(openEvents.filter((e: DocumentData) => e.id !== id));
+    addToNoEventsList(id);
+  }
+
+  const addToNoEventsList = async (id: string) =>
+    await setDoc(doc(db, 'users', user!.uid), { unwantedEvents: arrayUnion(id) }, { merge: true })
   
   const updateDB = async (eventData: docDataPair) => {
     const id = user!.uid;
@@ -174,7 +191,7 @@ export function ProviderRequestsView() {
         )}
         <View>
           {accEvents.map(event => (
-            <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('consumerStatusView', { event })}>
+            <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('parkingStatusView', { event })}>
               <View style={{ padding: 10 }} key={event.id}>
                 <EventBlock event={event} showSpaces={false} showName={true} eventTextStyle={styles.eventText} />
               </View>
@@ -198,20 +215,22 @@ export function ProviderRequestsView() {
             Open
           </Text>
         )}
-        {(accEvents.length == 0 && openEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>}
-        <View>
-          {openEvents
-            .filter((e: DocumentData) => !unwantedEvents.includes(e.id))
-            .map((event) => (
-            <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
-              <EventBlock event={event} showSpaces={true} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]}/>
-              <View style={{ padding: 10, justifyContent: 'space-between' }}>
-                <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
-                <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>
+        {/* {(accEvents.length == 0 && openEvents.length == 0 && pendingEvents.length == 0) && <Text style={styles.requestHeader}>No events as of now!</Text>} */}
+        {openEvents.length !== 0 && (
+          <View>
+            {openEvents
+              .filter((e: DocumentData) => !unwantedEvents.includes(e!.id))
+              .map((event) => (
+              <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
+                <EventBlock event={event} showSpaces={true} showName={true} eventTextStyle={[styles.eventText, { color: "#454852" }]}/>
+                <View style={{ padding: 10, justifyContent: 'space-between' }}>
+                  <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
+                  <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>
+                </View>
               </View>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        )}
         {deniedEventArr.length !== 0 &&
           (
             <View>
@@ -265,4 +284,14 @@ const styles = StyleSheet.create({
     width: 155, 
     alignSelf: "center" 
   },
+  headerStyleIOS: { 
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5 
+  },
+  headerStyleAndroid: {
+    fontSize: 16, 
+    marginTop: 10, 
+    marginRight: -5,
+  }
 });

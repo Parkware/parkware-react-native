@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, Alert, StatusBar, Platform } from 'react-native';
-import { DocumentData, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { View, Text, SafeAreaView, StyleSheet, Platform } from 'react-native';
+import { DocumentData, collection, doc, getDoc, onSnapshot, query, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView, TouchableOpacity } from 'react-native';
-import { EventBlock } from './EventBlock';
 import { docDataPair } from '../providerComponents/ProviderRequestsView';
-import { AppButton, AuthButton, DeleteAccountButton } from '../ButtonComponents';
-import { User, deleteUser, onAuthStateChanged, signOut } from 'firebase/auth';
+import { AppButton } from '../ButtonComponents';
+import { User, onAuthStateChanged } from 'firebase/auth';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
@@ -17,7 +16,6 @@ export function ConsumerRequestsView() {
   const [pendingEvents, setPendingEvents] = useState<docDataPair[]>([]);
   const [completedEvents, setCompletedEvents] = useState<docDataPair[]>([]);
   const [userName, setUserName] = useState('');
-  const [isProvider, setIsProvider] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -28,19 +26,17 @@ export function ConsumerRequestsView() {
 
   useEffect(() => {
     if (user?.uid) {
-      getIfProvider();
       updateName();
       getEvents();
     }
   }, [user])
 
   const navigation = useNavigation<consumerScreenProp>();
-  
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <View style={{ flexDirection: "row", marginTop: 6 }}>
-          <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={Platform.OS == "android" ? { marginRight: 150 } : { marginRight: 120 }}/>
           <Text style={Platform.OS == "ios" ? styles.headerStyleIOS : styles.headerStyleAndroid}>Logged in as {userName}</Text>
         </View>
       ),
@@ -48,52 +44,9 @@ export function ConsumerRequestsView() {
         backgroundColor: '#F2F2F2',
       },
     });
-  }, [navigation, userName]);
+  }, [userName]);
 
-  const showConfirmLogout = () =>
-    Alert.alert('Are you sure you want to log out?', 'Click cancel to stay on.', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Log out', onPress: () => logout()},
-    ]);
-
-  const logout = async () => {
-    try {
-      // Setting the loggedInAsProvider boolean to true in case the user is a provider. 
-      switchToProvider();
-      await signOut(auth);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-  const switchToProvider = async () => {
-    if (user) {
-      const userRef = doc(db, 'users', user.uid);
-      const userSnap = await getDoc(userRef)
-      if (userSnap.exists() && userSnap.data().isProvider)
-        await updateDoc(userRef, { loggedAsProvider: true })
-    }
-  }
-  const showConfirmDel = () =>
-    Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Delete', onPress: () => delAccount()},
-    ]);
-
-  const delAccount = async () => {
-    if (user) {
-      await deleteDoc(doc(db, "users", user.uid));
-      await deleteUser(user)
-    }
-  }
-  
   const switchView = () => navigation.navigate('makeRequestScreen');
-  
-  const getIfProvider = async () => {
-    const userRef = doc(db, 'users', user!.uid);
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists() && docSnap.data().isProvider) 
-      setIsProvider(true);
-  }
 
   const updateName = async () => {
     const userSnap = await getDoc(doc(db, 'users', user!.uid))
@@ -126,8 +79,8 @@ export function ConsumerRequestsView() {
             },
           } as docDataPair;
           
-          // Will need to ensure that accepted providers are never greater than the requested number
-          if (!e.data().isOpen)
+          // Can add another condition to add previously ended events to an ended event list. 
+          if (!e.data().isOpen || e.data().eventEnded)
             compEventPromises.push(eventObj);
           else
             penEventPromises.push(eventObj);
@@ -163,11 +116,8 @@ export function ConsumerRequestsView() {
         </Text>
         {showSpaces && 
           <View>
-            <Text style={styles.eventText}>
-              {event.doc.accSpaceCount == 0 ? 'No spaces available yet' : `Current Parking Spaces ${event.doc.accSpaceCount}`}
-            </Text>
             <Text key={event.doc.requestedSpaces + 1} style={styles.eventText}>
-              {'Requested Spaces: ' + event.doc.requestedSpaces}
+              {`Spaces: ${event.doc.accSpaceCount} / ${event.doc.requestedSpaces}`}
             </Text>
           </View>
         }
@@ -227,26 +177,10 @@ export function ConsumerRequestsView() {
               </TouchableOpacity>
             ))}
           </View>
-          {isProvider && 
-            <AppButton 
-              title="Switch to Provider" 
-              onPress={switchToProvider} 
-              extraStyles={{ marginTop: 70 }}
-            />
-          }
           <AppButton
-            title="Make a Request"
+            title="Request Spaces"
             onPress={switchView}
-            extraStyles={{ marginTop: 7 }}
-          />
-          <DeleteAccountButton 
-            title="Delete account" 
-            onPress={showConfirmDel} 
-            extraStyles={{ 
-              borderColor: "red", 
-              marginTop: 20,
-              marginBottom: Platform.OS === "android" ? 15 : 0
-            }}
+            extraStyles={{ marginTop: 7, marginBottom: 30 }}
           />
         </ScrollView>
       </View>

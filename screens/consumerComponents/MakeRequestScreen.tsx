@@ -243,9 +243,9 @@ export function MakeRequestScreen() {
   const DatePickerAndroid = () => {
     return (
       <View>
-        <AppButton onPress={showDatepicker} title="Show date picker" extraStyles={styles.smallerWidth} />
-        <AppButton onPress={showStartPicker} title="Show Start time picker" extraStyles={styles.smallerWidth} />
-        <AppButton onPress={showEndPicker} title="Show End time picker" extraStyles={styles.smallerWidth} />
+        <AppButton onPress={showDatepicker} title="Select Date" extraStyles={styles.smallerWidth} />
+        <AppButton onPress={showStartPicker} title="Select Start Time" extraStyles={styles.smallerWidth} />
+        <AppButton onPress={showEndPicker} title="Select End Time" extraStyles={styles.smallerWidth} />
       </View>
     );
   }
@@ -253,7 +253,7 @@ export function MakeRequestScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={styles.header}>Make a Request</Text>
+        <Text style={styles.header}>Request Spaces</Text>
         <TextInput
           value={eventName}
           onChangeText={setEventName}
@@ -333,9 +333,8 @@ const styles = StyleSheet.create({
   },
   selectedDate: {
     padding: 13, 
-    fontSize: 16
+    fontSize: 18
   },
-  showPickerButton: {},
   appButtonContainer: {
     elevation: 8,
     backgroundColor: "#6b7080",

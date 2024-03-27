@@ -1,15 +1,17 @@
 import { Button, Keyboard, SafeAreaView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../App'
 import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../../firebaseConfig'
-import { EventBlock } from '../consumerComponents/EventBlock'
 import { docDataPair } from './ProviderRequestsView'
 import { Divider } from '@rneui/base'
 import { User, onAuthStateChanged } from 'firebase/auth'
+import { useNavigation } from '@react-navigation/native'
 
-type Props = NativeStackScreenProps<ProviderStackParams, 'consumerStatusView'>
+type Props = NativeStackScreenProps<ProviderStackParams, 'parkingStatusView'>
+type parkingStatusProp = NativeStackNavigationProp<ProviderStackParams, 'providerRequestsView'>;
+
 
 const ParkingStatusView = ({ route }: Props) => {
   const { event } = route.params;
@@ -31,6 +33,22 @@ const ParkingStatusView = ({ route }: Props) => {
   const [eventEnded, setEventEnded] = useState(false);
   const [notesPresent, setNotesPresent] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+
+  const navigation = useNavigation<parkingStatusProp>();
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <View style={{ marginTop: 6 }}>
+          <Text style={styles.headerStyle}>{event.doc.eventName}</Text>
+        </View>
+      ),
+      headerStyle: {
+        backgroundColor: '#F2F2F2',
+      },
+      headerTitleAlign: 'center'
+    });
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
@@ -115,6 +133,7 @@ const ParkingStatusView = ({ route }: Props) => {
       const now = new Date();
       const difference = startTime.getTime() - now.getTime();
       setDiff(difference);
+      
       if (difference <= 0) {
         clearInterval(interval);
         setTimeRemaining("Parking Time!");
@@ -188,21 +207,21 @@ const ParkingStatusView = ({ route }: Props) => {
           <Divider width={3} style={{ paddingVertical: 10 }} />
           <View style={{ marginTop: 10 }}>
           {!eventEnded
-            ? <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+            ? <Text style={[styles.infoHeader, { fontSize: 20 }]}>
                 Event ends: {endTime.toLocaleString(navigator.language, {
               hour: '2-digit',
               minute:'2-digit'
             })}
               </Text>
             : <View>
-                <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                <Text style={[styles.infoHeader, { fontSize: 20 }]}>
                   Please fill out the survey form below.
                 </Text>
                 <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
                       onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                         https://forms.gle/DqPH34zYAfxdgzzt6
                 </Text>
-                <Text style={[styles.infoHeader, { fontWeight: "700", fontSize: 20 }]}>
+                <Text style={[styles.infoHeader, { fontSize: 20 }]}>
                   Thank you for providing your space!
                 </Text>
               </View>
@@ -211,7 +230,7 @@ const ParkingStatusView = ({ route }: Props) => {
         </View>
       )
     }
-    return <Text>Loading...</Text>
+    return <Text style={[styles.infoHeader, { fontSize: 20 }]}>Upload notes for guest</Text>
   }
 
   useEffect(() => {
@@ -240,9 +259,6 @@ const ParkingStatusView = ({ route }: Props) => {
     
     return (
       <View>
-        <Text key={event.doc.eventName+event.id} style={styles.eventText} >
-          {'Event name: ' + event.doc.eventName}
-        </Text>
         <Text key={event.doc.address} style={styles.eventText}>
           {'Address: ' + event.doc.address}
         </Text>
@@ -374,5 +390,10 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     marginTop: 2,
+  },
+  headerStyle: {
+    fontSize: 22, 
+    fontWeight: "500", 
+    color: "#454852"
   }
 });

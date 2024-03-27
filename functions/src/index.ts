@@ -90,7 +90,7 @@ export const notifyNewEvent = functions.firestore
     const snap = await usersColl.where("isProvider", "==", true)
       .where("expoPushToken", "!=", "").get();
     snap.forEach((doc: any) => {
-      if (doc.id !== eventsSnap.consumer_id) {
+      if (doc.id !== eventsSnap.data().consumer_id) {
         return expo.sendPushNotificationsAsync([
           {
             to: doc.data().expoPushToken,

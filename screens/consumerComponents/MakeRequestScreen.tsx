@@ -267,7 +267,7 @@ export function MakeRequestScreen() {
           value={address}
           onChangeText={setAddress}
           keyboardType="default"
-          placeholder="Address"
+          placeholder="Event Address"
           autoCapitalize="none"
           placeholderTextColor="#aaa"
           autoCorrect={false}

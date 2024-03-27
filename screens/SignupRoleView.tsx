@@ -7,6 +7,7 @@ import { SignupStackParams } from '../App';
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
 import { AppButton, AuthButton } from './ButtonComponents';
+import { FirebaseError } from 'firebase/app';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'signupRoleView'>;
 
@@ -15,6 +16,7 @@ export const SignupRoleView = ({ route }: Props) => {
   const [address, setAddress] = useState('');
   const [providerSpaces, setProviderSpaces] = useState<number>();
   const { name, email, phoneNum, password }  = route.params;
+  const [error, setError] = useState('');
   
   // Create user
   const createAccount = async (isProvider: boolean) => {
@@ -38,8 +40,14 @@ export const SignupRoleView = ({ route }: Props) => {
 
       await setDoc(doc(db, "users", user.uid), userObj);
       showAccountSuccess();
-    } catch (e) {
-      console.log('Something went wrong with sign up: ', e);
+    } catch (error) {
+      if ((error as FirebaseError).code === 'auth/invalid-email' || (error as FirebaseError).code === 'auth/wrong-password') {
+        setError('Your email is invalid.');
+      } else if ((error as FirebaseError).code === 'auth/email-already-in-use') {
+        setError('An account with this email already exists');
+      } else {
+        setError('There was a problem with your request');
+      }
     }
   };
   
@@ -48,20 +56,22 @@ export const SignupRoleView = ({ route }: Props) => {
       {text: 'Continue'},
     ]);
     
-  const updateProviderSpaces = (value: number) =>
-    setProviderSpaces(value);
-
   return (
     <SafeAreaView>
       <View style={[styles.viewBlock, { marginTop: 150 }]}>
-        <Text style={{ fontSize: 35, fontWeight: "300" }}>Sign up as a </Text>
+        <Text style={{ fontSize: 35, fontWeight: "300" }}>Select your role:</Text>
       </View>
+      {error && 
+        <View style={styles.contrastBg}>
+          <Text style={styles.error}>{error}</Text>
+        </View>
+      }
       <View style={styles.viewBlock}>
         <View>
-          <AppButton title="Space Provider" onPress={() => setShowAddress(true)}/>
+          <AppButton title="Event Organizer" onPress={() => createAccount(false)}/>
         </View>
         <View>
-          <AppButton title="Event Organizer" onPress={() => createAccount(false)}/>
+          <AppButton title="Space Provider" onPress={() => setShowAddress(true)}/>
         </View>
       </View>
     {showAddress && (
@@ -75,12 +85,20 @@ export const SignupRoleView = ({ route }: Props) => {
         />
         <View style={{ justifyContent: "center", alignItems: "center", flexDirection: "row" }}>
           <Text style={{ fontSize: 18 }}>Spaces able to provide: </Text>
-          <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => updateProviderSpaces(value)} />
+          <NumericInput rounded totalHeight={50} minValue={1} maxValue={10} onChange={value => setProviderSpaces(value)} />
         </View>
         <View style={{ margin: 10 }} />
           <AuthButton title="Create Account" onPress={() => createAccount(true)} />
         </View>
     )}
+      <View style={{ alignSelf: 'center', marginTop: 30, paddingHorizontal: 20 }}>
+        <Text style={{ fontSize: 20, marginLeft: 5 }}>
+          <Text style={{fontWeight: "bold"}}>Event Organizer</Text>: Can request parking spaces but your address will not be saved to the database.           
+        </Text>
+        <Text style={{ fontSize: 20, marginLeft: 5, marginTop: 15 }}>
+          <Text style={{fontWeight: "bold"}}>Space Provider</Text>: Is able to provide their parking space for other organizers' event requests and create event requests like an event organizer.
+        </Text>
+      </View>
     </SafeAreaView>
   )
 }
@@ -96,7 +114,7 @@ const styles = StyleSheet.create({
   },
   viewBlock: {
     justifyContent: "center", 
-    marginTop: 50, 
+    marginTop: 20, 
     flexDirection: "row"
   },
   card: {
@@ -110,5 +128,19 @@ const styles = StyleSheet.create({
     shadowOffset: {width: -2, height: 4},
     shadowOpacity: 0.5,
     shadowRadius: 3,
+  },
+  contrastBg: { 
+    borderWidth: 0.5,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginTop: 18,
+    borderColor: "#ffff",
+    backgroundColor: "#bfbfbf", 
+    padding: 12,
+    marginHorizontal: 125,
+  },
+  error: {
+    color: 'red',
+    textAlign: "center"
   },
 })

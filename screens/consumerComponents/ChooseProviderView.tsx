@@ -141,8 +141,8 @@ const ChooseProviderView = ({ route }: Props) => {
         <Text key={providerInfo.address.slice(0, 3)} style={[styles.eventText, { marginBottom: 10 }]}>
           Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
-        <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => disableButton(providerInfo.id)}/>
-        <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalData(providerInfo.id)}/>
+        <AppButton title="Accept" key={providerInfo.id.slice(0, 3)} extraStyles={styles.eventButton} onPress={() => disableButton(providerInfo.id)}/>
+        <AppButton title="Decline" key={providerInfo.id.slice(3, 6)} extraStyles={styles.eventButton} onPress={() => removeLocalData(providerInfo.id)}/>
       </View>
     )
   }
@@ -190,7 +190,7 @@ const ChooseProviderView = ({ route }: Props) => {
               </Text>
               <View style={{ marginTop: -5, marginLeft: 35 }}>
                 <AppButton
-                  title="Delete"
+                  title="Cancel"
                   onPress={showConfirmDel}
                   extraStyles={{height: 35}}
                 />

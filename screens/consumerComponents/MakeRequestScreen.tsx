@@ -280,7 +280,8 @@ export function MakeRequestScreen() {
         <AppButton
           title="Send Request"
           onPress={createEventRequest}
-          disabled={!sendable || address.length == 0 }
+          // NEED to add sendable to disabled
+          disabled={address.length == 0 }
         />
       </View>
     </TouchableWithoutFeedback>

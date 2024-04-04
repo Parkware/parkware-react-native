@@ -86,26 +86,18 @@ export function MakeRequestScreen() {
       setEndTime(selectedDate);
       const diff = selectedDate.getTime()-startTime.getTime();
       findDiff(diff);
-      checkIfBefore(selectedDate);
-      setDate(selectedDate);
-      setSendable(true);
     }
   };
 
   /* --------------------------- HELPER FUNCTIONS --------------------------- */
-  const checkIfBefore = (endTime: any) => {
-    if (endTime < startTime) {
-      setSendable(false);
-      setError('The end time must be after the start time!')
-    }
-  }
   
   const findDiff = (diff: number) => {
     const min = Math.ceil(diff / (1000 * 60));
     if (min < 10) {
       setSendable(false);
-      setError('Events must be at least 10 minutes!')
+      setError('Invalid range. Events must be at least 10 minutes apart.')
     } else
+      setError('');
       setSendable(true);
   }
 
@@ -174,12 +166,15 @@ export function MakeRequestScreen() {
   };
 
   const DatePickeriOS = () => {
+    const dateNow = new Date();
+
     return (
       <View>
         <View style={{flexDirection:"row"}}>
           <Text style={{ fontSize: 18 }}>Event Date:</Text>
           <DateTimePickerModal
             isVisible={isDateVisible}
+            minimumDate={dateNow}
             mode='date'
             display="inline"
             onConfirm={handleDateConfirm}
@@ -246,6 +241,11 @@ export function MakeRequestScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={styles.header}>Request Spaces</Text>
+        {error && 
+            <View style={styles.contrastBg}>
+              <Text style={styles.error}>{error}</Text>
+            </View>
+          }
         <TextInput
           value={eventName}
           onChangeText={setEventName}
@@ -280,8 +280,7 @@ export function MakeRequestScreen() {
         <AppButton
           title="Send Request"
           onPress={createEventRequest}
-          // NEED to add sendable to disabled
-          disabled={address.length == 0 }
+          disabled={sendable || address.length == 0 || eventName?.length == 0}
         />
       </View>
     </TouchableWithoutFeedback>
@@ -290,6 +289,15 @@ export function MakeRequestScreen() {
 
 
 const styles = StyleSheet.create({
+  contrastBg: { 
+    borderWidth: 0.5,
+    overflow: 'hidden',
+    borderRadius: 10,
+    marginBottom: 8,
+    borderColor: "#FFFF",
+    backgroundColor: "#FFFF", 
+    padding: 12
+  },
   outer: {
     flex: 1,
     justifyContent: 'center',

@@ -135,7 +135,66 @@ export const notifyNewProvider = functions.firestore
           priority: "high",
         },
       ]);
-      return null;
+    }
+    return null;
+  });
+
+export const notifyGuestArrive = functions.firestore
+  .document("/events/{eventId}")
+  .onUpdate(async (change: any) => {
+    const afterArr = change.after.data().arrivedProviderSpaces;
+    const beforeArr = change.before.data().arrivedProviderSpaces;
+
+    if (afterArr.length > beforeArr.length) {
+      const addedProviderId: string = afterArr
+        .filter((id: string) => !beforeArr.includes(id))
+        .toString().slice(0, -2);
+      const userDoc = await db.collection("users").doc(addedProviderId).get();
+      const providerPushToken = userDoc.data()!.expoPushToken;
+
+      return expo.sendPushNotificationsAsync([
+        {
+          to: providerPushToken,
+          sound: "default",
+          title: "New Guest Arrival",
+          subtitle: "",
+          body: "Click to view",
+          data: {
+            withSome: "notification",
+          },
+          priority: "high",
+        },
+      ]);
+    }
+    return null;
+  });
+
+export const notifyGuestDepart = functions.firestore
+  .document("/events/{eventId}")
+  .onUpdate(async (change: any) => {
+    const afterArr = change.after.data().departedProviderSpaces;
+    const beforeArr = change.before.data().departedProviderSpaces;
+
+    if (afterArr.length > beforeArr.length) {
+      const addedProviderId: string = afterArr
+        .filter((id: string) => !beforeArr.includes(id))
+        .toString().slice(0, -2);
+      const userDoc = await db.collection("users").doc(addedProviderId).get();
+      const providerPushToken = userDoc.data()!.expoPushToken;
+
+      return expo.sendPushNotificationsAsync([
+        {
+          to: providerPushToken,
+          sound: "default",
+          title: "One of your guests has departed",
+          subtitle: "",
+          body: "Click to view",
+          data: {
+            withSome: "notification",
+          },
+          priority: "high",
+        },
+      ]);
     }
     return null;
   });

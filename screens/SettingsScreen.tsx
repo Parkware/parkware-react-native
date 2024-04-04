@@ -45,7 +45,10 @@ const SettingsScreen = () => {
     };
     checkNotificationStatus();
   }, []);
+
   const toggleNotifications = async () => {
+    console.log(notificationsEnabled);
+    
     if (notificationsEnabled) {
       // If notifications are currently enabled, turn them off
       await Notifications.setNotificationHandler({
@@ -68,6 +71,7 @@ const SettingsScreen = () => {
       setNotificationsEnabled(true);
     }
   };
+
   useEffect(() => {
     if (auth.currentUser?.uid) updateName();
   }, [])

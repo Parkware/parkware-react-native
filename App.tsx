@@ -251,6 +251,7 @@ export default function App() {
     if (Device.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
+      console.log(existingStatus);
       
       if (existingStatus !== 'granted') {
         const response = await Notifications.requestPermissionsAsync();

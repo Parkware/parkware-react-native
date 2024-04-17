@@ -47,8 +47,9 @@ const SettingsScreen = () => {
   }, []);
 
   const toggleNotifications = async () => {
-    console.log(notificationsEnabled);
-    
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      console.log(existingStatus);
+
     if (notificationsEnabled) {
       // If notifications are currently enabled, turn them off
       await Notifications.setNotificationHandler({

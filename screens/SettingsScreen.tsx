@@ -46,33 +46,6 @@ const SettingsScreen = () => {
     checkNotificationStatus();
   }, []);
 
-  const toggleNotifications = async () => {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      console.log(existingStatus);
-
-    if (notificationsEnabled) {
-      // If notifications are currently enabled, turn them off
-      await Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-          shouldShowAlert: false,
-          shouldPlaySound: false,
-          shouldSetBadge: false,
-        }),
-      });
-      setNotificationsEnabled(false);
-    } else {
-      // If notifications are currently disabled, turn them on
-      await Notifications.setNotificationHandler({
-        handleNotification: async () => ({
-          shouldShowAlert: true,
-          shouldPlaySound: true,
-          shouldSetBadge: true,
-        }),
-      });
-      setNotificationsEnabled(true);
-    }
-  };
-
   useEffect(() => {
     if (auth.currentUser?.uid) updateName();
   }, [])
@@ -87,8 +60,6 @@ const SettingsScreen = () => {
       <Text style={{ fontSize: 25 }}>Settings</Text>
       <Text style={{ fontSize: 18, marginTop: 20 }}>Logged in as {userName}</Text>
       <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginTop: 15 }}/>
-      <Text style={{ fontSize: 18, marginVertical: 10 }}>Notifications are {notificationsEnabled ? 'enabled' : 'disabled'}</Text>
-      <AuthButton title={notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications'} onPress={toggleNotifications} />
       <DeleteAccountButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginTop: 30, borderColor: "red" }}/>
     </View>
   )

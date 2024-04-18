@@ -72,6 +72,7 @@ export function MakeRequestScreen() {
       setStartTime(startTime);
       endTime.setDate(selectedDate.getDate());
       setEndTime(endTime);
+      setDate(selectedDate);
     }
   };
   const startTimeFun = (event: any, selectedDate: any) => {
@@ -93,12 +94,16 @@ export function MakeRequestScreen() {
   
   const findDiff = (diff: number) => {
     const min = Math.ceil(diff / (1000 * 60));
-    if (min < 10) {
+    if (min < 0) {
       setSendable(false);
-      setError('Invalid range. Events must be at least 10 minutes apart.')
-    } else
+      setError('End time must be after start time.')
+    } else if (min < 10) {
+      setSendable(false);
+      setError('Events must be at least 10 minutes apart.')
+    } else {
       setError('');
       setSendable(true);
+    }
   }
 
   const handleStartConfirm = (time: any) => {
@@ -280,7 +285,7 @@ export function MakeRequestScreen() {
         <AppButton
           title="Send Request"
           onPress={createEventRequest}
-          disabled={sendable || address.length == 0 || eventName?.length == 0}
+          disabled={!sendable || address.length == 0 || eventName?.length == 0}
         />
       </View>
     </TouchableWithoutFeedback>

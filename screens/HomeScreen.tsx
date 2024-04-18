@@ -8,19 +8,19 @@ export const HomeScreen = () => {
         <Text style={styles.title}>Welcome to Parkware</Text>
         
         <Text style={styles.subtitle}>
-          Go to the organizer tab to request spaces or see the status of your current requests.
+          Navigate to the organizer tab to request spaces or see the status of your current requests.
         </Text>
         
         <Text style={styles.subtitle}>
-          Go to the provider tab to see open spaces and provide your space for them. You can also see the current events you're providing for.
+          Navigate to the provider tab to see open events and provide your space for them. You can also see the current events you're providing for.
         </Text>
 
         <Text style={styles.subtitle}>
-          Open the following links to get more information on how this app works:
+          Open the following links to get more information:
         </Text>
 
         <TouchableOpacity onPress={() => Linking.openURL('https://youtu.be/kjg3q9gL15w?si=8M13GXai18xmLZ1v')}>
-          <Text style={styles.link}>What is Parkware</Text>
+          <Text style={styles.link}>What is Parkware?</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/playlist?list=PLZq65TsC76Dvqk2vz3EwcJjJ1h5tt0Pmp')}>

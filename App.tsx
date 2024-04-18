@@ -251,7 +251,6 @@ export default function App() {
     if (Device.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
-      console.log(existingStatus);
       
       if (existingStatus !== 'granted') {
         const response = await Notifications.requestPermissionsAsync();
@@ -259,10 +258,6 @@ export default function App() {
         finalStatus = response.status;
       }
       
-      // if (finalStatus !== 'granted') {
-      //   alert('Failed to get push token for push notification!');
-      //   return;
-      // }
       token = (await Notifications.getExpoPushTokenAsync({ projectId: Constants.expoConfig!.extra!.eas.projectId })).data;
     } else {
       alert('Must use physical device for Push Notifications');

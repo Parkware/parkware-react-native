@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
@@ -76,6 +76,11 @@ export function LoginScreen() {
             <Text style={[styles.link, { fontSize: 18 }]}>Login</Text>
           </TouchableOpacity>
         </View>
+        <View>
+          <TouchableOpacity style={{ paddingTop: 30 }} onPress={() => Linking.openURL('https://linktr.ee/parkware')}>
+            <Text style={styles.info}>Learn more</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -130,5 +135,10 @@ export function LoginScreen() {
     link: {
       color: '#bec7ed',
       marginBottom: 20,
+    },
+    info: {
+      color: '#919191',
+      marginBottom: 20,
+      textDecorationLine: 'underline'
     },
   });

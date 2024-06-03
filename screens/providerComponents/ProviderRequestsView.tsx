@@ -67,16 +67,17 @@ export function ProviderRequestsView() {
           if (!e.exists || Object.keys(e.data()).length === 0) return
           
           // Order matters!
-          if (e.data().acceptedProviderIds.includes(user!.uid)) {
-            accEventPromises.push(eventObj);
-          } 
-          else if (e.data().interestedProviderIds.includes(user!.uid)) {
-            penEventPromises.push(eventObj);
-          } else if (e.data().isOpen 
-                    && !e.data().unwantedProviders.includes(user!.uid)
-                    && e.data().consumer_id !== user!.uid
-                    && !unwantedEvents.includes(e.id)) {
-            openEventPromises.push(eventObj);
+          if (e.data().eventEnded !== true) {
+            if (e.data().acceptedProviderIds.includes(user!.uid)){
+              accEventPromises.push(eventObj);
+            } else if (e.data().interestedProviderIds.includes(user!.uid)) {
+              penEventPromises.push(eventObj);
+            } else if (e.data().isOpen 
+                      && !e.data().unwantedProviders.includes(user!.uid)
+                      && e.data().consumer_id !== user!.uid
+                      && !unwantedEvents.includes(e.id)) {
+              openEventPromises.push(eventObj);
+            }
           }
         });
         const penEvents = await Promise.all(penEventPromises);
@@ -157,7 +158,7 @@ export function ProviderRequestsView() {
           <View>
             {event.doc.accSpaceCount !== 0 && (
               <Text style={eventTextStyle}>
-                Current Parking Spaces ${event.doc.accSpaceCount}
+                {'Current Parking Spaces: ' + event.doc.accSpaceCount}
               </Text>
             )}
             <Text key={event.doc.requestedSpaces + 1} style={eventTextStyle}>

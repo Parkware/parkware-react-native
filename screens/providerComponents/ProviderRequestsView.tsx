@@ -131,9 +131,6 @@ export function ProviderRequestsView() {
         }),
         interestedProviderIds: arrayUnion(id),
       }, { merge: true });
-    /*
-    A provider may need to be able to revert their acceptance to an event request. 
-    */
   }
 
   const EventBlock = ({event, showSpaces, eventTextStyle}: any) => {

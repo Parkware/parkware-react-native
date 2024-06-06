@@ -39,7 +39,7 @@ export function MakeRequestScreen() {
     if (user) {
       const userSnap = await getDoc(doc(db, 'users/', user.uid))
       if (userSnap.exists()) {
-        await addDoc(collection(db, 'events/'), {
+        const event = await addDoc(collection(db, 'events/'), {
           eventName,
           consumer_id: user.uid,
           name: userSnap.data().name,
@@ -61,12 +61,12 @@ export function MakeRequestScreen() {
         setStartTime(new Date());
         setEndTime(new Date());
         setAddress('');
-        showReqSuccess();
+        navigation.navigate('eventSuccessView', { eventID: event.id })
       }
     }
   }
   
-  const dateFun = (event: any, selectedDate: any) => {
+  const dateAnd = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       startTime.setDate(selectedDate.getDate());
       setStartTime(startTime);
@@ -75,14 +75,14 @@ export function MakeRequestScreen() {
       setDate(selectedDate);
     }
   };
-  const startTimeFun = (event: any, selectedDate: any) => {
+  const startTimeAnd = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setStartTime(selectedDate);
       const diff = endTime.getTime()-selectedDate.getTime();
       findDiff(diff);
     }
   };
-  const endTimeFun = (event: any, selectedDate: any) => {
+  const endTimeAnd = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
       setEndTime(selectedDate);
       const diff = selectedDate.getTime()-startTime.getTime();
@@ -99,32 +99,28 @@ export function MakeRequestScreen() {
       setError('End time must be after start time.')
     } else if (min < 10) {
       setSendable(false);
-      setError('Events must be at least 10 minutes apart.')
+      setError('Event duration must be at least 10 minutes.')
     } else {
       setError('');
       setSendable(true);
     }
   }
 
-  const handleStartConfirm = (time: any) => {
+  const startConfirmIOS = (time: any) => {
     setStartTime(time);
     const diff = endTime.getTime()-time.getTime();
     findDiff(diff);
     setStartTimeVisible(false)
   };
-  const showReqSuccess = () =>
-    Alert.alert('Your event request is successful!', '', [
-      {text: 'Ok', onPress: () => navigation.goBack()},
-    ]);
 
-  const handleEndConfirm = (time: any) => {
+  const endConfirmIOS = (time: any) => {
     setEndTime(time);
     const diff = time.getTime()-startTime.getTime();
     findDiff(diff);
     setEndTimeVisible(false);
   };
   
-  const handleDateConfirm = (date: any) => {
+  const dateConfirmIOS = (date: any) => {
     startTime.setDate(date.getDate());
     setStartTime(startTime);
     endTime.setDate(date.getDate());
@@ -137,21 +133,21 @@ export function MakeRequestScreen() {
     if (type === 'start') {
       DateTimePickerAndroid.open({
         value: startTime,
-        onChange: startTimeFun,
+        onChange: startTimeAnd,
         mode: currentMode,
         is24Hour: false,
       });
     } else if (type === 'end') {
         DateTimePickerAndroid.open({
         value: endTime,
-        onChange: endTimeFun,
+        onChange: endTimeAnd,
         mode: currentMode,
         is24Hour: false,
       });
     } else {
       DateTimePickerAndroid.open({
         value: startTime,
-        onChange: dateFun,
+        onChange: dateAnd,
         mode: currentMode,
         is24Hour: false,
       });
@@ -182,7 +178,7 @@ export function MakeRequestScreen() {
             minimumDate={dateNow}
             mode='date'
             display="inline"
-            onConfirm={handleDateConfirm}
+            onConfirm={dateConfirmIOS}
             onCancel={() => setDateVisible(false)}
           />
           <TextInput
@@ -197,7 +193,7 @@ export function MakeRequestScreen() {
           <DateTimePickerModal
             isVisible={isStartTimeVisible}
             mode='time'
-            onConfirm={handleStartConfirm}
+            onConfirm={startConfirmIOS}
             onCancel={() => setStartTimeVisible(false)}
           />
           <TextInput
@@ -215,7 +211,7 @@ export function MakeRequestScreen() {
           <DateTimePickerModal
             isVisible={isEndTimeVisible}
             mode='time'
-            onConfirm={handleEndConfirm}
+            onConfirm={endConfirmIOS}
             onCancel={() => setEndTimeVisible(false)}
           />
           <TextInput
@@ -326,7 +322,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   error: {
-    marginBottom: 20,
     color: 'red',
   },
   link: {

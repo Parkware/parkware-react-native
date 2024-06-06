@@ -59,7 +59,7 @@ const EventInfoView = ({ route }: Props) => {
         .map((proId: string) => eventSnap.data().interestedProviders
         .find((proObj: any) => proObj.id == proId))
       setProviderInfo(proInfo);
-      setShareableLink('https://parkware1.web.app/' + event.id);
+      setShareableLink('https://parkware1.web.app/' + event.id + "/guest");
     }
   }
 

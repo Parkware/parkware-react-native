@@ -26,6 +26,10 @@ export const HomeScreen = () => {
         <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/playlist?list=PLZq65TsC76Dvqk2vz3EwcJjJ1h5tt0Pmp')}>
           <Text style={styles.link}>Parkware Tutorial Series</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={{ paddingTop: 30 }} onPress={() => Linking.openURL('https://linktr.ee/parkware')}>
+          <Text style={styles.info}>Learn more</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -64,5 +68,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#d7e6fc",
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  info: {
+    color: '#919191',
+    marginBottom: 20,
+    textDecorationLine: 'underline'
+  },
 });

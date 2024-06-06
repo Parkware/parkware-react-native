@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform, SafeAreaView, StatusBar } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform, SafeAreaView, StatusBar, Linking } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
@@ -27,6 +27,8 @@ const ChooseProviderView = ({ route }: Props) => {
   const [editSpaces, setEditSpaces] = useState('');
   const [focus, setFocus] = useState(false);
   const [spacePlaceholder, setSpacePlaceholder] = useState(event.doc.requestedSpaces.toString())
+  const shareableLink = 'https://parkware1.web.app/' + event.id + '/provide'
+
   const refInput = useRef<TextInput | null>(null);
 
   const navigation = useNavigation<navigationProps>();
@@ -229,6 +231,9 @@ const ChooseProviderView = ({ route }: Props) => {
                 extraStyles={{ width: 170, alignSelf: "center" }}
               />
             }
+            <Text style={styles.link} onPress={() => Linking.openURL(shareableLink)}>
+                Link to share with providers
+            </Text>
           </View>
           <Text style={styles.providerHeader}>Interested Providers:</Text>
             {eventData.doc.interestedProviders
@@ -325,5 +330,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingVertical: 2,
     color: "#454852" 
+  },
+  link: {
+    color: '#5985eb', 
+    fontSize: 18 
   },
 })

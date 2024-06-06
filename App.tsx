@@ -17,7 +17,6 @@ import ChooseProviderView from './screens/consumerComponents/ChooseProviderView'
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
-import DepartureGuestView from './screens/consumerComponents/DepartureGuestView';
 import { Platform, View, Text, StyleSheet, Image } from 'react-native';
 import EventInfoView from './screens/consumerComponents/EventInfoView';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -27,10 +26,14 @@ import { HomeScreen } from './screens/HomeScreen';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
+import EventSuccessView from './screens/consumerComponents/EventSuccessView';
 
 export type ConsumerStackParams = {
   makeRequestScreen: undefined;
-  consumerRequestsView: any;
+  eventSuccessView: any;
+  consumerRequestsView: {
+    eventID: string;
+  }
   chooseProviderView: {
     event: docDataPair;
   };
@@ -153,8 +156,8 @@ const ConsumerScreenStack = () => {
       />
       <ConsumerStack.Screen
         options={{ title: "", headerTransparent: true }}
-        name="departureGuestView"
-        component={DepartureGuestView}
+        name="eventSuccessView"
+        component={EventSuccessView}
       />
     </ConsumerStack.Navigator>
   );

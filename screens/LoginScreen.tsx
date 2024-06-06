@@ -29,8 +29,6 @@ export function LoginScreen() {
         } else if ((error as FirebaseError).code === 'auth/user-not-found') {
           setError('User not found');
         } else {
-          console.log((error as FirebaseError).code);
-          
           setError('There was a problem with your request');
         }
       }

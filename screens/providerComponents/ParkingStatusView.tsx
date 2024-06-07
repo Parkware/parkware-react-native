@@ -1,10 +1,9 @@
-import { Button, Keyboard, SafeAreaView, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
+import { Button, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../App'
 import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { auth, db } from '../../firebaseConfig'
-import { docDataPair } from './ProviderRequestsView'
 import { Divider } from '@rneui/base'
 import { User, onAuthStateChanged } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
@@ -17,7 +16,6 @@ const ParkingStatusView = ({ route }: Props) => {
   const { event } = route.params;
   const endTime = event.doc.endTime.toDate();
   const startTime = event.doc.startTime.toDate();
-  const [eventData, setEventData] = useState<docDataPair>(event);
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
   const [diff, setDiff] = useState<number>();
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -28,7 +26,6 @@ const ParkingStatusView = ({ route }: Props) => {
   const [modProviderId2, setModProviderId2] = useState<DocumentData>();
   const [guestOneLeft, setGuestOneLeft] = useState(false)
   const [guestTwoLeft, setGuestTwoLeft] = useState(false)
-  const [leftMargin, setLeftMargin] = useState(20)
   const [sentNotes, setSentNotes] = useState(false);
   const [eventEnded, setEventEnded] = useState(false);
   const [notesPresent, setNotesPresent] = useState(true);
@@ -58,7 +55,7 @@ const ParkingStatusView = ({ route }: Props) => {
 
   useEffect(() => {
     if (user) {
-      const unsub = onSnapshot(doc(db, 'events', eventData.id), (eventSnap) => {
+      const unsub = onSnapshot(doc(db, 'events', event.id), (eventSnap) => {
         if (eventSnap.exists()) {
           // Order matters!
           checkDepartStatus(eventSnap.data().departedProviderSpaces)
@@ -123,7 +120,7 @@ const ParkingStatusView = ({ route }: Props) => {
   }, [modProviderId2])
   
   const getConsumerInfo = async () => {
-    const userSnap = await getDoc(doc(db, 'users', eventData.doc.consumer_id))
+    const userSnap = await getDoc(doc(db, 'users', event.doc.consumer_id))
     if (userSnap.exists())
       setConsumerInfo(userSnap.data());
   }
@@ -152,10 +149,10 @@ const ParkingStatusView = ({ route }: Props) => {
   const sendNotes = async () => {
     Keyboard.dismiss
 
-    const myProviderObj = eventData.doc.interestedProviders
+    const myProviderObj = event.doc.interestedProviders
       .find((proObj: DocumentData) => proObj.id == user!.uid);
       
-    const existingList = eventData.doc.interestedProviders
+    const existingList = event.doc.interestedProviders
       .filter((proObj: DocumentData) => proObj.id !== user!.uid);
 
     existingList.push({
@@ -163,7 +160,7 @@ const ParkingStatusView = ({ route }: Props) => {
       notes: providerNotes
     })
     
-    await updateDoc(doc(db, 'events', eventData.id), {
+    await updateDoc(doc(db, 'events', event.id), {
       interestedProviders: existingList
     });
 
@@ -235,7 +232,7 @@ const ParkingStatusView = ({ route }: Props) => {
 
   useEffect(() => {
     if (user) {
-      const proObj = eventData.doc.interestedProviders.find((proObj: DocumentData) => proObj.id == user.uid)
+      const proObj = event.doc.interestedProviders.find((proObj: DocumentData) => proObj.id == user.uid)
       if (!proObj.notes || proObj.notes == "") setNotesPresent(false);
     }
   }, [user])

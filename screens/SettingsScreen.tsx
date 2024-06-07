@@ -1,10 +1,10 @@
-import { Alert, Button, Text, View } from 'react-native'
+import { Alert, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AuthButton, DeleteAccountButton } from './ButtonComponents'
 import { deleteDoc, doc, getDoc } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
-import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import * as Notifications from 'expo-notifications';
 
 

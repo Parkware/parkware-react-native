@@ -93,10 +93,10 @@ export const SignupRoleView = ({ route }: Props) => {
     )}
       <View style={{ alignSelf: 'center', marginTop: 30, paddingHorizontal: 20 }}>
         <Text style={{ fontSize: 20, marginLeft: 5 }}>
-          <Text style={{fontWeight: "bold"}}>Event Organizer</Text>: Can request parking spaces but your address will not be saved to the database.           
+          <Text style={{fontWeight: "bold"}}>Event Organizer</Text>: You can request parking spaces. 
         </Text>
         <Text style={{ fontSize: 20, marginLeft: 5, marginTop: 15 }}>
-          <Text style={{fontWeight: "bold"}}>Space Provider</Text>: Is able to provide their parking space for other organizers' event requests and create event requests like an event organizer.
+          <Text style={{fontWeight: "bold"}}>Space Provider</Text>: You can request parking spaces and provide your space to other events.
         </Text>
       </View>
     </SafeAreaView>

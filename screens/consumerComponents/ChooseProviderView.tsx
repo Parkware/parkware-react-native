@@ -1,8 +1,8 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View, ScrollView, TouchableOpacity, Platform, SafeAreaView, StatusBar, Linking } from 'react-native'
+import { Alert, StyleSheet, Text, TextInput, View, ScrollView, Platform, SafeAreaView, Linking } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayRemove, arrayUnion, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore'
+import { DocumentData, arrayRemove, arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 import { docDataPair } from '../providerComponents/ProviderRequestsView'
 import { AppButton } from '../ButtonComponents'
@@ -23,7 +23,6 @@ const ChooseProviderView = ({ route }: Props) => {
   const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [unwantedProviders, setUnwantedProviders] = useState<string[]>([]);
   const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
-  const [showBackInfo, setShowBackInfo] = useState(false);
   const [editSpaces, setEditSpaces] = useState('');
   const [focus, setFocus] = useState(false);
   const [spacePlaceholder, setSpacePlaceholder] = useState(event.doc.requestedSpaces.toString())
@@ -130,7 +129,6 @@ const ChooseProviderView = ({ route }: Props) => {
     }
   }
 
-  // Might have an issue as we don't have a key
   const ProviderBlock = ({providerInfo}: DocumentData) => {
     return (
       <View key={providerInfo.id}>
@@ -143,8 +141,8 @@ const ChooseProviderView = ({ route }: Props) => {
         <Text key={providerInfo.address.slice(0, 3)} style={[styles.eventText, { marginBottom: 10 }]}>
           Spaces able to provide: {providerInfo.providerSpaces} / {eventData.doc.requestedSpaces}
         </Text>
-        <AppButton title="Accept" key={providerInfo.id.slice(0, 3)} extraStyles={styles.eventButton} onPress={() => disableButton(providerInfo.id)}/>
-        <AppButton title="Decline" key={providerInfo.id.slice(3, 6)} extraStyles={styles.eventButton} onPress={() => removeLocalData(providerInfo.id)}/>
+        <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => disableButton(providerInfo.id)}/>
+        <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalData(providerInfo.id)}/>
       </View>
     )
   }
@@ -238,7 +236,7 @@ const ChooseProviderView = ({ route }: Props) => {
           <Text style={styles.providerHeader}>Interested Providers:</Text>
             {eventData.doc.interestedProviders
               .filter((pro: DocumentData) =>
-                // only want providers who haven't already been accepeted or denied
+                // only want providers who haven't already been accepted or denied
                 (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
               .map((providerInfo: DocumentData) => (
                 <View style={[styles.card, styles.shadowProp]}>
@@ -246,8 +244,6 @@ const ChooseProviderView = ({ route }: Props) => {
                 </View>
               ))
             }
-          {showBackInfo && <Text style={[styles.eventHeader, { marginVertical: 15 }]}>Go back and re-enter screen to see changes!</Text>}
-          {(currAvailPros == eventData.doc.requestedSpaces) && <Text style={[styles.eventHeader, { marginVertical: 15 }]}>Event Request Resolved! Go back and see the app update.</Text>}
           <Text style={[{ marginTop: 80 }, styles.providerHeader]}>Accepted Providers:</Text>
           {eventData.doc.acceptedProviderIds
             .map((proId: string) => eventData.doc.interestedProviders

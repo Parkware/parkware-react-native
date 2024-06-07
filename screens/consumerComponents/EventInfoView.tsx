@@ -7,13 +7,6 @@ import { db } from '../../firebaseConfig'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'eventInfoView'>
 
-/*
-    Is there some way that I can have one onSnapshot function listen and update both these pages?
-    It isn't necessary since a user may only need updates from one screen, but it could be a good addition
-    I could pass in the doc id and just listen to that document. however, i would be opening up many snapshots
-    since many events could be looked at. 
-*/
-
 const EventInfoView = ({ route }: Props) => {
   const { event } = route.params;
   const [timeRemaining, setTimeRemaining] = useState('');
@@ -66,7 +59,6 @@ const EventInfoView = ({ route }: Props) => {
   useEffect(() => {
     getProviderInfo();
   }, [])
-
 
   return (
     <SafeAreaView>

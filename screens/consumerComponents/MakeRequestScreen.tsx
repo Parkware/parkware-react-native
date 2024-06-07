@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, Platform, Alert, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Platform, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import { auth, db } from '../../firebaseConfig';
-import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AppButton } from '../ButtonComponents';
 import { User, onAuthStateChanged } from 'firebase/auth';
+import { color } from '@rneui/base';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
@@ -172,7 +174,7 @@ export function MakeRequestScreen() {
     return (
       <View>
         <View style={{flexDirection:"row"}}>
-          <Text style={{ fontSize: 18 }}>Event Date:</Text>
+          <Text style={styles.labels}>Event Date:</Text>
           <DateTimePickerModal
             isVisible={isDateVisible}
             minimumDate={dateNow}
@@ -189,7 +191,7 @@ export function MakeRequestScreen() {
           />
         </View>
         <View style={{flexDirection:"row"}}>
-          <Text style={{ fontSize: 18 }}>Start Time:</Text>
+          <Text style={styles.labels}>Start Time:</Text>
           <DateTimePickerModal
             isVisible={isStartTimeVisible}
             mode='time'
@@ -207,7 +209,7 @@ export function MakeRequestScreen() {
           />
         </View>
         <View style={{ flexDirection:"row" }}>
-          <Text style={{ fontSize: 18 }}>End Time:</Text>
+          <Text style={styles.labels}>End Time:</Text>
           <DateTimePickerModal
             isVisible={isEndTimeVisible}
             mode='time'
@@ -238,6 +240,15 @@ export function MakeRequestScreen() {
     );
   }
 
+  const homeAddressShort = async () => {
+    if (user) {
+      const userSnap = await getDoc(doc(db, 'users/', user.uid))
+      if (userSnap.exists()) {
+        setAddress(userSnap.data().address)
+      }
+    }
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -264,18 +275,25 @@ export function MakeRequestScreen() {
               <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
             </View>
         }
-        <TextInput
-          value={address}
-          onChangeText={setAddress}
-          keyboardType="default"
-          placeholder="Event Address"
-          autoCapitalize="none"
-          placeholderTextColor="#aaa"
-          autoCorrect={false}
-          style={[styles.input, { marginTop: 3 }]}
-        />
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            value={address}
+            onChangeText={setAddress}
+            keyboardType="default"
+            placeholder="Event Address"
+            autoCapitalize="none"
+            placeholderTextColor="#aaa"
+            autoCorrect={false}
+            style={[styles.input, { marginTop: 3 }]}
+          />
+          {/* <TouchableOpacity
+            onPress={homeAddressShort}
+            style={{ marginLeft: 10, marginTop: 3 }}>
+            <Ionicons name={"home"} size={30} color={color} />
+          </TouchableOpacity> */}
+        </View>
         <View style={{ flexDirection:"row", paddingBottom: 15 }}>
-          <Text style={{ fontSize: 18, paddingRight: 10, paddingTop: 12 }}>Spaces Needed:</Text>
+          <Text style={[styles.labels, { paddingRight: 10, paddingTop: 12 }]}>Spaces Needed:</Text>
           <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={count => setRequestedSpaces(count)} />
         </View>
         <AppButton
@@ -311,6 +329,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: "#4e515c"
   },
   input: {
     borderWidth: 1,
@@ -320,6 +339,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginBottom: 16,
     marginTop: 16,
+    color: "#4e515c"
   },
   error: {
     color: 'red',
@@ -374,5 +394,9 @@ const styles = StyleSheet.create({
   smallerWidth: {
     width: 250,
     alignSelf: "center"
+  },
+  labels: {
+    fontSize: 18,
+    color: "#4e515c"
   }
 });

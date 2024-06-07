@@ -113,7 +113,7 @@ export function ConsumerRequestsView() {
   }
 
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center'  }}>
+    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
       <View style={{ paddingTop: Platform.OS === "android" ? 30 : 0 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           {pendingEvents.length !== 0 && (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 
-export const AppButton = ({ onPress, title, extraStyles=null, disabled, key }: any) => (
+export const AppButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
   <TouchableOpacity 
     onPress={onPress} 
     style={
@@ -9,29 +9,26 @@ export const AppButton = ({ onPress, title, extraStyles=null, disabled, key }: a
       ? [styles.appButtonContainer, { backgroundColor: '#c7c3c3', elevation: 0 }]
       : [styles.appButtonContainer, extraStyles]}
     disabled={disabled}
-    key={key}
   >
     <Text style={styles.appButtonText}>{title}</Text>
   </TouchableOpacity>
 );
 
-export const AuthButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
+export const AuthButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
   <TouchableOpacity 
     onPress={onPress} 
     style={[styles.authButtonContainer, extraStyles]}
     disabled={disabled}
-    key={key}
   >
     <Text style={styles.authButtonText}>{title}</Text>
   </TouchableOpacity>
 );
 
-export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled, key=null }: any) => (
+export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
   <TouchableOpacity 
     onPress={onPress} 
     style={[styles.authButtonContainer, extraStyles]}
     disabled={disabled}
-    key={key}
   >
     <Text style={styles.deleteButtonText}>{title}</Text>
   </TouchableOpacity>

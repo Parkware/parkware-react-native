@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { auth, db } from '../firebaseConfig';
+import { auth } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from '../App';
-import { AuthButton } from './ButtonComponents';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Login'>;
 

@@ -12,12 +12,12 @@ import { ProviderRequestsView, docDataPair } from './screens/providerComponents/
 import { ConsumerRequestsView } from './screens/consumerComponents/ConsumerRequestsView';
 import { NavigationContainer, NavigatorScreenParams } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DocumentData, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { DocumentData, doc, getDoc, setDoc } from 'firebase/firestore';
 import ChooseProviderView from './screens/consumerComponents/ChooseProviderView';
 import ParkingStatusView from './screens/providerComponents/ParkingStatusView';
 import { SignupRoleView } from './screens/SignupRoleView';
 import LoadingScreen from './screens/LoadingScreen';
-import { Platform, View, Text, StyleSheet, Image } from 'react-native';
+import { Platform, Image } from 'react-native';
 import EventInfoView from './screens/consumerComponents/EventInfoView';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -315,12 +315,3 @@ export default function App() {
   return <NavigationContainer><RenderContent /></NavigationContainer>;
   
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

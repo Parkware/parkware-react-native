@@ -1,11 +1,9 @@
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import { docDataPair } from "../providerComponents/ProviderRequestsView";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface StatusTextProps {
   event: docDataPair;
-  // sometimes, we need to render the space count with a state variable 
-  // in the component as it's actively being updated (i.e. MultiProvidrDetailsView.tsx)
   showSpaces: boolean;
   showEditSpaces: boolean;
   showName: boolean;

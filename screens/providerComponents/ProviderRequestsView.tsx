@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, TouchableOpacity, ScrollView, Alert, SafeAreaView, StyleSheet, Platform } from 'react-native';
-import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet } from 'react-native';
+import { DocumentData, arrayUnion, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig';
 import 'firebase/firestore';
-import { User, onAuthStateChanged, signOut } from 'firebase/auth';
+import { User, onAuthStateChanged } from 'firebase/auth';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import { AppButton, AuthButton } from '../ButtonComponents';
-import { FirebaseError } from 'firebase/app';
+import { AppButton } from '../ButtonComponents';
 
 export interface docDataPair {
   id: string,
@@ -24,8 +23,6 @@ export function ProviderRequestsView() {
   const [unwantedEvents, setUnwantedEvents] = useState<string[]>([]);
   const [deniedEventArr, setDeniedEventArr] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<FirebaseError>();
-  const [userName, setUserName] = useState('');
 
   const navigation = useNavigation<providerScreenProp>();
 
@@ -44,8 +41,7 @@ export function ProviderRequestsView() {
 
   // Reading the event data and setting eventData to it. 
   useEffect(() => {
-    try {
-      if (user) {
+    if (user) {
       const unsub = onSnapshot(collection(db, 'events'), async (snapshot) => {            
         const openEventPromises: docDataPair[] = [];
         const penEventPromises: docDataPair[] = [];
@@ -90,21 +86,8 @@ export function ProviderRequestsView() {
         updateDeniedEvents();
       });
       return () => unsub();
-      }
-    } catch (error) {
-      setError((error) as FirebaseError);
     }
   }, [user]);
-
-  useEffect(() => {
-    if (user?.uid) updateName();
-  }, [user])
-
-  const updateName = async () => {
-    const userSnap = await getDoc(doc(db, 'users', user!.uid))
-    if (userSnap.exists())
-      setUserName(userSnap.data().name);
-  }
   
   const removeLocalEventData = (id: string) => {
     // Update the state variable

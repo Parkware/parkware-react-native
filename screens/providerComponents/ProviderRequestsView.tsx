@@ -63,7 +63,7 @@ export function ProviderRequestsView() {
           if (!e.exists || Object.keys(e.data()).length === 0) return
           
           // Order matters!
-          if (e.data().eventEnded !== true) {
+          if (!e.data().eventEnded) {
             if (e.data().acceptedProviderIds.includes(user!.uid)){
               accEventPromises.push(eventObj);
             } else if (e.data().interestedProviderIds.includes(user!.uid)) {

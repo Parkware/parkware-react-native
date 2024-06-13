@@ -67,10 +67,12 @@ export function ConsumerRequestsView() {
           } as docDataPair;
           
           // Can add another condition to add previously ended events to an ended event list. 
-          if (!e.data().isOpen || e.data().eventEnded)
-            compEventPromises.push(eventObj);
-          else
-            penEventPromises.push(eventObj);
+          if (!e.data().eventEnded) {
+            if (!e.data().isOpen)
+              compEventPromises.push(eventObj);
+            else
+              penEventPromises.push(eventObj);
+          }
         });
         
         const penEvents = await Promise.all(penEventPromises);

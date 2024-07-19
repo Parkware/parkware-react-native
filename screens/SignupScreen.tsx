@@ -45,6 +45,14 @@ export function SignupScreen() {
       else
         setError('')
     }, [password])
+
+    useEffect(() => {
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; 
+      if (!emailPattern.test(email) && email.length !== 0)
+        setError("Invalid email")
+      else
+        setError("")
+    }, [email])
   
     return (
       <View style={styles.outer}>

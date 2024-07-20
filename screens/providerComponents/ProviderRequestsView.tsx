@@ -52,38 +52,41 @@ export function ProviderRequestsView() {
         if (userSnap.exists()) {
           unwantedEvents = userSnap.data().unwantedEvents
           if (!unwantedEvents) unwantedEvents = [];
-        }
         
-        snapshot.docs.map(e => {
-          let eventObj = {
-            id: e.id,
-            doc: e.data(),
-          } as docDataPair
+          snapshot.docs.map(e => {
+            let eventObj = {
+              id: e.id,
+              doc: e.data(),
+            } as docDataPair
 
-          if (!e.exists || Object.keys(e.data()).length === 0) return
-          
-          // Order matters!
-          if (!e.data().eventEnded) {
-            if (e.data().acceptedProviderIds.includes(user!.uid)){
-              accEventPromises.push(eventObj);
-            } else if (e.data().interestedProviderIds.includes(user!.uid)) {
-              penEventPromises.push(eventObj);
-            } else if (e.data().isOpen 
-                      && !e.data().unwantedProviders.includes(user!.uid)
-                      && e.data().consumer_id !== user!.uid
-                      && !unwantedEvents.includes(e.id)) {
-              openEventPromises.push(eventObj);
+            if (!e.exists || Object.keys(e.data()).length === 0) return
+            
+            // Order matters!
+            if (!e.data().eventEnded) {
+              if (e.data().acceptedProviderIds.includes(user!.uid)){
+                accEventPromises.push(eventObj);
+              } else if (e.data().interestedProviderIds.includes(user!.uid)) {
+                penEventPromises.push(eventObj);
+              } else if (e.data().isOpen 
+                        && !e.data().unwantedProviders.includes(user!.uid)
+                        && e.data().consumer_id !== user!.uid
+                        && !unwantedEvents.includes(e.id)
+                        && e.data().neighborhood == userSnap.data().neighborhood) {
+                openEventPromises.push(eventObj);
+              }
+              console.log(e.data().neighborhood, userSnap.data().neighborhood);
             }
-          }
-        });
-        const penEvents = await Promise.all(penEventPromises);
-        const accEvents = await Promise.all(accEventPromises);
-        const openEvents = await Promise.all(openEventPromises);
-        
-        setPendingEvents(penEvents);
-        setAccEvents(accEvents);
-        setOpenEvents(openEvents);
-        updateDeniedEvents();
+          });
+          
+          const penEvents = await Promise.all(penEventPromises);
+          const accEvents = await Promise.all(accEventPromises);
+          const openEvents = await Promise.all(openEventPromises);
+          
+          setPendingEvents(penEvents);
+          setAccEvents(accEvents);
+          setOpenEvents(openEvents);
+          updateDeniedEvents();
+        }
       });
       return () => unsub();
     }

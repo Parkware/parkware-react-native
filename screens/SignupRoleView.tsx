@@ -8,6 +8,7 @@ import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
 import { AppButton, AuthButton } from './ButtonComponents';
 import { FirebaseError } from 'firebase/app';
+import { Picker } from '@react-native-picker/picker';
 
 type Props = NativeStackScreenProps<SignupStackParams, 'signupRoleView'>;
 
@@ -17,6 +18,7 @@ export const SignupRoleView = ({ route }: Props) => {
   const [providerSpaces, setProviderSpaces] = useState<number>();
   const { name, email, phoneNum, password }  = route.params;
   const [error, setError] = useState('');
+  const [neighborhood, setNeighborhood] = useState('');
   
   // Create user
   const createAccount = async (isProvider: boolean) => {
@@ -28,6 +30,7 @@ export const SignupRoleView = ({ route }: Props) => {
         phoneNumber: phoneNum,
         name,
         isProvider,
+        neighborhood,
         loggedAsProvider: isProvider
       };
 
@@ -59,7 +62,7 @@ export const SignupRoleView = ({ route }: Props) => {
   return (
     <SafeAreaView>
       <View style={[styles.viewBlock, { marginTop: 150 }]}>
-        <Text style={{ fontSize: 35, fontWeight: "300" }}>Select your role:</Text>
+        <Text style={{ fontSize: 30, fontWeight: "300" }}>Select your role</Text>
       </View>
       {error && 
         <View style={styles.contrastBg}>
@@ -91,12 +94,23 @@ export const SignupRoleView = ({ route }: Props) => {
           <AuthButton title="Create Account" onPress={() => createAccount(true)} />
         </View>
     )}
-      <View style={{ alignSelf: 'center', marginTop: 30, paddingHorizontal: 20 }}>
+      <View style={[styles.viewBlock, { marginTop: 20 }]}>
+        <Text style={{ fontSize: 30, fontWeight: "300" }}>Select your neighborhood</Text>
+      </View>
+      <Picker
+        selectedValue={neighborhood}
+        onValueChange={itemValue => setNeighborhood(itemValue)}
+        itemStyle={{ marginTop: -70 }}>
+        <Picker.Item color='#565a66' label="Birkshires" value="birkshires" />
+        <Picker.Item color='#565a66' label="Providence" value="providence" />
+        <Picker.Item color='#565a66' label="Kitts Creek" value="kittscreek" />
+      </Picker>
+      <View style={{ alignSelf: 'center', paddingHorizontal: 20 }}>
         <Text style={{ fontSize: 20, marginLeft: 5 }}>
           <Text style={{fontWeight: "bold"}}>Event Organizer</Text>: You can request parking spaces. 
         </Text>
         <Text style={{ fontSize: 20, marginLeft: 5, marginTop: 15 }}>
-          <Text style={{fontWeight: "bold"}}>Space Provider</Text>: You can request parking spaces and provide your space to other events.
+          <Text style={{fontWeight: "bold"}}>Space Provider</Text>: You can request parking spaces and provide your space to other people.
         </Text>
       </View>
     </SafeAreaView>

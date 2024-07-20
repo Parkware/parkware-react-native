@@ -53,7 +53,7 @@ export function SignupScreen() {
       else
         setError("")
     }, [email])
-  
+    
     return (
       <View style={styles.outer}>
         <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
@@ -69,7 +69,7 @@ export function SignupScreen() {
           <TextInput
             value={name}
             onChangeText={setName}
-            placeholder="Enter display name"
+            placeholder="Enter name"
             autoCapitalize="none"
             placeholderTextColor="#ccc"
             selectionColor={'white'}

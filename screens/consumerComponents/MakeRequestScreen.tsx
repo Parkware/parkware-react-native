@@ -10,9 +10,6 @@ import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AppButton } from '../ButtonComponents';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { color } from '@rneui/base';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
@@ -48,6 +45,7 @@ export function MakeRequestScreen() {
           address,
           startTime,
           endTime,
+          neighborhood: userSnap.data().neighborhood,
           acceptedProviderIds: [],
           interestedProviders: [],
           interestedProviderIds: [],

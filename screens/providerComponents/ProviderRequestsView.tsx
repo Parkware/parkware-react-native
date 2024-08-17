@@ -74,7 +74,6 @@ export function ProviderRequestsView() {
                         && e.data().neighborhood == userSnap.data().neighborhood) {
                 openEventPromises.push(eventObj);
               }
-              console.log(e.data().neighborhood, userSnap.data().neighborhood);
             }
           });
           

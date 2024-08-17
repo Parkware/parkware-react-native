@@ -61,7 +61,18 @@ export const SignupRoleView = ({ route }: Props) => {
     
   return (
     <SafeAreaView>
-      <View style={[styles.viewBlock, { marginTop: 150 }]}>
+      <View style={[styles.viewBlock, { marginTop: 70 }]}>
+        <Text style={{ fontSize: 30, fontWeight: "300" }}>Select your neighborhood</Text>
+      </View>
+      <Picker
+        selectedValue={neighborhood}
+        onValueChange={itemValue => setNeighborhood(itemValue)}
+        itemStyle={{ marginTop: -70 }}>
+        <Picker.Item color='#565a66' label="Birkshires" value="birkshires" />
+        <Picker.Item color='#565a66' label="Providence" value="providence" />
+        <Picker.Item color='#565a66' label="Kitts Creek" value="kittscreek" />
+      </Picker>
+      <View style={[styles.viewBlock, { marginTop: 0 }]}>
         <Text style={{ fontSize: 30, fontWeight: "300" }}>Select your role</Text>
       </View>
       {error && 
@@ -78,7 +89,7 @@ export const SignupRoleView = ({ route }: Props) => {
         </View>
       </View>
     {showAddress && (
-      <View style={[styles.shadowProp, styles.card, { marginTop: 15, width: 370, alignSelf: 'center' } ]}>
+      <View style={[styles.shadowProp, styles.card, { marginVertical: 15, width: 370, alignSelf: 'center' } ]}>
         <TextInput
           value={address}
           onChangeText={setAddress}
@@ -94,17 +105,6 @@ export const SignupRoleView = ({ route }: Props) => {
           <AuthButton title="Create Account" onPress={() => createAccount(true)} />
         </View>
     )}
-      <View style={[styles.viewBlock, { marginTop: 20 }]}>
-        <Text style={{ fontSize: 30, fontWeight: "300" }}>Select your neighborhood</Text>
-      </View>
-      <Picker
-        selectedValue={neighborhood}
-        onValueChange={itemValue => setNeighborhood(itemValue)}
-        itemStyle={{ marginTop: -70 }}>
-        <Picker.Item color='#565a66' label="Birkshires" value="birkshires" />
-        <Picker.Item color='#565a66' label="Providence" value="providence" />
-        <Picker.Item color='#565a66' label="Kitts Creek" value="kittscreek" />
-      </Picker>
       <View style={{ alignSelf: 'center', paddingHorizontal: 20 }}>
         <Text style={{ fontSize: 20, marginLeft: 5 }}>
           <Text style={{fontWeight: "bold"}}>Event Organizer</Text>: You can request parking spaces. 

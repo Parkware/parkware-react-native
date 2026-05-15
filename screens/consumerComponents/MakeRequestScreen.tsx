@@ -10,7 +10,6 @@ import { AppButton } from '../ButtonComponents';
 import { useAuthProfile } from '../../auth/AuthProvider';
 import { createEventRequest as createEvent } from '../../services/events';
 
-
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
 export function MakeRequestScreen() {

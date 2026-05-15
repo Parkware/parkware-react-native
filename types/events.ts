@@ -13,6 +13,7 @@ export interface EventDoc {
   eventName: string;
   consumer_id: string;
   name?: string;
+  neighborhood?: string;
   address: string;
   startTime: Timestamp;
   endTime: Timestamp;

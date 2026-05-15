@@ -29,6 +29,7 @@ export const createEventRequest = async ({
     eventName,
     consumer_id: user.uid,
     name: userSnap.data().name,
+    neighborhood: userSnap.data().neighborhood,
     address,
     startTime,
     endTime,

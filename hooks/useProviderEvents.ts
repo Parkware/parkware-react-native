@@ -21,6 +21,7 @@ export const useProviderEvents = (userId?: string): ProviderEventsState => {
   const [pendingEvents, setPendingEvents] = useState<DocDataPair[]>([]);
   const [deniedEventNames, setDeniedEventNames] = useState<string[]>([]);
   const [unwantedEventIds, setUnwantedEventIds] = useState<string[]>([]);
+  const [providerNeighborhood, setProviderNeighborhood] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export const useProviderEvents = (userId?: string): ProviderEventsState => {
     const unsubscribe = onSnapshot(doc(db, "users", userId), (snapshot) => {
       const profile = snapshot.exists() ? (snapshot.data() as UserProfile) : {};
       setUnwantedEventIds(profile.unwantedEvents ?? []);
+      setProviderNeighborhood(profile.neighborhood);
     });
 
     return unsubscribe;
@@ -77,7 +79,8 @@ export const useProviderEvents = (userId?: string): ProviderEventsState => {
             !event.doc.unwantedProviders.includes(userId) &&
             !event.doc.acceptedProviderIds.includes(userId) &&
             !event.doc.interestedProviderIds.includes(userId) &&
-            !unwantedEventIds.includes(event.id),
+            !unwantedEventIds.includes(event.id) &&
+            (!providerNeighborhood || event.doc.neighborhood === providerNeighborhood),
         );
 
       setOpenEvents(nextEvents);
@@ -93,7 +96,7 @@ export const useProviderEvents = (userId?: string): ProviderEventsState => {
       unsubscribePending();
       unsubscribeOpen();
     };
-  }, [unwantedEventIds, userId]);
+  }, [providerNeighborhood, unwantedEventIds, userId]);
 
   return {
     acceptedEvents,

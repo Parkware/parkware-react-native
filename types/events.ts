@@ -14,8 +14,8 @@ export interface EventDoc {
   consumer_id: string;
   name?: string;
   address: string;
-  startTime: Timestamp | Date;
-  endTime: Timestamp | Date;
+  startTime: Timestamp;
+  endTime: Timestamp;
   acceptedProviderIds: string[];
   interestedProviders: ProviderInfo[];
   interestedProviderIds: string[];

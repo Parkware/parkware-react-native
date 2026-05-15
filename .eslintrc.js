@@ -16,7 +16,7 @@ module.exports = {
     jest: true,
     node: true,
   },
-  ignorePatterns: ["node_modules/", "functions/lib/", ".expo/"],
+  ignorePatterns: ["node_modules/", "functions/", ".expo/"],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-var-requires": "off",

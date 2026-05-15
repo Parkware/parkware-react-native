@@ -1,10 +1,10 @@
-import { Button, Text, TextInput, View, StyleSheet, SafeAreaView, Alert } from 'react-native'
+import { Text, TextInput, View, StyleSheet, SafeAreaView, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SignupStackParams } from '../navigation/types';
-import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
 import { AppButton, AuthButton } from './ButtonComponents';
 import { FirebaseError } from 'firebase/app';

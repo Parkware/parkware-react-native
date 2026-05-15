@@ -22,7 +22,6 @@ type navigationProps = NativeStackNavigationProp<ConsumerStackParams, 'choosePro
 const ChooseProviderView = ({ route }: Props) => {
   const { event } = route.params;
   const [eventData, setEventData] = useState<DocDataPair>(event);
-  const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
   const [unwantedProviders, setUnwantedProviders] = useState<string[]>([]);
   const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
   const [editSpaces, setEditSpaces] = useState('');
@@ -45,10 +44,6 @@ const ChooseProviderView = ({ route }: Props) => {
   }, [])
   
   const disableButton = (providerId: string) => {
-    setDisabledButtons((prevState) => ({
-      ...prevState,
-      [providerId]: true, // Set the specific provider's button as disabled
-    }));
     addAcceptedProvider(providerId);
     Alert.alert('The provider has been notified.', '', [
       {text: 'Ok', onPress: () => navigation.goBack()},
@@ -210,7 +205,8 @@ const ChooseProviderView = ({ route }: Props) => {
           {eventData.doc.acceptedProviderIds
             .map((proId: string) => eventData.doc.interestedProviders
               .find((proObj: ProviderInfo) => proObj.id == proId))
-            .map((accProInfo: DocumentData) => (
+            .filter((providerInfo): providerInfo is ProviderInfo => Boolean(providerInfo))
+            .map((accProInfo) => (
               <View key={accProInfo.id} style={styles.accProviderBlock}>
                 <Text key={accProInfo.name} style={styles.providerText}>
                 {'Name: ' + accProInfo.name}

@@ -1,5 +1,5 @@
 import { View, Text, TextInput } from "react-native";
-import { useState } from "react";
+import React, { useState } from "react";
 import { DocDataPair } from "../../types/events";
 
 interface StatusTextProps {
@@ -28,10 +28,10 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
       <Text key={event.doc.address} style={eventText}>
         {'Address: ' + event.doc.address}
       </Text>
-      <Text key={event.doc.accepted_provider_id} style={eventText}>
+      <Text style={eventText}>
         {'Date: ' + formatDate(event.doc.startTime)}
       </Text>
-      <Text key={event.doc.startTime} style={eventText}>
+      <Text style={eventText}>
         {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
       </Text>
       {showSpaces && 
@@ -43,7 +43,7 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
             ? <TextInput 
                 value={editSpaces}
                 onChangeText={setEditSpaces}
-                placeholder={event.doc.requestedSpaces}
+                placeholder={event.doc.requestedSpaces.toString()}
                 keyboardType='numeric'
                 placeholderTextColor="#aaa"
               />

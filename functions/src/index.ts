@@ -1,5 +1,5 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
-import * as functions from "firebase-functions";
+import * as functions from "firebase-functions/v1";
 
 // The Firebase Admin SDK to access Firestore.
 import {initializeApp} from "firebase-admin/app";
@@ -138,7 +138,7 @@ export const notifyNewProvider = functions.firestore
     if (afterArr.length > beforeArr.length) {
       const consumerId = change.after.data().consumer_id;
       const userDoc = await db.collection("users").doc(consumerId).get();
-      const consPushToken = userDoc.data()!.expoPushToken;
+      const consPushToken = userDoc.data()?.expoPushToken;
 
       return sendPushNotification(
         consPushToken,
@@ -163,7 +163,7 @@ export const notifyGuestArrive = functions.firestore
         return null;
       }
       const userDoc = await db.collection("users").doc(addedProviderId).get();
-      const providerPushToken = userDoc.data()!.expoPushToken;
+      const providerPushToken = userDoc.data()?.expoPushToken;
 
       return sendPushNotification(
         providerPushToken,
@@ -188,7 +188,7 @@ export const notifyGuestDepart = functions.firestore
         return null;
       }
       const userDoc = await db.collection("users").doc(addedProviderId).get();
-      const providerPushToken = userDoc.data()!.expoPushToken;
+      const providerPushToken = userDoc.data()?.expoPushToken;
 
       return sendPushNotification(
         providerPushToken,

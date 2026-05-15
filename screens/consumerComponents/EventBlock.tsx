@@ -1,9 +1,9 @@
 import { View, Text, TextInput } from "react-native";
-import { docDataPair } from "../providerComponents/ProviderRequestsView";
 import { useState } from "react";
+import { DocDataPair } from "../../types/events";
 
 interface StatusTextProps {
-  event: docDataPair;
+  event: DocDataPair;
   showSpaces: boolean;
   showEditSpaces: boolean;
   showName: boolean;

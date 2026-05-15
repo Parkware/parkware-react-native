@@ -1,12 +1,12 @@
 import { Button, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ProviderStackParams } from '../../App'
+import { ProviderStackParams } from '../../navigation/types'
 import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
-import { auth, db } from '../../firebaseConfig'
+import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
-import { User, onAuthStateChanged } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
+import { useAuthProfile } from '../../auth/AuthProvider'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'parkingStatusView'>
 type parkingStatusProp = NativeStackNavigationProp<ProviderStackParams, 'providerRequestsView'>;
@@ -29,7 +29,7 @@ const ParkingStatusView = ({ route }: Props) => {
   const [sentNotes, setSentNotes] = useState(false);
   const [eventEnded, setEventEnded] = useState(false);
   const [notesPresent, setNotesPresent] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuthProfile();
 
   const navigation = useNavigation<parkingStatusProp>();
 
@@ -48,9 +48,7 @@ const ParkingStatusView = ({ route }: Props) => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
     getConsumerInfo();
-    return unsubscribe;
   }, [])
 
   useEffect(() => {

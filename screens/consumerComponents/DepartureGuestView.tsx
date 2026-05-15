@@ -1,7 +1,7 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ConsumerStackParams } from '../../App'
+import { ConsumerStackParams } from '../../navigation/types'
 import { arrayRemove, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 

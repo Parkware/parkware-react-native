@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Platform, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
-import { auth, db } from '../../firebaseConfig';
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ConsumerStackParams } from '../../App';
+import { ConsumerStackParams } from '../../navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import NumericInput from 'react-native-numeric-input'
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AppButton } from '../ButtonComponents';
-import { User, onAuthStateChanged } from 'firebase/auth';
-import { color } from '@rneui/base';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useAuthProfile } from '../../auth/AuthProvider';
+import { createEventRequest as createEvent } from '../../services/events';
 
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
@@ -20,7 +17,7 @@ export function MakeRequestScreen() {
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date());
   const [address, setAddress] = useState<string>('');
-  const [eventName, setEventName] = useState<string>();
+  const [eventName, setEventName] = useState('');
   const [error, setError] = useState('')
   const [sendable, setSendable] = useState(false)
   const [requestedSpaces, setRequestedSpaces] = useState<number>(1);
@@ -29,41 +26,25 @@ export function MakeRequestScreen() {
   const [isStartTimeVisible, setStartTimeVisible] = useState(false);
   const [isEndTimeVisible, setEndTimeVisible] = useState(false);
   const [isDateVisible, setDateVisible] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
-    
-    return unsubscribe;
-  }, [])
+  const { user, profile } = useAuthProfile();
 
   const createEventRequest = async () => {
     if (user) {
-      const userSnap = await getDoc(doc(db, 'users/', user.uid))
-      if (userSnap.exists()) {
-        const event = await addDoc(collection(db, 'events/'), {
-          eventName,
-          consumer_id: user.uid,
-          name: userSnap.data().name,
-          address,
-          startTime,
-          endTime,
-          acceptedProviderIds: [],
-          interestedProviders: [],
-          interestedProviderIds: [],
-          arrivedProviderSpaces: [],
-          departedProviderSpaces: [],
-          unwantedProviders: [],
-          requestedSpaces,
-          accSpaceCount: 0,
-          isOpen: true
-        });
-        
+      const eventID = await createEvent({
+        user,
+        eventName: eventName ?? '',
+        address,
+        startTime,
+        endTime,
+        requestedSpaces,
+      });
+
+      if (eventID) {
         setEventName('');
         setStartTime(new Date());
         setEndTime(new Date());
         setAddress('');
-        navigation.navigate('eventSuccessView', { eventID: event.id })
+        navigation.navigate('eventSuccessView', { eventID })
       }
     }
   }
@@ -240,15 +221,6 @@ export function MakeRequestScreen() {
     );
   }
 
-  const homeAddressShort = async () => {
-    if (user) {
-      const userSnap = await getDoc(doc(db, 'users/', user.uid))
-      if (userSnap.exists()) {
-        setAddress(userSnap.data().address)
-      }
-    }
-  }
-
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -286,12 +258,12 @@ export function MakeRequestScreen() {
             autoCorrect={false}
             style={[styles.input, { marginTop: 3 }]}
           />
-          {/* <TouchableOpacity
-            onPress={homeAddressShort}
-            style={{ marginLeft: 10, marginTop: 3 }}>
-            <Ionicons name={"home"} size={30} color={color} />
-          </TouchableOpacity> */}
         </View>
+        {profile?.address && (
+          <Text style={styles.link} onPress={() => setAddress(profile.address ?? '')}>
+            Use my profile address
+          </Text>
+        )}
         <View style={{ flexDirection:"row", paddingBottom: 15 }}>
           <Text style={[styles.labels, { paddingRight: 10, paddingTop: 12 }]}>Spaces Needed:</Text>
           <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={count => setRequestedSpaces(count)} />
@@ -299,7 +271,7 @@ export function MakeRequestScreen() {
         <AppButton
           title="Send Request"
           onPress={createEventRequest}
-          disabled={!sendable || address.length == 0 || eventName?.length == 0}
+          disabled={!sendable || address.length == 0 || eventName.length == 0}
         />
       </View>
     </TouchableWithoutFeedback>

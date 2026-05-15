@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { doc, setDoc } from 'firebase/firestore'
 import { auth, db } from '../firebaseConfig'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { SignupStackParams } from '../App';
+import { SignupStackParams } from '../navigation/types';
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import NumericInput from 'react-native-numeric-input';
 import { AppButton, AuthButton } from './ButtonComponents';

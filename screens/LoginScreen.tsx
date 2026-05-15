@@ -7,7 +7,7 @@ import { auth } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from '../App';
+import { AuthStackParams } from '../navigation/types';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Login'>;
 

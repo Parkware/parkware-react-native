@@ -4,57 +4,81 @@ import * as functions from "firebase-functions";
 // The Firebase Admin SDK to access Firestore.
 import {initializeApp} from "firebase-admin/app";
 import {DocumentData, FieldValue, getFirestore} from "firebase-admin/firestore";
-import Expo from "expo-server-sdk";
+import Expo, {ExpoPushMessage} from "expo-server-sdk";
 initializeApp();
 const db = getFirestore();
+const expo = new Expo();
+
+const sendPushNotification = (
+  to: string | undefined,
+  title: string,
+  body: string
+) => {
+  if (!to || !Expo.isExpoPushToken(to)) {
+    return null;
+  }
+
+  const message: ExpoPushMessage = {
+    to,
+    sound: "default",
+    title,
+    subtitle: "",
+    body,
+    data: {
+      withSome: "notification",
+    },
+    priority: "high",
+  };
+
+  return expo.sendPushNotificationsAsync([message]);
+};
+
+const addedArrayValue = (before: string[], after: string[]) =>
+  after.find((id) => !before.includes(id));
 
 export const updateAccProvider = functions.firestore
   .document("/events/{eventId}")
-  .onUpdate(async (change: any, context: any) => {
+  .onUpdate(async (change, context) => {
     const afterArr = change.after.data().acceptedProviderIds;
     const beforeArr = change.before.data().acceptedProviderIds;
     const eventId = context.params.eventId;
 
     if (afterArr.length > beforeArr.length) {
-      const addedProviderId: string = afterArr
-        .filter((id: string) => !beforeArr.includes(id)).toString();
+      const addedProviderId = addedArrayValue(beforeArr, afterArr);
+      if (!addedProviderId) {
+        return null;
+      }
+
       // Get the no. of spaces from this acc provider
       let newProviderSpaces: number =
         change.after.data().interestedProviders
           .find((proObj: DocumentData) =>
             proObj.id == addedProviderId
           ).providerSpaces;
-      const diff = change.after.requestedSpaces - change.after.accSpaceCount;
+      const diff = change.after.data().requestedSpaces -
+        change.after.data().accSpaceCount;
       if (diff < newProviderSpaces) {
         newProviderSpaces = diff;
       }
 
-      db.collection("events/").doc(eventId).update({
+      await db.collection("events/").doc(eventId).update({
         accSpaceCount: FieldValue.increment(newProviderSpaces),
       });
 
       const proDoc = await db.collection("users").doc(addedProviderId).get();
 
-      return expo.sendPushNotificationsAsync([
-        {
-          to: proDoc.data()!.expoPushToken,
-          sound: "default",
-          title: "Organizer Accepted Interest",
-          subtitle: "",
-          body: "Click to view",
-          data: {
-            withSome: "notification",
-          },
-          priority: "high",
-        },
-      ]);
+      return sendPushNotification(
+        proDoc.data()?.expoPushToken,
+        "Organizer Accepted Interest",
+        "Click to view"
+      );
     }
     return null;
   });
 
 export const checkIfOpen = functions.firestore
   .document("/events/{eventId}")
-  .onUpdate(async (change: any, context: any) => {
+  .onUpdate(async (change, context) => {
     const after = change.after.data();
     const eventId = context.params.eventId;
 
@@ -68,12 +92,12 @@ export const checkIfOpen = functions.firestore
 
 export const checkIfEnd = functions.firestore
   .document("/events/{eventId}")
-  .onUpdate(async (change: any, context: any) => {
+  .onUpdate(async (change, context) => {
     const after = change.after.data();
     const eventId = context.params.eventId;
     const dateNow = Date.now();
     const eventEnd = after.endTime.toMillis();
-    if (after.departedProviderSpaces.length == 0 && dateNow > eventEnd) {
+    if (after.departedProviderSpaces.length === 0 && dateNow > eventEnd) {
       return db.collection("/events/").doc(eventId).set({
         eventEnded: true,
       }, {merge: true});
@@ -81,38 +105,32 @@ export const checkIfEnd = functions.firestore
     return null;
   });
 
-const expo = new Expo();
-
 export const notifyNewEvent = functions.firestore
   .document("/events/{eventId}")
-  .onCreate(async (eventsSnap: any) => {
+  .onCreate(async (eventsSnap) => {
     const usersColl = db.collection("users");
     const snap = await usersColl.where("isProvider", "==", true)
       .where("expoPushToken", "!=", "").get();
-    snap.forEach((doc: any) => {
+    const notificationPromises: Array<Promise<unknown> | null> = [];
+
+    snap.forEach((doc) => {
       if (doc.id !== eventsSnap.data().consumer_id) {
-        return expo.sendPushNotificationsAsync([
-          {
-            to: doc.data().expoPushToken,
-            sound: "default",
-            title: "New Event Request",
-            subtitle: "",
-            body: "Click to provide your space",
-            data: {
-              withSome: "notification",
-            },
-            priority: "high",
-          },
-        ]);
+        notificationPromises.push(sendPushNotification(
+          doc.data().expoPushToken,
+          "New Event Request",
+          "Click to provide your space"
+        ));
       }
       return null;
     });
+
+    await Promise.all(notificationPromises.filter(Boolean));
     return null;
   });
 
 export const notifyNewProvider = functions.firestore
   .document("/events/{eventId}")
-  .onUpdate(async (change: any) => {
+  .onUpdate(async (change) => {
     const afterArr = change.after.data().interestedProviderIds;
     const beforeArr = change.before.data().interestedProviderIds;
 
@@ -122,79 +140,61 @@ export const notifyNewProvider = functions.firestore
       const userDoc = await db.collection("users").doc(consumerId).get();
       const consPushToken = userDoc.data()!.expoPushToken;
 
-      return expo.sendPushNotificationsAsync([
-        {
-          to: consPushToken,
-          sound: "default",
-          title: "New Provider Interested",
-          subtitle: "",
-          body: "Click to accept",
-          data: {
-            withSome: "notification",
-          },
-          priority: "high",
-        },
-      ]);
+      return sendPushNotification(
+        consPushToken,
+        "New Provider Interested",
+        "Click to accept"
+      );
     }
     return null;
   });
 
 export const notifyGuestArrive = functions.firestore
   .document("/events/{eventId}")
-  .onUpdate(async (change: any) => {
+  .onUpdate(async (change) => {
     const afterArr = change.after.data().arrivedProviderSpaces;
     const beforeArr = change.before.data().arrivedProviderSpaces;
 
     if (afterArr.length > beforeArr.length) {
-      const addedProviderId: string = afterArr
-        .filter((id: string) => !beforeArr.includes(id))
-        .toString().slice(0, -2);
+      const addedProviderId = addedArrayValue(beforeArr, afterArr)
+        ?.replace(".1", "")
+        .replace(".2", "");
+      if (!addedProviderId) {
+        return null;
+      }
       const userDoc = await db.collection("users").doc(addedProviderId).get();
       const providerPushToken = userDoc.data()!.expoPushToken;
 
-      return expo.sendPushNotificationsAsync([
-        {
-          to: providerPushToken,
-          sound: "default",
-          title: "New Guest Arrival",
-          subtitle: "",
-          body: "Click to view",
-          data: {
-            withSome: "notification",
-          },
-          priority: "high",
-        },
-      ]);
+      return sendPushNotification(
+        providerPushToken,
+        "New Guest Arrival",
+        "Click to view"
+      );
     }
     return null;
   });
 
 export const notifyGuestDepart = functions.firestore
   .document("/events/{eventId}")
-  .onUpdate(async (change: any) => {
+  .onUpdate(async (change) => {
     const afterArr = change.after.data().departedProviderSpaces;
     const beforeArr = change.before.data().departedProviderSpaces;
 
     if (afterArr.length > beforeArr.length) {
-      const addedProviderId: string = afterArr
-        .filter((id: string) => !beforeArr.includes(id))
-        .toString().slice(0, -2);
+      const addedProviderId = addedArrayValue(beforeArr, afterArr)
+        ?.replace(".1", "")
+        .replace(".2", "");
+      if (!addedProviderId) {
+        return null;
+      }
       const userDoc = await db.collection("users").doc(addedProviderId).get();
       const providerPushToken = userDoc.data()!.expoPushToken;
 
-      return expo.sendPushNotificationsAsync([
-        {
-          to: providerPushToken,
-          sound: "default",
-          title: "One of your guests has departed",
-          subtitle: "",
-          body: "Click to view",
-          data: {
-            withSome: "notification",
-          },
-          priority: "high",
-        },
-      ]);
+      return sendPushNotification(
+        providerPushToken,
+        "One of your guests has departed",
+        "Click to view"
+      );
     }
     return null;
   });

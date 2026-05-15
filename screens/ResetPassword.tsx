@@ -6,7 +6,7 @@ import {
 import { auth } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams, ConsumerStackParams } from '../App';
+import { AuthStackParams } from '../navigation/types';
 import { useNavigation } from '@react-navigation/native';
 
 type resetPasswordScreenProp = NativeStackNavigationProp<AuthStackParams, 'resetPassword'>;

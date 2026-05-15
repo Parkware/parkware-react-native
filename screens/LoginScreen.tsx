@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
@@ -8,6 +8,11 @@ import { FirebaseError } from "firebase/app";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from '../navigation/types';
+import { ScreenContainer } from '../components/layout/ScreenContainer';
+import { AppButton } from './ButtonComponents';
+import { commonStyles } from '../theme/styles';
+import { colors } from '../theme/colors';
+import { spacing } from '../theme/spacing';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Login'>;
 
@@ -34,17 +39,14 @@ export function LoginScreen() {
     };
   
     return (
-      <View style={styles.outer}>
-        <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Login</Text>
-          {error && 
-            <View style={styles.contrastBg}>
-              <Text style={styles.error}>{error}</Text>
-            </View>
-          }
-          <TouchableOpacity onPress={() => navigation.navigate('Signup', { screen: 'SignupScreen' })}>
-            <Text style={styles.link}>Create an account</Text>
-          </TouchableOpacity>
+      <ScreenContainer centered>
+        <Text style={styles.eyebrow}>Parkware</Text>
+        <Text style={styles.title}>Welcome back.</Text>
+        <Text style={styles.subtitle}>Sign in to manage parking requests and provider updates.</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Signup', { screen: 'SignupScreen' })}>
+          <Text style={styles.topLink}>Create an account</Text>
+        </TouchableOpacity>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
   
           <TextInput
             value={email}
@@ -52,8 +54,8 @@ export function LoginScreen() {
             keyboardType="email-address"
             placeholder="Enter email address"
             autoCapitalize="none"
-            placeholderTextColor="#ccc"
-            selectionColor={'white'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.text}
             style={styles.input}
           />
           <TextInput
@@ -62,80 +64,54 @@ export function LoginScreen() {
             secureTextEntry
             placeholder="Enter password"
             autoCapitalize="none"
-            placeholderTextColor="#ccc"
-            selectionColor={'white'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.text}
             style={styles.input}
           />
           <TouchableOpacity onPress={() => navigation.navigate('resetPassword')}>
-            <Text style={[styles.link, { color: '#FFFF' }]}>Forgot your password?</Text>
+            <Text style={styles.link}>Forgot your password?</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={loginUser} disabled={!email || !password} style={{ alignSelf: "center" }}>
-            <Text style={[styles.link, { fontSize: 18 }]}>Login</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity style={{ paddingTop: 30 }} onPress={() => Linking.openURL('https://linktr.ee/parkware')}>
-            <Text style={styles.info}>Learn more</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+          <AppButton title="Login" onPress={loginUser} disabled={!email || !password} extraStyles={styles.primaryButton} />
+        <TouchableOpacity onPress={() => Linking.openURL('https://linktr.ee/parkware')}>
+          <Text style={styles.info}>Learn more</Text>
+        </TouchableOpacity>
+      </ScreenContainer>
     );
   }
 
   const styles = StyleSheet.create({
-    contrastBg: { 
-      borderWidth: 0.5,
-      overflow: 'hidden',
-      borderRadius: 10,
-      marginBottom: 8,
-      borderColor: "#ffff",
-      backgroundColor: "#bfbfbf", 
-      padding: 12
+    error: {
+      ...commonStyles.errorText,
+      marginBottom: spacing.md,
     },
-    outer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    card: {
-      backgroundColor: '#56667A',
-      borderRadius: 8,
-      padding: 15,
-      width: '100%',
-    },
-    shadowProp: {
-      shadowColor: '#171717',
-      shadowOffset: {width: -2, height: 4},
-      shadowOpacity: 0.5,
-      shadowRadius: 3,
-    },
-    header: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      color: "#FFF",
-      alignSelf: "center", 
-      textAlign: "center" 
+    eyebrow: commonStyles.label,
+    info: {
+      ...commonStyles.link,
+      alignSelf: 'center',
+      color: colors.textMuted,
+      marginTop: spacing.xl,
     },
     input: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 4,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      marginBottom: 16,
-      color: "#f5f5f5",
-    },
-    error: {
-      color: 'red',
+      ...commonStyles.input,
     },
     link: {
-      color: '#bec7ed',
-      marginBottom: 20,
+      ...commonStyles.link,
+      alignSelf: 'flex-start',
+      marginBottom: spacing.lg,
     },
-    info: {
-      color: '#919191',
-      marginBottom: 20,
-      textDecorationLine: 'underline'
+    primaryButton: {
+      marginTop: spacing.xs,
+    },
+    subtitle: {
+      ...commonStyles.subtitle,
+      marginBottom: spacing.xl,
+    },
+    title: {
+      ...commonStyles.screenTitle,
+      marginBottom: spacing.sm,
+    },
+    topLink: {
+      ...commonStyles.link,
+      marginBottom: spacing.xl,
     },
   });

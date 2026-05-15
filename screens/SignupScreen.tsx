@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParams } from '../navigation/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack/lib/typescript/src/types';
 import { AppButton } from './ButtonComponents';
+import { ScreenContainer } from '../components/layout/ScreenContainer';
+import { commonStyles } from '../theme/styles';
+import { colors } from '../theme/colors';
+import { spacing } from '../theme/spacing';
 
 type signupScreenProp = NativeStackNavigationProp<AuthStackParams, 'Signup'>;
 
@@ -55,14 +59,11 @@ export function SignupScreen() {
     }, [email])
     
     return (
-      <View style={styles.outer}>
-        <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Sign up</Text>
-          {error && 
-            <View style={styles.contrastBg}>
-              <Text style={styles.error}>{error}</Text>
-            </View>
-          }
+      <ScreenContainer centered>
+          <Text style={styles.eyebrow}>New account</Text>
+          <Text style={styles.header}>Start with the basics.</Text>
+          <Text style={styles.subtitle}>Create an account, then choose your neighborhood and role.</Text>
+          {error ? <Text style={styles.error}>{error}</Text> : null}
           <TouchableOpacity onPress={() => navigation.navigate('Login', { screen: 'LoginScreen' })}>
             <Text style={styles.link}>Login to existing account</Text>
           </TouchableOpacity>
@@ -71,8 +72,8 @@ export function SignupScreen() {
             onChangeText={setName}
             placeholder="Enter name"
             autoCapitalize="none"
-            placeholderTextColor="#ccc"
-            selectionColor={'white'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.text}
             style={styles.input}
           />
           <TextInput
@@ -81,8 +82,8 @@ export function SignupScreen() {
             keyboardType="email-address"
             placeholder="Enter email address"
             autoCapitalize="none"
-            placeholderTextColor="#ccc"
-            selectionColor={'white'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.text}
             style={styles.input}
           />
           <TextInput
@@ -91,8 +92,8 @@ export function SignupScreen() {
             keyboardType="phone-pad"
             placeholder="Enter phone number (optional)"
             autoCapitalize="none"
-            placeholderTextColor="#ccc"
-            selectionColor={'white'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.text}
             style={styles.input}
           />
           <TextInput
@@ -101,8 +102,8 @@ export function SignupScreen() {
             secureTextEntry
             placeholder="Enter password"
             autoCapitalize="none"
-            placeholderTextColor="#ccc"
-            selectionColor={'white'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.text}
             style={styles.input}
           />
           <TextInput
@@ -111,8 +112,8 @@ export function SignupScreen() {
             secureTextEntry
             placeholder="Confirm password"
             autoCapitalize="none"
-            placeholderTextColor="#ccc"
-            selectionColor={'white'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.text}
             style={styles.input}
           />
           <AppButton
@@ -120,60 +121,29 @@ export function SignupScreen() {
             onPress={navNext}
             disabled={ !email || !password || (password !== confirmPassword) || (password.length < 6)}
           />
-        </View>
-      </View>
+      </ScreenContainer>
     );
   }
 
   const styles = StyleSheet.create({
-    contrastBg: { 
-      borderWidth: 0.5,
-      overflow: 'hidden',
-      borderRadius: 10,
-      marginBottom: 8,
-      borderColor: "#FFFF",
-      backgroundColor: "#FFFF", 
-      padding: 12
+    error: {
+      ...commonStyles.errorText,
+      marginBottom: spacing.md,
     },
-    outer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    card: {
-      backgroundColor: '#56667A',
-      borderRadius: 8,
-      padding: 15,
-      width: '100%',
-    },
-    shadowProp: {
-      shadowColor: '#171717',
-      shadowOffset: {width: -2, height: 4},
-      shadowOpacity: 0.5,
-      shadowRadius: 3,
-    },
+    eyebrow: commonStyles.label,
     header: {
-      textAlign: "center",
-      alignSelf: 'center',
-      fontSize: 30,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      color: "#FFF"
+      ...commonStyles.screenTitle,
+      marginBottom: spacing.sm,
     },
     input: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 4,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      marginBottom: 16,
-      color: "#ccc"
-    },
-    error: {
-      color: 'red',
+      ...commonStyles.input,
     },
     link: {
-      color: '#bec7ed',
-      marginBottom: 20,
+      ...commonStyles.link,
+      marginBottom: spacing.xl,
+    },
+    subtitle: {
+      ...commonStyles.subtitle,
+      marginBottom: spacing.xl,
     },
   });

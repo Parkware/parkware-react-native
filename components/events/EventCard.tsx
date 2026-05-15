@@ -36,8 +36,8 @@ export const EventCard = ({ event, showName = true, showSpaces = true, status, t
         </View>
       )}
     </View>
-    <Text style={[styles.eventText, textStyle]}>Address: {event.doc.address}</Text>
-    <Text style={[styles.eventText, textStyle]}>Date: {formatDate(event.doc.startTime)}</Text>
+    <Text style={[styles.eventText, textStyle]}>Address  {event.doc.address}</Text>
+    <Text style={[styles.eventText, textStyle]}>Date  {formatDate(event.doc.startTime)}</Text>
     <Text style={[styles.eventText, textStyle]}>
       Time: {formatTime(event.doc.startTime)} - {formatTime(event.doc.endTime)}
     </Text>
@@ -51,20 +51,23 @@ export const EventCard = ({ event, showName = true, showSpaces = true, status, t
 
 const styles = StyleSheet.create({
   badge: {
-    backgroundColor: colors.primaryDark,
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
+    borderWidth: 1,
     borderRadius: 999,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
   },
   badgeText: {
-    color: colors.textInverse,
+    color: colors.text,
     fontSize: 12,
     fontWeight: "700",
   },
   eventText: {
-    color: colors.textInverse,
-    fontSize: 17,
-    paddingVertical: 1,
+    color: colors.textMuted,
+    fontSize: 15,
+    lineHeight: 22,
+    paddingVertical: 2,
   },
   headerRow: {
     alignItems: "center",
@@ -73,10 +76,10 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   title: {
-    color: colors.textInverse,
+    color: colors.text,
     flex: 1,
-    fontSize: 18,
-    fontWeight: "700",
+    fontSize: 20,
+    fontWeight: "800",
     paddingRight: spacing.sm,
   },
 });

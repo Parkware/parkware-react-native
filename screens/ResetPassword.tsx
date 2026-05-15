@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
@@ -8,6 +8,11 @@ import { FirebaseError } from "firebase/app";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from '../navigation/types';
 import { useNavigation } from '@react-navigation/native';
+import { ScreenContainer } from '../components/layout/ScreenContainer';
+import { AppButton } from './ButtonComponents';
+import { commonStyles } from '../theme/styles';
+import { colors } from '../theme/colors';
+import { spacing } from '../theme/spacing';
 
 type resetPasswordScreenProp = NativeStackNavigationProp<AuthStackParams, 'resetPassword'>;
 
@@ -33,9 +38,10 @@ export function ResetPassword() {
     };
   
     return (
-      <View style={styles.outer}>
-        <View style={[styles.shadowProp, styles.card, { width: 330 }]}>
-          <Text style={styles.header}>Reset Password</Text>
+      <ScreenContainer centered>
+          <Text style={styles.eyebrow}>Account help</Text>
+          <Text style={styles.header}>Reset password.</Text>
+          <Text style={styles.subtitle}>Enter your email and we will send a reset link.</Text>
   
           {error && <Text style={styles.error}>{error}</Text>}
   
@@ -53,61 +59,36 @@ export function ResetPassword() {
                 keyboardType="email-address"
                 placeholder="Enter email address"
                 autoCapitalize="none"
-                placeholderTextColor="#aaa"
+                placeholderTextColor={colors.textMuted}
                 style={styles.input}
               />
   
-              <TouchableOpacity onPress={resetUserPassword} disabled={!email} style={{ alignSelf: "center" }}>
-                <Text style={[styles.link, { fontSize: 18 }]}>Reset Password</Text>
-              </TouchableOpacity>
+              <AppButton title="Send reset link" onPress={resetUserPassword} disabled={!email} />
             </>
           )}
-        </View>
-      </View>
+      </ScreenContainer>
     );
   }
 
   const styles = StyleSheet.create({
-    outer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    inner: {
-      width: 240,
-    },
+    eyebrow: commonStyles.label,
     header: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      color: "#FFF"
+      ...commonStyles.screenTitle,
+      marginBottom: spacing.sm,
     },
     input: {
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 4,
-      paddingVertical: 8,
-      paddingHorizontal: 12,
-      marginBottom: 16,
+      ...commonStyles.input,
     },
     error: {
-      marginBottom: 20,
-      color: 'red',
+      ...commonStyles.errorText,
+      marginBottom: spacing.md,
     },
     link: {
-      color: '#bec7ed',
-      marginBottom: 20,
+      ...commonStyles.link,
+      marginBottom: spacing.xl,
     },
-    card: {
-      backgroundColor: '#56667A',
-      borderRadius: 8,
-      padding: 15,
-      width: '100%',
-    },
-    shadowProp: {
-      shadowColor: '#171717',
-      shadowOffset: {width: -2, height: 4},
-      shadowOpacity: 0.5,
-      shadowRadius: 3,
+    subtitle: {
+      ...commonStyles.subtitle,
+      marginBottom: spacing.xl,
     },
   });

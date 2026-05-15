@@ -1,9 +1,13 @@
-import { Linking, StyleSheet, Text, View, SafeAreaView, Platform } from 'react-native'
+import { Linking, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../navigation/types'
 import { DocumentData, doc, getDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
+import { ScreenContainer } from '../../components/layout/ScreenContainer'
+import { commonStyles } from '../../theme/styles'
+import { colors } from '../../theme/colors'
+import { spacing } from '../../theme/spacing'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'eventInfoView'>
 
@@ -61,9 +65,9 @@ const EventInfoView = ({ route }: Props) => {
   }, [])
 
   return (
-    <SafeAreaView>
-      <View style={{ paddingHorizontal: 16, paddingTop: Platform.OS === "android" ? 90 : 0 }}>
-        <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 10, marginTop: -34, alignSelf: "center" }}>
+    <ScreenContainer scroll>
+        <Text style={styles.eyebrow}>Event</Text>
+        <Text style={styles.title}>
           {event.doc.eventName}
         </Text>
         {providerInfo ? providerInfo.map((proObj: DocumentData) => (
@@ -78,11 +82,11 @@ const EventInfoView = ({ route }: Props) => {
           </View>
         )) : <Text style={styles.text}>Loading...</Text>}
         {eventEnded
-          ? <View style={[styles.card, styles.shadowProp]}>
+          ? <View style={styles.card}>
               <Text style={styles.feedbackHeader}>
                 Please fill out the survey form below.
               </Text>
-              <Text style={{ color: 'lightblue', fontSize: 19, marginVertical: 10 }}
+              <Text style={styles.link}
                     onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                       https://forms.gle/DqPH34zYAfxdgzzt6
               </Text>
@@ -91,73 +95,58 @@ const EventInfoView = ({ route }: Props) => {
               </Text>
             </View>
           : <View>{diff && diff > 0 && 
-              <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 10 }}>
+              <Text style={styles.countdown}>
                 {timeRemaining} till your parking event.
               </Text>
             }
-              <View style={[styles.card, styles.shadowProp, { marginTop: 7 }]}>
-                <Text style={{ marginBottom: 10, fontSize: 18, color: "white" }}>
+              <View style={styles.card}>
+                <Text style={styles.text}>
                   Share the link below with other guests so that they can update their status to the providers
                 </Text>
-                <Text style={{ color: 'lightblue', fontSize: 15 }}
+                <Text style={styles.link}
                       onPress={() => Linking.openURL(shareableLink)}>
                   {shareableLink.replace('https://', '')}
                 </Text>
               </View>
             </View>
       }
-      </View>
-    </SafeAreaView>
+    </ScreenContainer>
   )
 }
 
 export default EventInfoView
 
 const styles = StyleSheet.create({
+  countdown: {
+    color: colors.text,
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: spacing.md,
+  },
+  eyebrow: commonStyles.label,
   feedbackHeader: { 
-    fontSize: 22, 
-    fontWeight: "500", 
-    color: "#e8e8e8" 
+    color: colors.text,
+    fontSize: 22,
+    fontWeight: "800",
   },
   card: {
-    backgroundColor: '#56667A',
-    borderRadius: 8,
-    padding: 15,
-    width: '100%',
-    marginVertical: 10,
+    ...commonStyles.card,
+    marginVertical: spacing.sm,
   },
-  shadowProp: {
-    shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
-  },
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-  },
-  countContainer: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
+  link: commonStyles.link,
   providerBlock: { 
-    borderWidth: 0.5,
+    ...commonStyles.card,
     overflow: 'hidden',
-    borderRadius: 10,
     marginVertical: 5,
-    borderColor: "#9e9e9e", 
-    backgroundColor: "#5F4B66",
-    padding: 9
   },
   text: {
     fontSize: 16,
     paddingVertical: 2,
-    color: "white"
+    color: colors.textMuted,
+    lineHeight: 23,
+  },
+  title: {
+    ...commonStyles.screenTitle,
+    marginBottom: spacing.xl,
   }
 })

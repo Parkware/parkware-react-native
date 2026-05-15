@@ -1,6 +1,7 @@
 import { View, Text, TextInput } from "react-native";
 import React, { useState } from "react";
 import { DocDataPair } from "../../types/events";
+import { colors } from "../../theme/colors";
 
 interface StatusTextProps {
   event: DocDataPair;
@@ -45,7 +46,7 @@ export const EventBlock = ({ event, showSpaces, showEditSpaces=false, showName=t
                 onChangeText={setEditSpaces}
                 placeholder={event.doc.requestedSpaces.toString()}
                 keyboardType='numeric'
-                placeholderTextColor="#aaa"
+                placeholderTextColor={colors.textMuted}
               />
             : <Text key={event.doc.requestedSpaces + 1} style={eventText}>
                 {'Requested Spaces: ' + event.doc.requestedSpaces}

@@ -1,7 +1,10 @@
-import { Linking, StyleSheet, Text, View, SafeAreaView, Platform } from 'react-native'
+import { Linking, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../navigation/types'
+import { ScreenContainer } from '../../components/layout/ScreenContainer'
+import { commonStyles } from '../../theme/styles'
+import { spacing } from '../../theme/spacing'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'eventSuccessView'>
 
@@ -14,9 +17,9 @@ const EventSuccessView = ({ route }: Props) => {
   }, [])
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
+    <ScreenContainer centered>
         <View style={styles.card}>
+            <Text style={styles.eyebrow}>Request sent</Text>
             <Text style={styles.text}>
                 Your event request was successful! Share the link with space providers.
             </Text>
@@ -24,36 +27,23 @@ const EventSuccessView = ({ route }: Props) => {
                 {shareableLink.replace('https://', '')}
             </Text>
         </View>
-      </View>
-    </SafeAreaView>
+    </ScreenContainer>
   )
 }
 
 export default EventSuccessView
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 16, 
-    paddingTop: Platform.OS === "android" ? 90 : 20,
-  },
+  eyebrow: commonStyles.label,
   card: {
-    backgroundColor: '#56667A',
-    borderRadius: 8,
-    padding: 15,
-    width: '100%',
+    ...commonStyles.card,
     justifyContent: "center",
-    shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
   },
   link: {
-    color: 'lightblue', 
-    fontSize: 18 
+    ...commonStyles.link,
   },
   text: {
-    marginBottom: 10, 
-    fontSize: 18, 
-    color: "white"
+    ...commonStyles.subtitle,
+    marginBottom: spacing.lg,
   }
 })

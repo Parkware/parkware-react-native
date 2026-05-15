@@ -1,4 +1,4 @@
-import { Alert, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AuthButton, DeleteAccountButton } from './ButtonComponents'
 import { deleteDoc, doc } from 'firebase/firestore';
@@ -7,6 +7,10 @@ import { auth, db } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import * as Notifications from 'expo-notifications';
 import { useAuthProfile } from '../auth/AuthProvider';
+import { ScreenContainer } from '../components/layout/ScreenContainer';
+import { commonStyles } from '../theme/styles';
+import { colors } from '../theme/colors';
+import { spacing } from '../theme/spacing';
 
 
 const SettingsScreen = () => {
@@ -50,16 +54,43 @@ const SettingsScreen = () => {
   }, []);
 
   return (
-    <View style={{ alignItems: "center", marginTop: 120 }}>
-      <Text style={{ fontSize: 25 }}>Settings</Text>
-      <Text style={{ fontSize: 18, marginTop: 20 }}>Logged in as {profile?.name ?? user?.email ?? 'Parkware user'}</Text>
-      <Text style={{ fontSize: 14, marginTop: 8 }}>
-        Notifications {notificationsEnabled ? 'enabled' : 'not enabled'}
-      </Text>
-      <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginTop: 15 }}/>
-      <DeleteAccountButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginTop: 30, borderColor: "red" }}/>
-    </View>
+    <ScreenContainer centered>
+      <Text style={styles.eyebrow}>Account</Text>
+      <Text style={styles.title}>Settings</Text>
+      <View style={styles.card}>
+        <Text style={styles.label}>Signed in as</Text>
+        <Text style={styles.value}>{profile?.name ?? user?.email ?? 'Parkware user'}</Text>
+        <View style={styles.divider} />
+        <Text style={styles.label}>Notifications</Text>
+        <Text style={styles.value}>{notificationsEnabled ? 'Enabled' : 'Not enabled'}</Text>
+      </View>
+      <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={styles.button}/>
+      <DeleteAccountButton title="Delete account" onPress={showConfirmDel} extraStyles={styles.button}/>
+    </ScreenContainer>
   )
 }
 
 export default SettingsScreen
+
+const styles = StyleSheet.create({
+  button: {
+    marginTop: spacing.md,
+  },
+  card: {
+    ...commonStyles.card,
+    marginVertical: spacing.xl,
+  },
+  divider: {
+    backgroundColor: colors.border,
+    height: 1,
+    marginVertical: spacing.lg,
+  },
+  eyebrow: commonStyles.label,
+  label: commonStyles.label,
+  title: commonStyles.screenTitle,
+  value: {
+    color: colors.text,
+    fontSize: 18,
+    fontWeight: '700',
+  },
+});

@@ -1,6 +1,7 @@
 import React from 'react';
-import { GestureResponderEvent, StyleProp, Text, TouchableOpacity, StyleSheet, Platform, ViewStyle } from 'react-native';
+import { GestureResponderEvent, StyleProp, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { colors } from '../theme/colors';
+import { spacing } from '../theme/spacing';
 
 interface ButtonProps {
   onPress: (event: GestureResponderEvent) => void;
@@ -25,17 +26,17 @@ export const AppButton = ({ onPress, title, extraStyles=null, disabled }: Button
 export const AuthButton = ({ onPress, title, extraStyles=null, disabled }: ButtonProps) => (
   <TouchableOpacity 
     onPress={onPress} 
-    style={[styles.authButtonContainer, extraStyles]}
+    style={[styles.secondaryButtonContainer, extraStyles]}
     disabled={disabled}
   >
-    <Text style={styles.authButtonText}>{title}</Text>
+    <Text style={styles.secondaryButtonText}>{title}</Text>
   </TouchableOpacity>
 );
 
 export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled }: ButtonProps) => (
   <TouchableOpacity 
     onPress={onPress} 
-    style={[styles.authButtonContainer, extraStyles]}
+    style={[styles.dangerButtonContainer, extraStyles]}
     disabled={disabled}
   >
     <Text style={styles.deleteButtonText}>{title}</Text>
@@ -43,77 +44,45 @@ export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled
 );
 
 const styles = StyleSheet.create({
-  outer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inner: {
-    width: 240,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
-    marginTop: 16,
-  },
-  error: {
-    marginBottom: 20,
-    color: 'red',
-  },
-  link: {
-    color: 'blue',
-    marginBottom: 20,
-  },
-  datetimeAlgn: {
-    marginLeft: 15,
-    marginTop: -4
-  },
-  selectedDate: {
-    padding: 13, 
-    fontSize: 16
-  },
   appButtonContainer: {
-    elevation: 8,
     backgroundColor: colors.primary,
-    borderRadius: 10,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    margin: 2
+    borderRadius: 999,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    marginVertical: spacing.xs,
   },
   appButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: colors.textInverse,
-    fontWeight: "bold",
+    fontWeight: "800",
     alignSelf: "center",
   },
-  authButtonContainer: {
-    elevation: Platform.OS === "android" ? 0 : 8,
-    borderRadius: 8,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    margin: 2,
-    borderWidth: 2,
-    borderColor: "#4f9ee3"
+  dangerButtonContainer: {
+    borderColor: colors.danger,
+    borderRadius: 999,
+    borderWidth: 1,
+    marginVertical: spacing.xs,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
   },
-  authButtonText: {
+  secondaryButtonContainer: {
+    borderColor: colors.primary,
+    borderRadius: 999,
+    borderWidth: 1,
+    marginVertical: spacing.xs,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+  },
+  secondaryButtonText: {
     fontSize: 15,
-    color: "#3a74a6",
-    fontWeight: "bold",
+    color: colors.text,
+    fontWeight: "800",
     alignSelf: "center",
   },
   deleteButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: colors.danger,
-    fontWeight: "bold",
+    fontWeight: "800",
     alignSelf: "center",
   }
 });

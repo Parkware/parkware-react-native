@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProviderStackParams } from '../../navigation/types';
@@ -12,6 +12,9 @@ import { useProviderEvents } from '../../hooks/useProviderEvents';
 import { addProviderInterest, declineEventForProvider } from '../../services/events';
 import { DocDataPair } from '../../types/events';
 import { colors } from '../../theme/colors';
+import { ScreenContainer } from '../../components/layout/ScreenContainer';
+import { commonStyles } from '../../theme/styles';
+import { spacing } from '../../theme/spacing';
 
 export type providerScreenProp = NativeStackNavigationProp<ProviderStackParams, 'providerRequestsView'>;
 
@@ -45,8 +48,9 @@ export function ProviderRequestsView() {
   const hasEvents = acceptedEvents.length !== 0 || pendingEvents.length !== 0 || visibleOpenEvents.length !== 0;
   
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', marginTop: 75 }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <ScreenContainer scroll>
+        <Text style={styles.eyebrow}>Provider</Text>
+        <Text style={styles.pageTitle}>Requests</Text>
         {acceptedEvents.length !== 0 && (
           <Text style={[styles.requestHeader, { marginTop: 20 }]}>
             Accepted
@@ -55,7 +59,7 @@ export function ProviderRequestsView() {
         <View>
           {acceptedEvents.map(event => (
             <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('parkingStatusView', { event })}>
-              <View style={{ padding: 10 }} key={event.id}>
+              <View key={event.id}>
                 <EventCard event={event} showSpaces={false} status="accepted" />
               </View>
             </TouchableOpacity>
@@ -82,9 +86,9 @@ export function ProviderRequestsView() {
           <View>
             {visibleOpenEvents
               .map((event) => (
-              <View style={[styles.unclickableRequests, { paddingHorizontal: 20 }]} key={event.id}>
+              <View style={styles.unclickableRequests} key={event.id}>
                 <EventCard event={event} showSpaces={true} status="open" textStyle={styles.darkEventText}/>
-                <View style={{ padding: 10, justifyContent: 'space-between' }}>
+                <View style={styles.actionRow}>
                   <AppButton title="Accept" extraStyles={styles.eventButton} onPress={() => updateDB(event)}/>
                   <AppButton title="Decline" extraStyles={styles.eventButton} onPress={() => removeLocalEventData(event.id)}/>
                 </View>
@@ -99,42 +103,54 @@ export function ProviderRequestsView() {
         {deniedEventNames.length !== 0 &&
           (
             <View>
-              <Text style={{ fontSize: 17, fontWeight: 'bold', marginBottom: 10 }}>
+              <Text style={styles.deniedTitle}>
                 Denied Events
               </Text>
               {deniedEventNames
                 .map((name: string) => (
-                  <View style={{ marginBottom: 10 }} key={name}>
-                    <Text>{name}</Text>
+                  <View style={styles.deniedItem} key={name}>
+                    <Text style={styles.darkEventText}>{name}</Text>
                   </View>
                 ))}
             </View>
           )
         }
-      </ScrollView>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
+  actionRow: {
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  deniedItem: {
+    ...commonStyles.card,
+    marginBottom: spacing.sm,
+    padding: spacing.md,
+  },
+  deniedTitle: {
+    ...commonStyles.sectionTitle,
+    marginTop: spacing.xl,
+  },
   eventBlock: { 
-    borderWidth: 1,
+    ...commonStyles.card,
     overflow: 'hidden',
-    borderRadius: 10,
     marginVertical: 10,
-    borderColor: colors.border, 
-    backgroundColor: colors.primaryMuted,
+  },
+  eyebrow: commonStyles.label,
+  pageTitle: {
+    ...commonStyles.screenTitle,
+    marginBottom: spacing.lg,
   },
   requestHeader: { 
-    fontSize: 23, 
-    fontWeight: 'bold', 
-    marginBottom: 10, 
-    alignSelf: "center"
+    ...commonStyles.sectionTitle,
+    marginTop: spacing.lg,
   },
   eventText: {
     fontSize: 17,
     padding: 1,
-    color: colors.textInverse
+    color: colors.text
   },
   darkEventText: {
     color: colors.text,
@@ -142,26 +158,13 @@ const styles = StyleSheet.create({
     padding: 1,
   },
   unclickableRequests: { 
-    borderWidth: 0.5,
+    ...commonStyles.card,
     overflow: 'hidden',
-    borderRadius: 10,
     marginVertical: 5,
-    borderColor: colors.border, 
-    padding: 9, 
-    backgroundColor: colors.surfaceMuted
+    padding: spacing.lg,
   },
   eventButton: {
     width: 155, 
     alignSelf: "center" 
   },
-  headerStyleIOS: { 
-    fontSize: 16, 
-    marginTop: 10, 
-    marginRight: -5 
-  },
-  headerStyleAndroid: {
-    fontSize: 16, 
-    marginTop: 10, 
-    marginRight: -5,
-  }
 });

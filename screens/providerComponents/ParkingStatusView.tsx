@@ -1,4 +1,4 @@
-import { Button, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
+import { Keyboard, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ProviderStackParams } from '../../navigation/types'
@@ -7,6 +7,10 @@ import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
 import { useAuthProfile } from '../../auth/AuthProvider'
+import { AppButton } from '../ButtonComponents'
+import { commonStyles } from '../../theme/styles'
+import { colors } from '../../theme/colors'
+import { spacing } from '../../theme/spacing'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'parkingStatusView'>
 type parkingStatusProp = NativeStackNavigationProp<ProviderStackParams, 'providerRequestsView'>;
@@ -40,7 +44,7 @@ const ParkingStatusView = ({ route }: Props) => {
         </View>
       ),
       headerStyle: {
-        backgroundColor: '#F2F2F2',
+        backgroundColor: colors.background,
       },
       headerTitleAlign: 'center'
     });
@@ -209,7 +213,7 @@ const ParkingStatusView = ({ route }: Props) => {
                 <Text style={[styles.infoHeader, { fontSize: 20 }]}>
                   Please fill out the survey form below.
                 </Text>
-                <Text style={{ color: 'blue', fontSize: 19, marginVertical: 10 }}
+                <Text style={styles.link}
                       onPress={() => Linking.openURL('https://forms.gle/DqPH34zYAfxdgzzt6')}>
                         https://forms.gle/DqPH34zYAfxdgzzt6
                 </Text>
@@ -275,15 +279,15 @@ const ParkingStatusView = ({ route }: Props) => {
       style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.inner}>
-          <View style={[styles.card, styles.shadowProp]}>
+          <View style={styles.card}>
             <Text style={styles.infoHeader}>Organizer Information:</Text>
             <RenderUserInfo />
           </View>
-          <View style={[styles.card, styles.shadowProp]}>
+          <View style={styles.card}>
             <Text style={styles.infoHeader}>Event Information:</Text>
             <EventBlock />
           </View>
-          <View style={[styles.card, styles.shadowProp]}>
+          <View style={styles.card}>
             <ArrivalText />
             {(!notesPresent && !eventEnded) && (
               <View style={{ paddingTop: 10 }}>
@@ -291,12 +295,12 @@ const ParkingStatusView = ({ route }: Props) => {
                   value={providerNotes}
                   onChangeText={setProviderNotes}
                   placeholder="Enter notes here"
-                  placeholderTextColor="#454852"
+                  placeholderTextColor={colors.textMuted}
                   multiline={true}
                   style={styles.input}
                 />
                 <View style={styles.btnContainer}>
-                  <Button 
+                  <AppButton
                     title="Upload notes"
                     disabled={providerNotes.length == 0 || sentNotes}
                     onPress={sendNotes}
@@ -315,30 +319,27 @@ export default ParkingStatusView
 
 const styles = StyleSheet.create({
   eventText: {
-    fontSize: 19,
+    color: colors.textMuted,
+    fontSize: 16,
+    lineHeight: 23,
     padding: 1,
-    color: "#454852", 
     paddingVertical: 2
   },
   inner: {
     paddingTop: 0,
-    padding: 20,
+    padding: spacing.xl,
     flex: 1,
     justifyContent: 'space-around',
   },
   infoHeader: { 
-    fontSize: 22, 
-    fontWeight: "500", 
-    color: "#454852"
+    color: colors.text,
+    fontSize: 22,
+    fontWeight: "800",
   },
   infoBlock: { 
-    borderWidth: 0.5,
+    ...commonStyles.card,
     overflow: 'hidden',
-    borderRadius: 10,
     marginVertical: 5,
-    borderColor: "#9e9e9e", 
-    backgroundColor: "#737373",
-    padding: 9
   },
   boldText: { 
     fontSize: 20, 
@@ -346,17 +347,11 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   card: {
-    backgroundColor: '#A7ADC6',
-    borderRadius: 8,
-    padding: 15,
-  },
-  shadowProp: {
-    shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
+    ...commonStyles.card,
+    marginVertical: spacing.sm,
   },
   container: {
+    backgroundColor: colors.background,
     flex: 1,
   },
   header: {
@@ -366,26 +361,28 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    paddingVertical: 4,
-    paddingHorizontal: 3,
+    backgroundColor: colors.surfaceMuted,
+    borderColor: colors.border,
+    borderRadius: 16,
+    color: colors.text,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
     marginBottom: 5
   },
   error: {
     marginBottom: 20,
-    color: 'red',
+    color: colors.danger,
   },
   link: {
-    color: 'blue',
+    color: colors.text,
     marginBottom: 20,
   },
   btnContainer: {
     marginTop: 2,
   },
   headerStyle: {
-    fontSize: 22, 
-    fontWeight: "500", 
-    color: "#454852"
+    color: colors.text,
+    fontSize: 22,
+    fontWeight: "800",
   }
 });

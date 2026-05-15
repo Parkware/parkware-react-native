@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, TextInput, View, ScrollView, Platform, SafeAreaView, Linking } from 'react-native'
+import { Alert, StyleSheet, Text, TextInput, View, Linking } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../navigation/types'
@@ -9,6 +9,10 @@ import { useNavigation } from '@react-navigation/native'
 import { EventCard } from '../../components/events/EventCard'
 import { acceptProviderForEvent, declineProviderForEvent } from '../../services/events'
 import { DocDataPair, ProviderInfo } from '../../types/events'
+import { ScreenContainer } from '../../components/layout/ScreenContainer'
+import { commonStyles } from '../../theme/styles'
+import { colors } from '../../theme/colors'
+import { spacing } from '../../theme/spacing'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
 type navigationProps = NativeStackNavigationProp<ConsumerStackParams, 'chooseProviderView'>;
@@ -137,27 +141,23 @@ const ChooseProviderView = ({ route }: Props) => {
   }
 
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
-      <View style={{ margin: 9, paddingTop: Platform.OS === "android" ? 90 : 0 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[styles.card, styles.shadowProp]}>
-            <View style={{ flexDirection: "row", marginTop: 7}}>
+    <ScreenContainer scroll>
+          <View style={styles.card}>
+            <View style={styles.headerRow}>
               <Text style={styles.eventHeader}>
-                Name: {eventData.doc.eventName}
+                {eventData.doc.eventName}
               </Text>
-              <View style={{ marginTop: -5, marginLeft: 35 }}>
                 <AppButton
                   title="Cancel"
                   onPress={showConfirmDel}
-                  extraStyles={{height: 35}}
+                  extraStyles={styles.smallButton}
                 />
-              </View>
             </View>
             <EventCard event={eventData} showName={false} showSpaces={false} textStyle={styles.eventText} />
             <Text style={styles.eventText}>
               Current Spaces: {event.doc.accSpaceCount}
             </Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={styles.editRow}>
               <Text style={styles.eventText}>Requested Spaces:</Text>
               <TextInput 
                 ref={refInput}
@@ -165,18 +165,13 @@ const ChooseProviderView = ({ route }: Props) => {
                 onChangeText={setEditSpaces}
                 placeholder={spacePlaceholder}
                 keyboardType='numeric'
-                placeholderTextColor="#454852"
-                style={[
-                  Platform.OS == 'ios' 
-                  ? { marginLeft: 3, marginBottom: 10}
-                  : { marginTop: -5, marginLeft: 4 },
-                {fontSize: 17}
-                ]}
+                placeholderTextColor={colors.textMuted}
+                style={styles.inlineInput}
               />
               <AppButton
                   title={focus ? "Cancel" : "Edit"}
                   onPress={changeSpaceCount}
-                  extraStyles={{height: 35, marginLeft: 60, marginTop: -4}}
+                  extraStyles={styles.smallButton}
                 />
             </View>
             {editSpaces.length !== 0 &&
@@ -190,18 +185,18 @@ const ChooseProviderView = ({ route }: Props) => {
                 Link to share with providers
             </Text>
           </View>
-          <Text style={styles.providerHeader}>Interested Providers:</Text>
+          <Text style={styles.providerHeader}>Interested Providers</Text>
             {eventData.doc.interestedProviders
               .filter((pro: DocumentData) =>
                 // only want providers who haven't already been accepted or denied
                 (!unwantedProviders.includes(pro.id) && !eventData.doc.acceptedProviderIds.includes(pro.id)))
               .map((providerInfo: DocumentData) => (
-                <View style={[styles.card, styles.shadowProp]}>
+                <View style={styles.card} key={providerInfo.id}>
                   <ProviderBlock providerInfo={providerInfo}/>
                 </View>
               ))
             }
-          <Text style={[{ marginTop: 80 }, styles.providerHeader]}>Accepted Providers:</Text>
+          <Text style={styles.providerHeader}>Accepted Providers</Text>
           {eventData.doc.acceptedProviderIds
             .map((proId: string) => eventData.doc.interestedProviders
               .find((proObj: ProviderInfo) => proObj.id == proId))
@@ -222,9 +217,7 @@ const ChooseProviderView = ({ route }: Props) => {
               </View>
             ))
           }
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+    </ScreenContainer>
   )
 }
 
@@ -234,59 +227,68 @@ export default ChooseProviderView
 
 const styles = StyleSheet.create({
   eventHeader: { 
-    fontSize: 22, 
-    fontWeight: "500", 
-    color: "#454852" 
+    color: colors.text,
+    flex: 1,
+    fontSize: 28,
+    fontWeight: "800",
   },
   providerBlock: { 
-    borderWidth: 1,
-    overflow: 'hidden',
-    borderRadius: 10,
-    marginVertical: 10,
-    borderColor: "#9e9e9e", 
-    backgroundColor: "#c2c2c2",
-    padding: 9
+    ...commonStyles.card,
+    marginVertical: spacing.sm,
   },
   providerText: {
+    color: colors.text,
     fontSize: 16,
+    lineHeight: 22,
   },
   eventButton: {
     width: 175, 
     alignSelf: "center"
   },
   card: {
-    backgroundColor: '#A7ADC6',
-    borderRadius: 8,
-    padding: 15,
-    width: '100%',
-  },
-  shadowProp: {
-    shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 4},
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
+    ...commonStyles.card,
+    marginBottom: spacing.md,
   },
   accProviderBlock: { 
-    borderWidth: 0.5,
+    ...commonStyles.card,
     overflow: 'hidden',
-    borderRadius: 10,
     marginVertical: 5,
-    borderColor: "#9e9e9e", 
-    padding: 9
+    padding: spacing.md,
   },
   providerHeader: { 
-    fontSize: 23, 
-    marginBottom: 10, 
-    marginTop: 40, 
-    alignSelf: "center"
+    ...commonStyles.sectionTitle,
+    marginTop: spacing.xl,
   },
   eventText: {
     fontSize: 17,
     paddingVertical: 2,
-    color: "#454852" 
+    color: colors.textMuted,
+    lineHeight: 23,
+  },
+  headerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginBottom: spacing.md,
+  },
+  inlineInput: {
+    color: colors.text,
+    fontSize: 17,
+    minWidth: 36,
+    paddingHorizontal: spacing.xs,
+  },
+  editRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.sm,
   },
   link: {
-    color: '#5985eb', 
-    fontSize: 18 
+    ...commonStyles.link,
+    marginTop: spacing.md,
+  },
+  smallButton: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
 })

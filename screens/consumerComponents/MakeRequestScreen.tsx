@@ -9,6 +9,10 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { AppButton } from '../ButtonComponents';
 import { useAuthProfile } from '../../auth/AuthProvider';
 import { createEventRequest as createEvent } from '../../services/events';
+import { ScreenContainer } from '../../components/layout/ScreenContainer';
+import { commonStyles } from '../../theme/styles';
+import { colors } from '../../theme/colors';
+import { spacing } from '../../theme/spacing';
 
 type homeScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'makeRequestScreen'>;
 
@@ -222,49 +226,45 @@ export function MakeRequestScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ScreenContainer scroll>
+      <Text style={styles.eyebrow}>Organizer</Text>
         <Text style={styles.header}>Request Spaces</Text>
-        {error && 
-            <View style={styles.contrastBg}>
-              <Text style={styles.error}>{error}</Text>
-            </View>
-          }
+        <Text style={styles.subtitle}>Add the event details and invite local providers to help.</Text>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
         <TextInput
           value={eventName}
           onChangeText={setEventName}
           keyboardType="default"
           placeholder="Event Name"
           autoCapitalize="none"
-          placeholderTextColor="#aaa"
+          placeholderTextColor={colors.textMuted}
           autoCorrect={false}
           style={styles.input}
         />
         {Platform.OS === 'ios' 
           ? <DatePickeriOS /> 
-          : <View>
+          : <View style={styles.pickerCard}>
               <DatePickerAndroid />
               <Text style={styles.selectedDate}>Selected Date: {date.toLocaleDateString()}, {startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
             </View>
         }
-        <View style={{ flexDirection: "row" }}>
           <TextInput
             value={address}
             onChangeText={setAddress}
             keyboardType="default"
             placeholder="Event Address"
             autoCapitalize="none"
-            placeholderTextColor="#aaa"
+            placeholderTextColor={colors.textMuted}
             autoCorrect={false}
-            style={[styles.input, { marginTop: 3 }]}
+            style={styles.input}
           />
-        </View>
         {profile?.address && (
           <Text style={styles.link} onPress={() => setAddress(profile.address ?? '')}>
             Use my profile address
           </Text>
         )}
-        <View style={{ flexDirection:"row", paddingBottom: 15 }}>
-          <Text style={[styles.labels, { paddingRight: 10, paddingTop: 12 }]}>Spaces Needed:</Text>
+        <View style={styles.spaceRow}>
+          <Text style={styles.labels}>Spaces Needed</Text>
           <NumericInput rounded value={requestedSpaces} totalHeight={50} minValue={1} maxValue={10} onChange={count => setRequestedSpaces(count)} />
         </View>
         <AppButton
@@ -272,102 +272,66 @@ export function MakeRequestScreen() {
           onPress={createEventRequest}
           disabled={!sendable || address.length == 0 || eventName.length == 0}
         />
-      </View>
+      </ScreenContainer>
     </TouchableWithoutFeedback>
   );
 }
 
 
 const styles = StyleSheet.create({
-  contrastBg: { 
-    borderWidth: 0.5,
-    overflow: 'hidden',
-    borderRadius: 10,
-    marginBottom: 8,
-    borderColor: "#FFFF",
-    backgroundColor: "#FFFF", 
-    padding: 12
-  },
-  outer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inner: {
-    width: 240,
-  },
+  eyebrow: commonStyles.label,
   header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: "#4e515c"
+    ...commonStyles.screenTitle,
+    marginBottom: spacing.sm,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
-    marginTop: 16,
-    color: "#4e515c"
+    ...commonStyles.input,
   },
   error: {
-    color: 'red',
+    ...commonStyles.errorText,
+    marginBottom: spacing.md,
   },
   link: {
-    color: 'blue',
-    marginBottom: 20,
+    ...commonStyles.link,
+    marginBottom: spacing.lg,
   },
   datetimeAlgn: {
-    marginLeft: 15,
-    marginTop: -4
+    marginLeft: spacing.sm,
+    marginTop: -4,
+  },
+  pickerCard: {
+    ...commonStyles.card,
+    marginBottom: spacing.lg,
+    padding: spacing.lg,
   },
   selectedDate: {
-    padding: 13, 
-    fontSize: 18
-  },
-  appButtonContainer: {
-    elevation: 8,
-    backgroundColor: "#6b7080",
-    borderRadius: 10,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    margin: 2
-  },
-  appButtonText: {
-    fontSize: 18,
-    color: "#fff",
-    fontWeight: "bold",
-    alignSelf: "center",
-  },
-  authButtonContainer: {
-    elevation: 8,
-    borderRadius: 8,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    margin: 2,
-    borderWidth: 2,
-    borderColor: "#4f9ee3"
-  },
-  authButtonText: {
+    color: colors.textMuted,
     fontSize: 15,
-    color: "#3a74a6",
-    fontWeight: "bold",
-    alignSelf: "center",
-  },
-  deleteButtonText: {
-    fontSize: 18,
-    color: "red",
-    fontWeight: "bold",
-    alignSelf: "center",
+    marginTop: spacing.sm,
+    textAlign: 'center',
   },
   smallerWidth: {
-    width: 250,
+    minWidth: 250,
     alignSelf: "center"
   },
   labels: {
-    fontSize: 18,
-    color: "#4e515c"
+    color: colors.text,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  spaceRow: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: 20,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing.lg,
+    padding: spacing.lg,
+  },
+  subtitle: {
+    ...commonStyles.subtitle,
+    marginBottom: spacing.xl,
   }
 });

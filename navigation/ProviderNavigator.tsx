@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ParkingStatusView from "../screens/providerComponents/ParkingStatusView";
 import { ProviderRequestsView } from "../screens/providerComponents/ProviderRequestsView";
 import { ProviderStackParams } from "./types";
+import { colors } from "../theme/colors";
 
 const ProviderStack = createNativeStackNavigator<ProviderStackParams>();
 
@@ -18,7 +19,7 @@ export const ProviderNavigator = () => (
         title: "",
         headerTransparent: false,
         headerStyle: {
-          backgroundColor: "#F2F2F2",
+          backgroundColor: colors.background,
         },
       }}
       name="parkingStatusView"

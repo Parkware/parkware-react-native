@@ -43,7 +43,11 @@ export const RootTabs = () => {
           <Ionicons name={getIconName(route.name, focused)} size={size} color={color} />
         ),
         tabBarActiveTintColor: colors.primaryMuted,
-        tabBarInactiveTintColor: "gray",
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarStyle: {
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+        },
       })}
     >
       <Tab.Screen

@@ -19,9 +19,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: 24,
+    borderWidth: 1,
     marginVertical: spacing.lg,
-    padding: spacing.lg,
+    padding: spacing.xl,
   },
   message: {
     color: colors.text,

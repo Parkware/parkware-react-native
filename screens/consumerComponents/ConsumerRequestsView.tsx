@@ -1,16 +1,19 @@
 import React from 'react';
-import { View, Text, SafeAreaView, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { DocumentData } from 'firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ConsumerStackParams } from '../../navigation/types';
 import { useNavigation } from '@react-navigation/native';
-import { ScrollView, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { AppButton } from '../ButtonComponents';
 import { EventCard } from '../../components/events/EventCard';
 import { ScreenState } from '../../components/layout/ScreenState';
 import { useAuthProfile } from '../../auth/AuthProvider';
 import { useConsumerEvents } from '../../hooks/useConsumerEvents';
 import { colors } from '../../theme/colors';
+import { ScreenContainer } from '../../components/layout/ScreenContainer';
+import { commonStyles } from '../../theme/styles';
+import { spacing } from '../../theme/spacing';
 
 export type consumerScreenProp = NativeStackNavigationProp<ConsumerStackParams, 'consumerRequestsView'>;
 
@@ -23,9 +26,8 @@ export function ConsumerRequestsView() {
   const hasEvents = pendingEvents.length !== 0 || completedEvents.length !== 0;
 
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <View style={{ paddingTop: Platform.OS === "android" ? 30 : 0 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+    <ScreenContainer scroll>
+          <Text style={styles.eyebrow}>Organizer</Text>
           {profile?.name ? <Text style={styles.greeting}>Welcome, {profile.name}</Text> : null}
           {pendingEvents.length !== 0 && (
             <Text style={[styles.requestHeader, { marginTop: 15 }]}>
@@ -35,20 +37,20 @@ export function ConsumerRequestsView() {
           <View>
             {pendingEvents.map(event => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('chooseProviderView', { event })}>
-                <View style={{ padding: 10 }}>
+                <View>
                   <EventCard event={event} showSpaces={true} status="pending" />
                   {event.doc.interestedProviders.length !== 0
                     && ( 
                     <View>
-                      <Text style={{ fontSize: 18, marginBottom: 4, marginTop: 7, color: "white" }}>Available Providers:</Text>
+                      <Text style={styles.providerTitle}>Available Providers</Text>
                       {event.doc.interestedProviders
                         .filter((pro: DocumentData) => !event.doc.acceptedProviderIds.includes(pro.id))
                         .map((providerInfo: DocumentData) => (
                         <View key={providerInfo.id}>
-                          <Text key={providerInfo.name} style={{ color: "white" }}>
+                          <Text key={providerInfo.name} style={styles.providerText}>
                           {'Name: ' + providerInfo.name}
                           </Text>
-                          <Text key={providerInfo.address} style={{ color: "white" }}>
+                          <Text key={providerInfo.address} style={styles.providerText}>
                           {'Address: ' + providerInfo.address}
                           </Text>
                         </View>
@@ -68,7 +70,7 @@ export function ConsumerRequestsView() {
           <View>
             {completedEvents.map((event) => (
               <TouchableOpacity style={styles.eventBlock} key={event.id} onPress={() => navigation.navigate('eventInfoView', { event })}>
-                <View style={{ padding: 10 }}>
+                <View>
                 <EventCard event={event} showSpaces={false} status="accepted" />
                 </View>
               </TouchableOpacity>
@@ -83,31 +85,37 @@ export function ConsumerRequestsView() {
             onPress={switchView}
             extraStyles={{ marginTop: 7, marginBottom: 30 }}
           />
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
   eventBlock: { 
-    borderWidth: 1,
+    ...commonStyles.card,
     overflow: 'hidden',
-    borderRadius: 10,
-    marginVertical: 5,
-    borderColor: "#9e9e9e", 
-    backgroundColor: colors.primaryMuted,
+    marginVertical: spacing.sm,
   },
+  eyebrow: commonStyles.label,
   greeting: {
-    alignSelf: "center",
     color: colors.text,
-    fontSize: 16,
-    marginTop: 15,
+    fontSize: 28,
+    fontWeight: '800',
+    marginBottom: spacing.xl,
+  },
+  providerText: {
+    color: colors.textMuted,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  providerTitle: {
+    color: colors.text,
+    fontSize: 15,
+    fontWeight: '800',
+    marginBottom: spacing.xs,
+    marginTop: spacing.md,
   },
   requestHeader: { 
-    fontSize: 23, 
-    fontWeight: 'bold', 
-    marginBottom: 10, 
-    alignSelf: "center",
+    ...commonStyles.sectionTitle,
+    marginTop: spacing.lg,
   },
 });

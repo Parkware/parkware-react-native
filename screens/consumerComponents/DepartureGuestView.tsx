@@ -1,9 +1,14 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ConsumerStackParams } from '../../navigation/types'
 import { arrayRemove, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
+import { ScreenContainer } from '../../components/layout/ScreenContainer'
+import { AppButton } from '../ButtonComponents'
+import { commonStyles } from '../../theme/styles'
+import { colors } from '../../theme/colors'
+import { spacing } from '../../theme/spacing'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'departureGuestView'>
 
@@ -17,36 +22,32 @@ const DepartureGuestView = ({ route }: Props) => {
   }
   
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text key={providerInfo.name}>{providerInfo.name}</Text>
-        <Text style={{ marginBottom: 10 }}key={providerInfo.address}>{providerInfo.address}</Text>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={() => setLeftStatus(providerInfo.id)}
-        >
-          <Text>I have left</Text>
-        </TouchableOpacity>        
+    <ScreenContainer centered>
+      <View style={styles.card}>
+        <Text style={styles.eyebrow}>Departure</Text>
+        <Text style={styles.title}>{providerInfo.name}</Text>
+        <Text style={styles.address}>{providerInfo.address}</Text>
+        <AppButton title="I have left" onPress={() => setLeftStatus(providerInfo.id)} />
       </View>
-    </SafeAreaView>
+    </ScreenContainer>
   )
 }
 
 export default DepartureGuestView
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30,
+  address: {
+    ...commonStyles.subtitle,
+    marginBottom: spacing.xl,
   },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
+  card: {
+    ...commonStyles.card,
   },
-  countContainer: {
-    alignItems: 'center',
-    marginBottom: 30,
+  eyebrow: commonStyles.label,
+  title: {
+    color: colors.text,
+    fontSize: 28,
+    fontWeight: '800',
+    marginBottom: spacing.sm,
   },
 })

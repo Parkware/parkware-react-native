@@ -7,11 +7,13 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
+    "types": ["node"],
+    "lib": ["es2022"],
+    "skipLibCheck": true,
     "noEmit": false
   },
   "compileOnSave": true,
   "include": [
     "src"
-  ],
-  "extends": "expo/tsconfig.base"
+  ]
 }

@@ -1,7 +1,7 @@
 import { Linking, StyleSheet, Text, View, SafeAreaView, Platform } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ConsumerStackParams } from '../../App'
+import { ConsumerStackParams } from '../../navigation/types'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'eventSuccessView'>
 

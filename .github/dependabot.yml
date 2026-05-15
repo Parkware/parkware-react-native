@@ -1,0 +1,23 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      expo-app:
+        patterns:
+          - "expo*"
+          - "@expo/*"
+          - "react"
+          - "react-native"
+          - "react-native-*"
+  - package-ecosystem: "npm"
+    directory: "/functions"
+    schedule:
+      interval: "weekly"
+    groups:
+      firebase-functions:
+        patterns:
+          - "firebase-*"
+          - "expo-server-sdk"

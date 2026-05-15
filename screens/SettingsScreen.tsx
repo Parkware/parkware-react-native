@@ -1,16 +1,17 @@
 import { Alert, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AuthButton, DeleteAccountButton } from './ButtonComponents'
-import { deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
 import { auth, db } from '../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import * as Notifications from 'expo-notifications';
+import { useAuthProfile } from '../auth/AuthProvider';
 
 
 const SettingsScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [userName, setUserName] = useState('');
+  const { profile, user } = useAuthProfile();
   
   const showConfirmDel = () =>
     Alert.alert('Are you sure you want to delete your account?', 'Click cancel to keep your account. ', [
@@ -19,8 +20,10 @@ const SettingsScreen = () => {
     ]);
     
   const delAccount = async () => {
-    await deleteDoc(doc(db, "users", auth.currentUser!.uid));
-    await deleteUser(auth.currentUser!)
+    if (!auth.currentUser) return;
+
+    await deleteDoc(doc(db, "users", auth.currentUser.uid));
+    await deleteUser(auth.currentUser)
   }
 
   const showConfirmLogout = () =>
@@ -46,19 +49,13 @@ const SettingsScreen = () => {
     checkNotificationStatus();
   }, []);
 
-  useEffect(() => {
-    if (auth.currentUser?.uid) updateName();
-  }, [])
-
-  const updateName = async () => {
-    const userSnap = await getDoc(doc(db, 'users', auth.currentUser!.uid))
-    if (userSnap.exists())
-      setUserName(userSnap.data().name);
-  }
   return (
     <View style={{ alignItems: "center", marginTop: 120 }}>
       <Text style={{ fontSize: 25 }}>Settings</Text>
-      <Text style={{ fontSize: 18, marginTop: 20 }}>Logged in as {userName}</Text>
+      <Text style={{ fontSize: 18, marginTop: 20 }}>Logged in as {profile?.name ?? user?.email ?? 'Parkware user'}</Text>
+      <Text style={{ fontSize: 14, marginTop: 8 }}>
+        Notifications {notificationsEnabled ? 'enabled' : 'not enabled'}
+      </Text>
       <AuthButton title="Log out" onPress={showConfirmLogout} extraStyles={{ marginTop: 15 }}/>
       <DeleteAccountButton title="Delete account" onPress={showConfirmDel} extraStyles={{ marginTop: 30, borderColor: "red" }}/>
     </View>

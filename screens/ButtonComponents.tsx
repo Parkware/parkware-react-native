@@ -1,12 +1,20 @@
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { GestureResponderEvent, StyleProp, Text, TouchableOpacity, StyleSheet, Platform, ViewStyle } from 'react-native';
+import { colors } from '../theme/colors';
 
-export const AppButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
+interface ButtonProps {
+  onPress: (event: GestureResponderEvent) => void;
+  title: string;
+  extraStyles?: StyleProp<ViewStyle>;
+  disabled?: boolean;
+}
+
+export const AppButton = ({ onPress, title, extraStyles=null, disabled }: ButtonProps) => (
   <TouchableOpacity 
     onPress={onPress} 
     style={
       disabled 
-      ? [styles.appButtonContainer, { backgroundColor: '#c7c3c3', elevation: 0 }]
+      ? [styles.appButtonContainer, { backgroundColor: colors.disabled, elevation: 0 }]
       : [styles.appButtonContainer, extraStyles]}
     disabled={disabled}
   >
@@ -14,7 +22,7 @@ export const AppButton = ({ onPress, title, extraStyles=null, disabled }: any) =
   </TouchableOpacity>
 );
 
-export const AuthButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
+export const AuthButton = ({ onPress, title, extraStyles=null, disabled }: ButtonProps) => (
   <TouchableOpacity 
     onPress={onPress} 
     style={[styles.authButtonContainer, extraStyles]}
@@ -24,7 +32,7 @@ export const AuthButton = ({ onPress, title, extraStyles=null, disabled }: any) 
   </TouchableOpacity>
 );
 
-export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled }: any) => (
+export const DeleteAccountButton = ({ onPress, title, extraStyles=null, disabled }: ButtonProps) => (
   <TouchableOpacity 
     onPress={onPress} 
     style={[styles.authButtonContainer, extraStyles]}
@@ -75,7 +83,7 @@ const styles = StyleSheet.create({
   },
   appButtonContainer: {
     elevation: 8,
-    backgroundColor: "#6b7080",
+    backgroundColor: colors.primary,
     borderRadius: 10,
     paddingVertical: 7,
     paddingHorizontal: 12,
@@ -83,7 +91,7 @@ const styles = StyleSheet.create({
   },
   appButtonText: {
     fontSize: 18,
-    color: "#fff",
+    color: colors.textInverse,
     fontWeight: "bold",
     alignSelf: "center",
   },
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     fontSize: 18,
-    color: "red",
+    color: colors.danger,
     fontWeight: "bold",
     alignSelf: "center",
   }

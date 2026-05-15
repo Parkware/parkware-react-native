@@ -1,37 +1,7 @@
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking, SafeAreaView } from 'react-native';
-import { db } from '../firebaseConfig';
-
-
-
-
 
 export const HomeScreen = () => {
-
-  // const updateFieldInAllDocuments = async () => {
-  //   console.log("starting");
-    
-  //   const collectionRef = collection(db, "users");
-  //   const snapshot = await getDocs(collectionRef);
-  
-  //   snapshot.forEach(async (docSnapshot) => {
-  //     const docRef = doc(db, "users", docSnapshot.id);
-  //     const docSnap = await getDoc(docRef)
-  //     if (docSnap.exists() && docSnap.data().address.toLowerCase().includes("begen"))
-  //       await updateDoc(docRef, {
-  //         "neighborhood": "birkshires"
-  //       });
-  //   });
-  
-  //   console.log("Field updated in all documents");
-  // };
-  
-  // useEffect(() => {
-  //   updateFieldInAllDocuments();
-  
-  // }, [])
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.infoBlock}>

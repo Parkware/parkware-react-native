@@ -1,12 +1,14 @@
 import { Alert, StyleSheet, Text, TextInput, View, ScrollView, Platform, SafeAreaView, Linking } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ConsumerStackParams } from '../../App'
-import { DocumentData, arrayRemove, arrayUnion, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { ConsumerStackParams } from '../../navigation/types'
+import { DocumentData, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
-import { docDataPair } from '../providerComponents/ProviderRequestsView'
 import { AppButton } from '../ButtonComponents'
 import { useNavigation } from '@react-navigation/native'
+import { EventCard } from '../../components/events/EventCard'
+import { acceptProviderForEvent, declineProviderForEvent } from '../../services/events'
+import { DocDataPair, ProviderInfo } from '../../types/events'
 
 type Props = NativeStackScreenProps<ConsumerStackParams, 'chooseProviderView'>
 type navigationProps = NativeStackNavigationProp<ConsumerStackParams, 'chooseProviderView'>;
@@ -19,8 +21,7 @@ type navigationProps = NativeStackNavigationProp<ConsumerStackParams, 'choosePro
 */
 const ChooseProviderView = ({ route }: Props) => {
   const { event } = route.params;
-  const [eventData, setEventData] = useState<docDataPair>(event);
-  const [disabledButtons, setDisabledButtons] = useState<DocumentData>({});
+  const [eventData, setEventData] = useState<DocDataPair>(event);
   const [unwantedProviders, setUnwantedProviders] = useState<string[]>([]);
   const [currAvailPros, setCurrAvailPros] = useState<number | undefined>();
   const [editSpaces, setEditSpaces] = useState('');
@@ -43,10 +44,6 @@ const ChooseProviderView = ({ route }: Props) => {
   }, [])
   
   const disableButton = (providerId: string) => {
-    setDisabledButtons((prevState) => ({
-      ...prevState,
-      [providerId]: true, // Set the specific provider's button as disabled
-    }));
     addAcceptedProvider(providerId);
     Alert.alert('The provider has been notified.', '', [
       {text: 'Ok', onPress: () => navigation.goBack()},
@@ -54,27 +51,8 @@ const ChooseProviderView = ({ route }: Props) => {
   };
   
   const addAcceptedProvider = async (currProviderId: string) => {
-    const accProObj = eventData.doc.interestedProviders
-      .find((proObj: DocumentData) => currProviderId == proObj.id)
-    let otherInfo = eventData.doc.interestedProviders
-      .filter((proObj: DocumentData) => currProviderId !== proObj.id)
-    
-    // showSpaceChange(neededSpaces, accProObj.name);
-    
-    otherInfo.push({
-      ...accProObj,
-      providerSpaces: Math.min(accProObj.providerSpaces, eventData.doc.requestedSpaces - eventData.doc.accSpaceCount)
-    });
-
-    await updateDoc(doc(db, 'events', event.id), { 
-      acceptedProviderIds: arrayUnion(currProviderId),
-      interestedProviders: otherInfo
-    });
+    await acceptProviderForEvent(eventData, currProviderId);
   }
-
-  // const showSpaceChange = (addSpacesCount: number, providerName: string) => 
-  // Alert.alert(`You have booked ${addSpacesCount} space(s) at ${providerName}'s location.`, 
-  //             'Spaces able to be provided was greater what the event needed.');
   
   // Removing a provider from the consumer view if they have been declined
   const removeLocalData = (id: string) => {
@@ -84,20 +62,18 @@ const ChooseProviderView = ({ route }: Props) => {
     setEventData(prevEventData => {
       return {
         ...prevEventData,
-        interestedProviders: updatedProviders
+        doc: {
+          ...prevEventData.doc,
+          interestedProviders: updatedProviders,
+        },
       }
     });
 
     declineUserId(id, updatedProviders);
   }
 
-  const declineUserId = async (id: string, updatedProviders: any) => {
-    await updateDoc(doc(db, 'events', event.id), { 
-      interestedProviderIds: arrayRemove(id),
-      interestedProviders: updatedProviders,
-      unwantedProviders: arrayUnion(id)
-    });
-  }
+  const declineUserId = async (id: string, updatedProviders: ProviderInfo[]) =>
+    declineProviderForEvent(event.id, id, updatedProviders);
 
   const showConfirmDel = () =>
     Alert.alert('Are you sure you want to delete this event?', 'All providers will be notified. ', [
@@ -160,25 +136,6 @@ const ChooseProviderView = ({ route }: Props) => {
       }
   }
 
-  const EventBlock = () => {
-    const formatTime = (time: any) => time.toDate().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-    const formatDate = (date: any) => date.toDate().toLocaleDateString();
-    
-    return (
-      <View>
-        <Text key={event.doc.address} style={styles.eventText}>
-          {'Address: ' + event.doc.address}
-        </Text>
-        <Text key={event.doc.endTime} style={styles.eventText}>
-          {'Date: ' + formatDate(event.doc.startTime)}
-        </Text>
-        <Text key={event.doc.startTime} style={styles.eventText}>
-          {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
-        </Text>
-      </View>
-    );
-  }
-
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: "#e3e3e3" }}>
       <View style={{ margin: 9, paddingTop: Platform.OS === "android" ? 90 : 0 }}>
@@ -196,7 +153,7 @@ const ChooseProviderView = ({ route }: Props) => {
                 />
               </View>
             </View>
-            <EventBlock />
+            <EventCard event={eventData} showName={false} showSpaces={false} textStyle={styles.eventText} />
             <Text style={styles.eventText}>
               Current Spaces: {event.doc.accSpaceCount}
             </Text>
@@ -247,8 +204,9 @@ const ChooseProviderView = ({ route }: Props) => {
           <Text style={[{ marginTop: 80 }, styles.providerHeader]}>Accepted Providers:</Text>
           {eventData.doc.acceptedProviderIds
             .map((proId: string) => eventData.doc.interestedProviders
-            .find((proObj: any) => proObj.id == proId))
-            .map((accProInfo: DocumentData) => (
+              .find((proObj: ProviderInfo) => proObj.id == proId))
+            .filter((providerInfo): providerInfo is ProviderInfo => Boolean(providerInfo))
+            .map((accProInfo) => (
               <View key={accProInfo.id} style={styles.accProviderBlock}>
                 <Text key={accProInfo.name} style={styles.providerText}>
                 {'Name: ' + accProInfo.name}

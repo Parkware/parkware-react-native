@@ -1,12 +1,12 @@
 import { Button, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, KeyboardAvoidingView, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ProviderStackParams } from '../../App'
+import { ProviderStackParams } from '../../navigation/types'
 import { DocumentData, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
-import { auth, db } from '../../firebaseConfig'
+import { db } from '../../firebaseConfig'
 import { Divider } from '@rneui/base'
-import { User, onAuthStateChanged } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native'
+import { useAuthProfile } from '../../auth/AuthProvider'
 
 type Props = NativeStackScreenProps<ProviderStackParams, 'parkingStatusView'>
 type parkingStatusProp = NativeStackNavigationProp<ProviderStackParams, 'providerRequestsView'>;
@@ -18,7 +18,6 @@ const ParkingStatusView = ({ route }: Props) => {
   const startTime = event.doc.startTime.toDate();
   const [consumerInfo, setConsumerInfo] = useState<DocumentData>();
   const [diff, setDiff] = useState<number>();
-  const [timeRemaining, setTimeRemaining] = useState('');
   const [providerNotes, setProviderNotes] = useState('');
   const [guestInfo1, setGuestInfo1] = useState<DocumentData>();
   const [guestInfo2, setGuestInfo2] = useState<DocumentData>();
@@ -29,7 +28,7 @@ const ParkingStatusView = ({ route }: Props) => {
   const [sentNotes, setSentNotes] = useState(false);
   const [eventEnded, setEventEnded] = useState(false);
   const [notesPresent, setNotesPresent] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuthProfile();
 
   const navigation = useNavigation<parkingStatusProp>();
 
@@ -48,9 +47,7 @@ const ParkingStatusView = ({ route }: Props) => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => setUser(user));
     getConsumerInfo();
-    return unsubscribe;
   }, [])
 
   useEffect(() => {
@@ -133,13 +130,8 @@ const ParkingStatusView = ({ route }: Props) => {
       
       if (difference <= 0) {
         clearInterval(interval);
-        setTimeRemaining("Parking Time!");
       } else {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((difference / (1000 * 60)) % 60);
-
-        setTimeRemaining(`${days}d ${hours}h ${minutes}m`);
+        return;
       }
     }, 1000);
 
@@ -151,6 +143,9 @@ const ParkingStatusView = ({ route }: Props) => {
 
     const myProviderObj = event.doc.interestedProviders
       .find((proObj: DocumentData) => proObj.id == user!.uid);
+    if (!myProviderObj) {
+      return;
+    }
       
     const existingList = event.doc.interestedProviders
       .filter((proObj: DocumentData) => proObj.id !== user!.uid);
@@ -233,7 +228,7 @@ const ParkingStatusView = ({ route }: Props) => {
   useEffect(() => {
     if (user) {
       const proObj = event.doc.interestedProviders.find((proObj: DocumentData) => proObj.id == user.uid)
-      if (!proObj.notes || proObj.notes == "") setNotesPresent(false);
+      if (!proObj?.notes) setNotesPresent(false);
     }
   }, [user])
 
@@ -259,10 +254,10 @@ const ParkingStatusView = ({ route }: Props) => {
         <Text key={event.doc.address} style={styles.eventText}>
           {'Address: ' + event.doc.address}
         </Text>
-        <Text key={event.doc.accepted_provider_id} style={styles.eventText}>
+        <Text style={styles.eventText}>
           {'Date: ' + formatDate(event.doc.startTime)}
         </Text>
-        <Text key={event.doc.startTime} style={styles.eventText}>
+        <Text style={styles.eventText}>
           {'Time Range: ' + formatTime(event.doc.startTime) + '-' + formatTime(event.doc.endTime)}
         </Text>
         <View>

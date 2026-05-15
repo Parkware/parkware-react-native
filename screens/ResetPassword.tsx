@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { FirebaseError } from "firebase/app";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams, ConsumerStackParams } from '../App';
+import { AuthStackParams } from '../navigation/types';
 import { useNavigation } from '@react-navigation/native';
 
 type resetPasswordScreenProp = NativeStackNavigationProp<AuthStackParams, 'resetPassword'>;
